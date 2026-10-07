@@ -110,3 +110,9 @@ Do not treat repository preparation as live Steam Workshop publication.
 ## Art / source preservation
 
 When art work begins, follow the shared AMJ art/source-preservation rules. Accepted high-resolution masters belong under `Art/Sources/` and production `Textures/` files are derivatives. Never overwrite the accepted source merely to create a runtime-sized asset.
+
+
+## Unowned AMJ idea staging
+
+When work in this repository discovers an AMJ idea that may become a separate Mod but does not yet have an owning repository, **do not develop its evolving design here**. Record the concept, research and roadmap state in `sucRo-RimWorld/Ancient-Medieval-Japan-Project` until the author creates/selects an owner repository. Keep only a concise compatibility or ownership-boundary pointer here when it materially affects this repository.
+
