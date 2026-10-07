@@ -67,10 +67,19 @@ Scope:
 5. implement Diggable-based excavation eligibility with Ice/water/road/artificial-floor exclusions, including AMJ Environment `AMJ_ThinSoil` without a dedicated patch;
 6. use Construction work with initial values 500 dig / 300 fill and canal `pathCost=10`;
 7. implement per-map event-driven connectivity state;
-8. render supplied vs dry canal state;
-9. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
+8. represent canal state with `AMJW_DugCanalDry` / `AMJW_DugCanalWet` TerrainDefs and switch only on invalidation/load correction;
+9. add Architect -> Orders line-drag Dig/Fill designators and Construction jobs;
+10. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
+Implementation identity fixed by design:
+- `Ancient & Medieval Japan - Waterworks`
+- packageId `sucro.ancientmedievaljapan.waterworks`
+- assembly `AncientMedievalJapanWaterworks`
+- namespace `AncientMedievalJapan.Waterworks`
+- Def prefix `AMJW_`
+- no DLC or external-mod hard dependency; avoid Harmony unless proven necessary.
+
 
 
 ### FUTURE-MOAT-001 — AI-safe dry moat / water moat extension
