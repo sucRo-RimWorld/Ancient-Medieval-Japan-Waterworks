@@ -49,12 +49,10 @@ Waterworks owns the natural-surface-water / gravity-open-canal layer:
 
 - natural-water intake;
 - dug open canals;
-- culverts / covered crossings;
-- manual water gates;
 - canal-network state and visualization;
-- ordinary-water / hot-spring-water source classification;
-- a minimal optional query surface for consumer mods;
-- hot-spring conveyance infrastructure when a compatible source exists.
+- canal crossings/covers only where they are needed to preserve the open-canal system through settlement construction;
+- optional future water-control points such as manual gates when demonstrated by gameplay need;
+- a minimal optional query surface for consumer mods when a real integration needs it.
 
 Waterworks does **not** own:
 
@@ -70,6 +68,8 @@ Waterworks does **not** own:
 - erosion / sediment / maintenance simulation.
 
 Rice Cultivation and Hot Springs are separate standalone mods. Keep integration optional.
+
+Waterworks must **not** grow into a general bridge/foundation pack. Ordinary crossings use the Vanilla bridge. If a heavier crossing/cover is needed so structures can remain above an intact canal, Waterworks may own one canal-specific reinforced cover/foundation rather than requiring a large external bridge mod. Generic bridge families and unrelated foundations remain outside scope.
 
 ## DBH compatibility rule
 
