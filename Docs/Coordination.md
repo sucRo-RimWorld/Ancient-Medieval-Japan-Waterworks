@@ -30,8 +30,9 @@ This file is for handoff, state and blockers only. Confirmed design belongs in `
 Result:
 - `AGENTS.md` now owns Waterworks repository workflow and permanent boundaries.
 - `Docs/Design.md` is the authoritative Waterworks design.
-- The prior temporary design in `Ancient-Medieval-Japan-Grains/Docs/WaterworksDesign.md` must be reduced to a migration pointer so there is no competing source of truth.
-- Grains must retain only the Waterworks ownership / compatibility summary.
+- The prior temporary design in `Ancient-Medieval-Japan-Grains/Docs/WaterworksDesign.md` has been reduced to a migration pointer (`fe4f52759f459472107a31d9e220a076e7e06139`).
+- Grains `Docs/Design.md` now points to this repository as the authoritative Waterworks source (`0afa9be3b142ac8a7b77905ae5c63aa726ec57f7`).
+- Grains coordination handoff is closed (`418a505c1a01fcdc1443e72dbfbb5a19f9978ea5`).
 
 Transferred v1 baseline:
 - natural fresh-water intake;
@@ -63,7 +64,7 @@ Historical source commits in Grains:
 ### PROTO-WATERWORKS-001 — minimal independent canal prototype
 
 **Owner:** Waterworks implementation  
-**Status:** OPEN
+**Status:** OPEN — repository handoff complete; implementation not started
 
 Scope:
 1. choose final packageId / DefName prefix before public implementation;
