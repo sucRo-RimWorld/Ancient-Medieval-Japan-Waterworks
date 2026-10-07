@@ -84,4 +84,4 @@ Confirmed boundary:
 
 **Durable source:** `Docs/Design.md`, scope correction commit `e9e529e01c4f4a83fa612bec0bad58875ba858ad`.
 
-**Next action:** none in Waterworks. Revisit only in the future defensive-earthworks / fortification workstream if that mod is created.
+**Next action:** none in Waterworks. The unowned candidate is now tracked in `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/DefensiveEarthworksCandidate.md`; revisit there until an owning repository exists.
