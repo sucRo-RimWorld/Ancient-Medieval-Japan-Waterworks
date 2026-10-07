@@ -237,7 +237,6 @@ The dig action has no material cost. Fill-in also has no material refund/cost; i
 
 ### 6.3 Original terrain
 
-### 6.3 Original terrain
 
 When a canal is excavated, record the natural terrain it replaced.
 
@@ -335,29 +334,65 @@ Waterworks v1 does not simulate:
 - contamination;
 - rainfall-driven flow changes.
 
-## 8. Wet / dry presentation
+## 8. Wet / dry terrain states
 
 Normal map view must communicate the state without requiring a diagnostic overlay.
 
-### Dry canal
+Use **two Waterworks TerrainDefs representing one excavated canal state machine**:
 
-An unsupplied canal should visibly read as an excavated shallow ditch.
+- `AMJW_DugCanalDry` — excavated but unsupplied ditch;
+- `AMJW_DugCanalWet` — the same ditch while its connected component is supplied.
 
-### Wet canal
+Both are recognized as canal cells by Waterworks and both preserve the same recorded original terrain for fill-in.
 
-A supplied canal should visibly read as the same ditch containing water.
+### 8.1 State transitions
 
-Preferred implementation shape:
+- Digging completes as a canal cell, then the network recalculates.
+- If its connected component is supplied, all canal cells in that component use the wet TerrainDef.
+- If supply is broken, affected cells switch to the dry TerrainDef.
+- Reconnection switches them back to wet.
+- Terrain switching occurs only on topology/source invalidation or load correction, never as a per-tick fluid simulation.
+- Foundation/bridge layers above the canal remain untouched when the underlying canal switches wet/dry.
 
-- keep one persistent dug-canal TerrainDef for the excavation;
-- render supplied water as a Waterworks visual layer / overlay;
-- do not repeatedly swap TerrainDefs merely because supply changed.
+This is preferred over a custom water-render overlay because it keeps v1 rendering and common terrain behavior data-driven and easier to test.
 
-The exact renderer is an implementation decision and may change after a prototype.
+### 8.2 Shared movement/support behavior
 
-Selecting/inspecting a canal should expose a simple status such as **Supplied / Dry** (localized appropriately) so the player can diagnose one cell without a dedicated network overlay.
+Wet and dry canal TerrainDefs must share:
 
-A dedicated network overlay is optional and should only be added if normal visuals and inspection text prove insufficient.
+- `pathCost = 10`;
+- `Bridgeable`;
+- no normal heavy/medium construction support from the bare canal itself;
+- no fertility;
+- no HP.
+
+The bridge/foundation layer provides normal crossing/support behavior separately.
+
+### 8.3 Wet-only sensory behavior
+
+The wet TerrainDef should reproduce only the obvious shallow-water consequences that improve readability:
+
+- splash effects when traversed if supported cleanly by TerrainDef fields;
+- extinguish fire on the cell if supported cleanly;
+- soaking-wet traversal thought if this can be inherited without making the canal a generic Vanilla water source.
+
+Do **not** tag the canal as a generic natural `Water` or `River` source merely to obtain those effects. Other mods must not accidentally interpret an artificial canal as a lake, river or fishing water source.
+
+If a Vanilla water side-effect cannot be obtained without broad semantic tags or invasive patches, omit that side-effect from v1 rather than expanding scope.
+
+### 8.4 Dry state
+
+The dry TerrainDef reads as a shallow excavated ditch.
+
+- it does not extinguish fire;
+- it does not create soaking-wet effects;
+- it still has the same movement penalty as the wet canal.
+
+### 8.5 Inspection
+
+Selecting/inspecting a canal should expose a simple status such as **Supplied / Dry** (localized appropriately) so the player can diagnose one cell.
+
+A dedicated network overlay remains optional and should only be added if the ordinary terrain visuals and inspection text prove insufficient.
 
 ## 9. Runtime architecture
 
@@ -370,6 +405,8 @@ A per-map Waterworks component may own:
 - known canal cells / connectivity cache;
 - supplied / unsupplied component results;
 - recorded original terrain for restoration.
+
+The current dry/wet TerrainDef is **derived presentation state**, not the authoritative source of supply truth. After load, rebuild connectivity/source results and correct any canal TerrainDef whose saved visual state disagrees with the rebuilt network.
 
 Derived component IDs and wet/dry caches should be rebuilt after load rather than treated as permanent authoritative save data.
 
@@ -385,7 +422,46 @@ Do not scan every canal cell every tick.
 
 Because another mod may alter source terrain without notifying Waterworks, a low-frequency source-validity check is acceptable if implementation requires one.
 
-## 10. Integration philosophy
+## 10. Player interaction / UX
+
+### 10.1 Architect placement
+
+Place the two earthwork commands in **Architect -> Orders** rather than creating a dedicated Waterworks architect tab for v1.
+
+Commands:
+
+- **Dig canal / 水路を掘る**
+- **Fill canal / 水路を埋め戻す**
+
+A two-command feature does not justify its own category.
+
+### 10.2 Drag behavior
+
+The dig designator should behave like a one-cell-wide construction line:
+
+- single-cell click is allowed;
+- click-drag creates a cardinal straight segment;
+- corners are created by placing another segment;
+- do not create diagonal-only disconnected chains from a diagonal drag;
+- do not provide a rectangle/area tool that silently creates broad artificial ponds in v1.
+
+Fill canal follows the same single-cell / straight-segment interaction over existing canal cells.
+
+### 10.3 Designation lifecycle
+
+- A designation is only a work order; terrain does not change until work finishes.
+- Canceling an unfinished designation leaves terrain unchanged.
+- Completed canal cells recalculate the affected network immediately.
+- Fill designations are rejected while a bridge/foundation or supported structure still occupies the canal cell.
+- Re-designating an already matching state should be rejected/no-op rather than stacking duplicate work.
+
+### 10.4 Work prerequisites
+
+Ordinary removable plants that prevent the work should be handled through normal construction-style prerequisite clearing where practical.
+
+Waterworks should not add a new plant-cutting job, hauling stage or material delivery requirement for basic excavation.
+
+## 11. Integration philosophy
 
 Waterworks core must be complete without any integration, even though its standalone economic value is intentionally small.
 
@@ -429,7 +505,7 @@ Dry moats, water moats, bridges, swimming/climbing traversal, raid pathfinding a
 
 Such a mod may consume Waterworks supply state to fill a water moat. Waterworks owns only water delivery, not defense behavior.
 
-## 11. DBH / DBH for Medieval prior-art finding
+## 12. DBH / DBH for Medieval prior-art finding
 
 The supplied DBH for Medieval 1.6-era assets were audited on 2026-10-07.
 
@@ -444,7 +520,7 @@ Therefore DBH for Medieval does not directly replace Waterworks' narrow purpose 
 
 Waterworks must nevertheless avoid reimplementing DBH's pumps, tanks, pipes or water consumers.
 
-## 12. Existing-mod / VE audit status
+## 13. Existing-mod / VE audit status
 
 The AMJ project-wide prior-art audit currently classifies Waterworks as **independent implementation continued** because the desired natural-intake / visible-open-canal responsibility is not satisfied by the audited broad medieval packages without importing unrelated systems.
 
@@ -452,7 +528,7 @@ Vanilla Factions Expanded - Medieval 2 remains a broad medieval faction/technolo
 
 Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow core.
 
-## 13. Prototype acceptance gate
+## 14. Prototype acceptance gate
 
 The first vertical prototype is successful when automated/runtime checks demonstrate:
 
@@ -489,7 +565,7 @@ Visual manual checks are limited to:
 
 Do not block this prototype on DBH, gates, culverts, hot springs, stone lining or public API work.
 
-## 14. Post-core decision gates
+## 15. Post-core decision gates
 
 After the minimal core works in play, add features only in response to demonstrated need.
 
@@ -503,7 +579,7 @@ Candidate order:
 
 None of these is automatically part of v1 merely because it is technically feasible.
 
-## 15. Player-facing terminology
+## 16. Player-facing terminology
 
 Baseline terminology:
 
@@ -512,12 +588,52 @@ Baseline terminology:
 
 Exact localization may be refined for natural UI phrasing, but avoid engineering-heavy words such as pressure, flow rate or pipe network for the core canal.
 
-## 16. Open implementation values
+## 17. Repository / package identity
+
+Baseline implementation identity:
+
+- display name: **Ancient & Medieval Japan - Waterworks**
+- packageId: **`sucro.ancientmedievaljapan.waterworks`**
+- C# assembly: **`AncientMedievalJapanWaterworks`**
+- root namespace: **`AncientMedievalJapan.Waterworks`**
+- DefName prefix: **`AMJW_`**
+- RimWorld target: **1.6**
+- DLC dependency: **none**
+- DBH / MO / AMJ Environment dependency: **none**
+
+Harmony should not be added as a dependency unless the prototype proves a required behavior cannot be implemented cleanly through normal Def/Job/MapComponent APIs.
+
+## 18. Save-compatibility target
+
+Initial support target:
+
+- **Adding Waterworks to an existing RimWorld 1.6 save:** should be supported once runtime-tested. Existing terrain is untouched until the player designates canal work.
+- **Removing Waterworks from a save that has ever used Waterworks terrain/state:** not supported by default.
+
+Before public release, test adding to an existing save explicitly. Do not advertise safe removal merely because all visible canals were filled; custom map/save state may still make removal unsafe.
+
+## 19. First implementation slice
+
+The first implementation must stop at:
+
+1. About/load metadata and package identity;
+2. dry/wet canal TerrainDefs;
+3. Dig/Fill designations and Construction jobs;
+4. source validation including moving water and 9-cell standing-water rule;
+5. event-driven network recalculation;
+6. wet/dry TerrainDef switching;
+7. Vanilla bridge coexistence;
+8. save/load rebuild;
+9. automated/runtime ERROR gate.
+
+Do **not** add DBH integration, gates, reinforced covers, hot-spring semantics, public API, special overlays or consumer gameplay until this slice is green.
+
+## 20. Open implementation values
 
 Still intentionally unfixed:
 
 - whether the 9-cell minimum standing-water threshold needs balance tuning after real maps are sampled;
-- exact TerrainDef / rendering implementation;
+- exact textures / edge presentation for dry and wet canal TerrainDefs;
 - safe fallback when original terrain cannot be restored;
 - first consumer integration and its API shape;
 - exact material/work/support rules for the future reinforced canal cover;
