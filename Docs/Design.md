@@ -72,7 +72,21 @@ This represents a simple cut / intake at the canal mouth without forcing the pla
 
 A dedicated intake structure, weir, headgate or improved intake may be reconsidered later only if it creates a real control, balance or visual benefit.
 
-### 3.3 What is explicitly not required for v1
+### 3.3 v1 invariants
+
+The following are deliberate simplifications, not missing simulation:
+
+- natural fresh-water sources do not deplete because a canal touches them;
+- canal length does not reduce supply;
+- local map elevation / slope is not simulated;
+- water does not have to be assigned a flow direction;
+- a connected canal cannot be manually shut off in v1 except by changing topology (for example filling a connecting cell);
+- wet and dry canals use the same baseline traversal rules in v1;
+- no dedicated research is required: basic canal digging is available from the beginning of normal play.
+
+These invariants may change only when a concrete consumer or gameplay problem demonstrates that the extra simulation creates a useful decision.
+
+### 3.4 What is explicitly not required for v1
 
 The following are deferred until a concrete use case requires them:
 
@@ -104,6 +118,8 @@ Candidate sources include:
 
 Ocean / salt water is not a valid v1 source.
 
+A source is treated as effectively continuous for the binary v1 model. Connecting a canal does not lower, consume or dry the river/pond terrain.
+
 The exact RimWorld 1.6 TerrainDef whitelist must be audited immediately before implementation. Do not infer eligibility from DefName substrings.
 
 ### 4.2 Source registration
@@ -125,6 +141,8 @@ Waterworks v1 uses connectivity, not fluid simulation.
 - There is no required flow direction.
 - There is no per-cell water quantity, pressure, flow rate, velocity, elevation, head, slope, consumption, evaporation, leakage or attenuation.
 - A supplied canal does not become less supplied because it is long.
+- Supply ignores apparent uphill/downhill direction on the local map; RimWorld has no continuous local elevation field suitable for historical gravity-flow simulation.
+- The v1 abstraction is therefore connectivity to natural water, not a claim that every drawn route would be hydraulically possible in reality.
 - Recalculate after canal/source topology changes rather than simulating water every tick.
 
 The network deliberately answers one question:
@@ -141,11 +159,12 @@ The player uses a `Dig canal` designation.
 
 Baseline rules:
 
+- available from the start without a Waterworks research project;
 - requires work;
 - requires no construction material;
 - produces a one-cell-wide canal terrain;
 - does not behave like placing a wall or pipe building;
-- should be available early without a dedicated Waterworks research chain.
+- should reuse an existing sensible work category rather than add a new Waterworks-specific work type solely for ditch digging.
 
 For the first implementation, restrict excavation to uncomplicated surface cells:
 
@@ -153,6 +172,8 @@ For the first implementation, restrict excavation to uncomplicated surface cells
 - no existing constructed floor that Waterworks would have to destroy implicitly;
 - no natural water cell itself;
 - no impassable natural rock / mountain tunneling.
+
+Ordinary removable vegetation may be cleared through normal prerequisite work if practical; Waterworks should not create a separate vegetation-removal system.
 
 This keeps the initial tool predictable. Crossings and covered channels can be added later if actual play demonstrates the need.
 
@@ -185,7 +206,7 @@ The dug canal is a shallow, walkable ditch.
 - The canal terrain itself has no HP and cannot be destroyed by weapon attacks.
 - Removal is an earthwork action: fill it in.
 
-Wet vs dry state does not change the logical path category in v1 unless testing demonstrates a clear gameplay reason.
+Wet vs dry state uses the same initial path cost in v1. Do not create two movement-balance models until playtesting shows that doing so creates a useful choice.
 
 Waterworks v1 does not simulate:
 
@@ -218,6 +239,8 @@ Preferred implementation shape:
 - do not repeatedly swap TerrainDefs merely because supply changed.
 
 The exact renderer is an implementation decision and may change after a prototype.
+
+Selecting/inspecting a canal should expose a simple status such as **Supplied / Dry** (localized appropriately) so the player can diagnose one cell without a dedicated network overlay.
 
 A dedicated network overlay is optional and should only be added if normal visuals and inspection text prove insufficient.
 
@@ -351,7 +374,16 @@ Candidate order:
 
 None of these is automatically part of v1 merely because it is technically feasible.
 
-## 15. Open implementation values
+## 15. Player-facing terminology
+
+Baseline terminology:
+
+- English: **Dig canal** / **Fill canal** / **Dug canal** / **Supplied** / **Dry**
+- Japanese: **水路を掘る** / **水路を埋め戻す** / **素掘り水路** / **通水中** / **乾燥**
+
+Exact localization may be refined for natural UI phrasing, but avoid engineering-heavy words such as pressure, flow rate or pipe network for the core canal.
+
+## 16. Open implementation values
 
 Still intentionally unfixed:
 
