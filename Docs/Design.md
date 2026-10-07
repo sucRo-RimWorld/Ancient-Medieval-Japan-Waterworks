@@ -126,6 +126,8 @@ Standing water is valid only when it belongs to a contiguous orthogonally-connec
 
 The 9-cell minimum is a gameplay abstraction, not a hydrology simulation. Its purpose is to prevent a one-cell puddle from acting as an unlimited permanent source while still allowing small ponds.
 
+Implementation should use a **bounded flood-fill**: starting from the candidate standing-water cell, stop as soon as 9 eligible connected cells are found. Do not enumerate an entire lake merely to prove that it is large enough. Cache/reuse the result where practical until source terrain invalidates it.
+
 **Explicitly invalid as ordinary freshwater sources**
 - `WaterOceanShallow`
 - `WaterOceanDeep`
@@ -461,6 +463,21 @@ Ordinary removable plants that prevent the work should be handled through normal
 
 Waterworks should not add a new plant-cutting job, hauling stage or material delivery requirement for basic excavation.
 
+
+### 10.5 Feedback for invalid placement
+
+The designator should explain the first relevant rejection reason rather than silently failing. Minimum user-facing cases:
+
+- terrain cannot be dug;
+- existing floor/foundation must be removed first;
+- road terrain cannot be destroyed by this command;
+- edifice blocks excavation;
+- target is already a canal;
+- Fill canal requires an existing Waterworks canal;
+- bridge/foundation/structure must be removed before filling.
+
+Do not expose internal graph or Def terminology in these messages.
+
 ## 11. Integration philosophy
 
 Waterworks core must be complete without any integration, even though its standalone economic value is intentionally small.
@@ -614,7 +631,7 @@ Before public release, test adding to an existing save explicitly. Do not advert
 
 ## 19. First implementation slice
 
-The first implementation must stop at:
+This design phase is sufficiently specified for a prototype. The first implementation must stop at:
 
 1. About/load metadata and package identity;
 2. dry/wet canal TerrainDefs;
