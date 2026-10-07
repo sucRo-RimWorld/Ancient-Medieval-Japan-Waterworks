@@ -122,7 +122,25 @@ A source is treated as effectively continuous for the binary v1 model. Connectin
 
 The exact RimWorld 1.6 TerrainDef whitelist must be audited immediately before implementation. Do not infer eligibility from DefName substrings.
 
-### 4.2 Source registration
+### 4.2 Wetland terrain treatment
+
+Wet ground is not automatically a Waterworks source.
+
+For v1:
+
+- **Marshy soil / wet growable soil is not a water source.** It represents saturated ground rather than an open water body.
+- **Marsh is also not a water source by default.** Vanilla treats it as a shallow-water-affordance wet terrain, but allowing every marsh patch to supply an unlimited binary canal network would bypass the intended need to reach a river, stream, pond or lake.
+- Marshy soil may be excavated into a dug canal when it otherwise satisfies the ordinary excavation rules. Filling the canal should restore the recorded marshy-soil terrain when valid.
+- Marsh itself is not converted into a dug canal in the initial implementation. It is already a saturated wet terrain, and converting it would blur the distinction between an existing wetland and a deliberately excavated channel.
+- Mud and other wet-looking terrains are not promoted to water sources merely because they are wet or bridgeable. Source eligibility remains an explicit whitelist decision.
+
+This keeps the v1 rule legible:
+
+> open natural fresh water supplies canals; merely wet ground does not.
+
+If a later biome/environment integration needs a real spring, seep, wetland outlet or other source object, register that explicit source rather than treating an entire wetland terrain type as infinite water.
+
+### 4.3 Source registration
 
 Keep source recognition extensible, but do not build a large framework before it is needed.
 
@@ -344,6 +362,9 @@ The first vertical prototype is successful when automated/runtime checks demonst
 - a canal disconnected from natural fresh water is dry;
 - a canal orthogonally connected to a valid river/pond source is wet;
 - diagonal-only source contact does not supply the canal;
+- marshy soil does not supply the canal;
+- marsh does not supply the canal;
+- marshy-soil excavation/restoration works in supported cases;
 - a connected branch becomes wet through the same component;
 - breaking the connection dries the disconnected component;
 - reconnecting it restores wet state;
