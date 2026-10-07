@@ -76,3 +76,22 @@ Scope:
 7. automate orthogonal connectivity, no-diagonal connectivity, valid/invalid intake and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
+
+
+### FUTURE-MOAT-001 — AI-safe dry moat / water moat extension
+
+**Owner:** future Waterworks defense extension  
+**Status:** OPEN — post-v1 candidate; design constraint recorded, implementation not started
+
+Confirmed design direction:
+- Do not model a moat as an MO-style destructible wall-like building.
+- Dry moat is earthwork terrain with no HP; removal requires earthwork, not weapon damage.
+- Water moat is the supplied state of the same defensive earthwork and drains back to dry moat.
+- Do not use an unconditional Vanilla `Impassable` terrain ring: standard raider targeting and breach behavior can turn unattackable impassable terrain into an AI-hard-lock / exploit.
+- Preserve player-facing “not ordinary walking” semantics through a costly special traversal fallback. Bridges/causeways/ramps should be preferred; dry-moat traversal represents descent/climb, water-moat traversal represents wading/swimming.
+- Do not rely on Odyssey recreational swimming as the general combat traversal implementation.
+- Before release, test standard raids, no-crossing fallback, sappers/breachers, manhunters/animals/mechanoids, colonist route choice, repath loops and pathfinder performance.
+
+**Durable source:** `Docs/Design.md`, commit `d87d434b45e37ecd39d36a8f619c6340e9265c49`.
+
+**Next action:** none before Waterworks v1 core is proven. Revisit only after intake/open-canal/gate/culvert baseline is stable.
