@@ -60,16 +60,16 @@ Historical source commits in Grains:
 **Status:** OPEN — repository handoff complete; implementation not started
 
 Scope:
-1. choose final packageId / DefName prefix before public implementation;
-2. add minimal RimWorld 1.6 About/load structure;
+1. use the fixed package/Def identity from `Docs/Design.md` and add the minimal RimWorld 1.6 About/load structure;
 3. implement dug-canal TerrainDef plus Dig/Fill canal semantics;
 4. implement the audited Vanilla 1.6 source rules: moving freshwater always valid; standing `WaterShallow`/`WaterDeep` requires a 9-cell connected body; ocean/marsh/wet soil/mud invalid;
 5. implement Diggable-based excavation eligibility with Ice/water/road/artificial-floor exclusions, including AMJ Environment `AMJ_ThinSoil` without a dedicated patch;
 6. use Construction work with initial values 500 dig / 300 fill and canal `pathCost=10`;
 7. implement per-map event-driven connectivity state;
 8. represent canal state with `AMJW_DugCanalDry` / `AMJW_DugCanalWet` TerrainDefs and switch only on invalidation/load correction;
-9. add Architect -> Orders line-drag Dig/Fill designators and Construction jobs;
-10. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
+9. add Architect -> Orders line-drag Dig/Fill designators, Construction jobs and clear invalid-placement feedback;
+10. implement bounded standing-water validation that stops once 9 eligible cells are found;
+11. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
 Implementation identity fixed by design:
@@ -114,3 +114,24 @@ Confirmed direction:
 **Durable sources:** `AGENTS.md` commit `ac80fee83508d3c0994cff260cf62a00bb9e61a2`; `Docs/Design.md` commit `d00df5349b8593361265b34e491c5d06df0818e3`.
 
 **Next action:** none before the minimal direct-source canal prototype is green. When heavy-structure crossings become necessary, audit current RimWorld 1.6 foundation/support affordances and prototype only this one canal-specific cover.
+
+
+### DES-V1-BASELINE-001 — minimal canal v1 design closure
+
+**Requested by:** author (2026-10-07 JST)  
+**Owner:** Waterworks  
+**Status:** DONE — design baseline closed; prototype implementation may begin
+
+Closed baseline:
+- explicit RimWorld 1.6 natural-water source rules, including ocean/wetland exclusion and 9-cell standing-water threshold;
+- Diggable-based excavation compatibility with explicit exclusions;
+- 500 dig / 300 fill Construction work and `pathCost=10`;
+- dry/wet canal TerrainDefs instead of a custom per-cell fluid/render simulation;
+- Vanilla bridge reuse for crossings/covers;
+- Architect -> Orders line-drag Dig/Fill interaction;
+- save/load rebuild and add-to-existing-save test target;
+- no DLC or external hard dependency; no Harmony unless implementation proves it necessary.
+
+**Durable source:** `Docs/Design.md`, commits `b473f0a32de1cdd980e9beda829936fa9d298545`, `cfd6469fe22ebcc2462881d9b7f26065834a2113`, `ae41992e9822abafd01804066b68a1dd79ad8225`.
+
+**Next action:** implement `PROTO-WATERWORKS-001` without adding deferred consumers or control systems.
