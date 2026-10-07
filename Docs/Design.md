@@ -110,18 +110,34 @@ Do not implement these merely because they were present in earlier drafts.
 
 v1 has only one source class: **ordinary fresh natural water**.
 
-Candidate sources include:
+The RimWorld 1.6 source audit establishes these Base-game candidates:
 
-- rivers;
-- streams;
-- ponds / lakes;
-- shallow fresh natural water.
+**Always-valid moving freshwater**
+- `WaterMovingShallow`
+- `WaterMovingChestDeep`
 
-Ocean / salt water is not a valid v1 source.
+These represent river/creek water and are valid regardless of the size of the local moving-water component.
 
-A source is treated as effectively continuous for the binary v1 model. Connecting a canal does not lower, consume or dry the river/pond terrain.
+**Standing freshwater candidates**
+- `WaterShallow`
+- `WaterDeep`
 
-The exact RimWorld 1.6 TerrainDef whitelist must be audited immediately before implementation. Do not infer eligibility from DefName substrings.
+Standing water is valid only when it belongs to a contiguous orthogonally-connected standing-freshwater body of **at least 9 cells**. Count `WaterShallow` and `WaterDeep` together for this test.
+
+The 9-cell minimum is a gameplay abstraction, not a hydrology simulation. Its purpose is to prevent a one-cell puddle from acting as an unlimited permanent source while still allowing small ponds.
+
+**Explicitly invalid as ordinary freshwater sources**
+- `WaterOceanShallow`
+- `WaterOceanDeep`
+- `Marsh`
+- `MarshyTerrain`
+- `Mud`
+
+DLC or mod-added water terrains are not automatically valid. Add them deliberately through compatibility once their semantics are known.
+
+A valid source is treated as effectively continuous for the binary v1 model. Connecting a canal does not lower, consume or dry the river/pond terrain.
+
+Source checks must use explicit Def identity / registered source semantics, never substring matching such as "contains Water".
 
 ### 4.2 Wetland terrain treatment
 
@@ -130,7 +146,7 @@ Wet ground is not automatically a Waterworks source.
 For v1:
 
 - **Marshy soil / wet growable soil is not a water source.** It represents saturated ground rather than an open water body.
-- **Marsh is also not a water source by default.** Vanilla treats it as a shallow-water-affordance wet terrain, but allowing every marsh patch to supply an unlimited binary canal network would bypass the intended need to reach a river, stream, pond or lake.
+- **Marsh is not a water source.** Although Vanilla gives it shallow-water/bridge behavior, it represents wetland terrain rather than the open freshwater source Waterworks requires.
 - Marshy soil may be excavated into a dug canal when it otherwise satisfies the ordinary excavation rules. Filling the canal should restore the recorded marshy-soil terrain when valid.
 - Marsh itself is not converted into a dug canal in the initial implementation. It is already a saturated wet terrain, and converting it would blur the distinction between an existing wetland and a deliberately excavated channel.
 - Mud and other wet-looking terrains are not promoted to water sources merely because they are wet or bridgeable. Source eligibility remains an explicit whitelist decision.
@@ -145,7 +161,9 @@ If a later biome/environment integration needs a real spring, seep, wetland outl
 
 Keep source recognition extensible, but do not build a large framework before it is needed.
 
-The initial implementation may use an explicit internal whitelist of Vanilla 1.6 source terrains. Add a stable external registration mechanism only when the first optional source-providing integration actually needs it.
+The initial implementation uses the explicit Vanilla 1.6 source rules above. Add a stable external registration mechanism only when the first optional source-providing integration actually needs it.
+
+Source-region size checks apply only to standing-water sources unless an integration explicitly defines otherwise. A bridge/foundation over an otherwise valid source cell does not erase the underlying water source.
 
 ## 5. Network semantics
 
@@ -185,18 +203,41 @@ Baseline rules:
 - does not behave like placing a wall or pipe building;
 - should reuse an existing sensible work category rather than add a new Waterworks-specific work type solely for ditch digging.
 
-For the first implementation, restrict excavation to uncomplicated surface cells:
+For the first implementation, the terrain must satisfy all of the following:
 
-- no edifice occupying the cell;
-- no existing constructed floor that Waterworks would have to destroy implicitly;
-- no natural water cell itself;
-- no impassable natural rock / mountain tunneling.
+- the underlying natural TerrainDef is `Diggable`;
+- it is not water/wetland terrain itself;
+- it is not `Ice`;
+- it is not an artificial floor/foundation;
+- it is not a road terrain that Waterworks would silently destroy;
+- no edifice occupies the cell;
+- it is not impassable natural rock / mountain tunneling.
+
+This property-based rule intentionally supports compatible natural soils without per-mod patches. For example, AMJ Environment's `AMJ_ThinSoil` already exposes `Diggable` and therefore qualifies automatically unless another exclusion applies.
+
+Expected Vanilla examples include soil, rich soil, stony soil/gravel, sand, soft sand, lichen-covered soil and marshy soil. Mud and Marsh do not qualify as ordinary excavation surfaces for v1.
 
 Ordinary removable vegetation may be cleared through normal prerequisite work if practical; Waterworks should not create a separate vegetation-removal system.
 
 This keeps the initial tool predictable. Crossings and covered channels can be added later if actual play demonstrates the need.
 
-### 6.2 Original terrain
+### 6.2 Work model
+
+Use **Construction** work for canal earthwork; do not add a Waterworks-specific work type.
+
+Initial balance values:
+
+- Dig canal: **500 work/ticks per cell**
+- Fill canal: **300 work/ticks per cell**
+- minimum Construction skill: **none**
+
+These are initial implementation values and may be tuned after automated timing/balance checks, but the design intent is fixed: a long canal should cost meaningful labor while remaining cheaper per cell than constructing a Vanilla wooden bridge.
+
+The dig action has no material cost. Fill-in also has no material refund/cost; it is earthwork, not resource conversion.
+
+### 6.3 Original terrain
+
+### 6.3 Original terrain
 
 When a canal is excavated, record the natural terrain it replaced.
 
@@ -204,7 +245,7 @@ The purpose is limited to safe fill-in restoration.
 
 Do not treat this as a general terrain-history system.
 
-### 6.3 Fill canal
+### 6.4 Fill canal
 
 The player may designate a canal cell for fill-in.
 
@@ -274,7 +315,9 @@ A true culvert / hidden underground network should be reconsidered only if this 
 - Pawns may cross it.
 - It has a meaningful movement penalty compared with ordinary ground.
 - It must not function as a road or movement shortcut.
-- Exact path cost is an implementation/balance value and should be compared with current Vanilla shallow-water terrain.
+- Initial `pathCost`: **10** for both wet and dry states.
+- This is intentionally milder than Vanilla shallow water and milder than a true defensive ditch; Waterworks canals are infrastructure, not a substitute moat.
+- Vanilla bridge/foundation covering the canal removes the underlying canal movement penalty in the normal Vanilla way.
 - The canal terrain itself has no HP and cannot be destroyed by weapon attacks.
 - Removal is an earthwork action: fill it in.
 
@@ -414,11 +457,17 @@ Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow
 The first vertical prototype is successful when automated/runtime checks demonstrate:
 
 - a canal disconnected from natural fresh water is dry;
-- a canal orthogonally connected to a valid river/pond source is wet;
+- a canal orthogonally connected to valid moving freshwater is wet;
+- a 9+ cell standing-freshwater body supplies a canal;
+- an 8-cell or smaller standing-freshwater body does not supply a canal;
+- `WaterOceanShallow` / `WaterOceanDeep` do not supply a canal;
 - diagonal-only source contact does not supply the canal;
 - marshy soil does not supply the canal;
 - marsh does not supply the canal;
+- Diggable eligible natural terrains accept excavation while Ice/water/road/artificial-floor cases are rejected;
+- AMJ Environment `AMJ_ThinSoil` qualifies through `Diggable` without a dedicated compatibility patch;
 - marshy-soil excavation/restoration works in supported cases;
+- dig/fill jobs use the intended Construction work amounts and no material cost;
 - Vanilla bridge placement is valid on dug-canal terrain;
 - bridge presence does not interrupt canal connectivity/supply;
 - canal fill is rejected while an overlying bridge/foundation remains;
@@ -467,9 +516,7 @@ Exact localization may be refined for natural UI phrasing, but avoid engineering
 
 Still intentionally unfixed:
 
-- exact Vanilla 1.6 source TerrainDef whitelist;
-- exact excavation and fill work;
-- exact canal movement penalty;
+- whether the 9-cell minimum standing-water threshold needs balance tuning after real maps are sampled;
 - exact TerrainDef / rendering implementation;
 - safe fallback when original terrain cannot be restored;
 - first consumer integration and its API shape;
