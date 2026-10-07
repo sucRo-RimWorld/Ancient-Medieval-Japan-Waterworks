@@ -135,3 +135,21 @@ Closed baseline:
 **Durable source:** `Docs/Design.md`, commits `b473f0a32de1cdd980e9beda829936fa9d298545`, `cfd6469fe22ebcc2462881d9b7f26065834a2113`, `ae41992e9822abafd01804066b68a1dd79ad8225`.
 
 **Next action:** implement `PROTO-WATERWORKS-001` without adding deferred consumers or control systems.
+
+
+### COMPAT-MOJ-OWNERSHIP-001 — Japanization / Waterworks boundary
+
+**Owner:** Waterworks / Project Japanization architecture  
+**Status:** DONE — current Waterworks v1 unchanged
+
+Project-level Japanization architecture confirms:
+
+- MO Watermill remains independent of Waterworks;
+- Japanization does not make a wet Waterworks canal a Watermill power prerequisite merely because both involve water;
+- Waterworks continues to own no water-wheel/mechanical-power system;
+- no Japanization/Waterworks adapter is required for the current v1 core;
+- any future watermill/canal interaction must be justified by a real gameplay consumer after Waterworks core is stable.
+
+**Durable source:** `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/MedievalOverhaulJapanizationIntegrationMatrix.md`, commit `5483cc42744ed2652bf7599272c00225668d9963`.
+
+**Next action:** none.
