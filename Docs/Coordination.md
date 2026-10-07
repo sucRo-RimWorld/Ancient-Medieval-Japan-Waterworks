@@ -34,17 +34,10 @@ Result:
 - Grains `Docs/Design.md` now points to this repository as the authoritative Waterworks source (`0afa9be3b142ac8a7b77905ae5c63aa726ec57f7`).
 - Grains coordination handoff is closed (`418a505c1a01fcdc1443e72dbfbb5a19f9978ea5`).
 
-Transferred v1 baseline:
-- natural fresh-water intake;
-- visible dug open canals;
-- binary supplied / unsupplied four-direction network;
-- T / cross automatic branching;
-- manual gate cuts connectivity;
-- short culverts for built crossings;
-- ordinary vs hot-spring source classification;
-- DBH optional compatibility without using PipeNet internally;
-- Rice Cultivation and Hot Springs remain separate optional consumers;
-- no flow/pressure/volume simulation, generic irrigation, thirst/hygiene, flood control, erosion or water power in v1.
+Initial transferred draft (historical; superseded by current `Docs/Design.md`):
+- the migration originally included a dedicated intake building, gate, culvert and source classes in v1;
+- the author later narrowed v1 to the direct natural-water canal core in commit `51f43ec6d660bd3c85927951dfe06ce569ac967f`;
+- current v1 no longer requires a separate intake building, gate, culvert, hot-spring classification, DBH adapter or public integration API.
 
 Historical source commits in Grains:
 - ownership split: `f594c340fad0ee067e7ce07778e68856822402fb`
@@ -59,7 +52,7 @@ Historical source commits in Grains:
 - implementation architecture: `770f6b8aeef80d2c1918ef0e853f105fa7fceded`
 - DBH water-only compatibility profile: `97e91725edbac96bfe63056afe9be3bee518376d`
 
-**Next action:** implement the smallest vertical prototype only: intake -> dug canal -> wet/dry network state and rendering. After that passes automated tests, add manual gate, then culvert. DBH and Hot Springs adapters come after the independent core is proven.
+**Next action:** implement only the minimal direct-source vertical slice: dig canal -> orthogonal adjacency to valid river/pond terrain -> wet/dry connected-component state -> fill canal. Do not pre-commit to gates, culverts or adapters; add them later only if play or a real consumer demonstrates a need.
 
 ### PROTO-WATERWORKS-001 — minimal independent canal prototype
 
@@ -69,18 +62,19 @@ Historical source commits in Grains:
 Scope:
 1. choose final packageId / DefName prefix before public implementation;
 2. add minimal RimWorld 1.6 About/load structure;
-3. implement dug-canal TerrainDef and excavation/fill semantics;
-4. implement 1x1 natural-water intake;
-5. implement per-map event-driven connectivity cache;
-6. render supplied vs dry canal state;
-7. automate orthogonal connectivity, no-diagonal connectivity, valid/invalid intake and runtime ERROR=0 checks.
+3. implement dug-canal TerrainDef plus Dig/Fill canal semantics;
+4. audit and define the explicit Vanilla 1.6 fresh-natural-water TerrainDef whitelist;
+5. supply a canal component directly when any canal cell is orthogonally adjacent to a valid natural-water cell;
+6. implement per-map event-driven connectivity state;
+7. render supplied vs dry canal state;
+8. automate direct-source adjacency, orthogonal connectivity, diagonal rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
 
 
 ### FUTURE-MOAT-001 — AI-safe dry moat / water moat extension
 
-**Owner:** future Waterworks defense extension  
+**Owner:** future defensive-earthworks / fortification workstream  
 **Status:** ARCHIVED — responsibility moved outside Waterworks; retain only optional water-supply integration boundary
 
 Confirmed boundary:
