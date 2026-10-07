@@ -9,6 +9,10 @@ Before starting work in this repository:
 3. Read the relevant formal source of truth, beginning with `Docs/Design.md`.
 4. Check OPEN / IN PROGRESS coordination items before changing design or implementation.
 
+## Unowned idea staging
+
+When a new AMJ idea may become a separate Mod but does not yet have an owning repository, **record its durable concept, research and roadmap state in `sucRo-RimWorld/Ancient-Medieval-Japan-Project`**. Do not let this runtime repository become the evolving design home merely because the idea was discovered here. Keep only a concise compatibility or ownership-boundary pointer when relevant. Once a dedicated owner repository exists, migrate confirmed design there.
+
 ## Source hierarchy
 
 Use repository sources rather than chat history as the primary source of truth:
