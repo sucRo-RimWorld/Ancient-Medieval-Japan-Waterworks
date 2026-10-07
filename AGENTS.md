@@ -81,6 +81,18 @@ Dubs Bad Hygiene is an official optional compatibility target, not a dependency.
 - If DBH Lite Mode removes the required water-management systems, disable only the adapter; Waterworks core must continue to function.
 - Re-audit current DBH 1.6 API / water semantics before implementing an adapter.
 
+## GitHub preflight / CI error hygiene (AMJ common)
+
+Follow the project-wide canonical rule in `sucRo-RimWorld/Ancient-Medieval-Japan-Project/AGENTS.md`.
+
+- Before a remote write that can trigger GitHub Actions, inspect the relevant workflow triggers, path filters, required checks, and repository-specific validation path.
+- Run deterministic syntax/structure/XML/packaging/script checks before pushing whenever the current environment can do so. Treat GitHub Actions as a regression gate, not the first parser/debug pass.
+- Do not use repeated commits, PR pushes, API writes, or Actions runs as an exploratory debugger, and do not publish obviously broken intermediate states merely to learn from CI.
+- If CI fails, stop stacking further remote changes on that workstream. Inspect the failing workflow/job/log, identify the concrete cause, validate the correction, then submit one focused fix instead of speculative variants.
+- Where appropriate, use narrow branch/path triggers and `concurrency` / `cancel-in-progress` to avoid duplicate or superseded runs. Do not disable meaningful checks merely to suppress notifications.
+- Documentation-only or coordination-only changes should not trigger heavy runtime/build workflows unless those files are part of the validated contract.
+- Before weakening or excluding a workflow trigger, verify that release, runtime, packaging, and regression coverage remain protected.
+
 ## Automated testing
 
 Prefer RimTest Redux and Pickle; minimize manual testing.
