@@ -476,87 +476,28 @@ When implementation begins, automate at least:
 
 Use RimTest Redux for graph / state logic where practical and Pickle for loaded-Def / map / placement / integration behavior.
 
-## 17. Future moat / castle-ditch extension
+## 17. Defensive-earthworks compatibility boundary
 
-This is a **post-v1 candidate**, not part of the initial canal prototype or v1 completion gate.
+Dry moats, water moats, bridges, causeways, climbing/swimming combat traversal, raid pathfinding and siege/breach behavior are **not owned by Waterworks**.
 
-The historical/gameplay goal is to represent dry moats and water-filled moats as terrain-scale defensive works rather than MO-style destructible wall-like objects.
+If a future AMJ defensive-earthworks / fortification mod implements those systems, Waterworks may provide only the water-supply side of the integration:
 
-### 17.1 Core distinction
+- expose whether a moat intake / fill point is connected to supplied Waterworks water;
+- allow the consumer mod to distinguish ordinary vs hot-spring-qualified supply if it has a use for that distinction;
+- allow Waterworks gates/topology to cut or restore supply to that consumer.
 
-- A dry moat is excavated terrain, not a building with hit points.
-- It is not removed by attacking it with weapons.
-- Removal or alteration should require earthwork such as filling, bridging, ramping or another explicit traversal solution.
-- A water moat is the same defensive earthwork supplied with water through Waterworks.
-- Draining the water should leave a dry moat rather than erase the excavation.
+The defensive mod owns:
 
-### 17.2 Enemy pathfinding constraint
+- dry-moat excavation;
+- water-moat terrain/state;
+- bridge / causeway / ramp behavior;
+- traversal rules;
+- swimming / climbing / combat penalties;
+- enemy pathfinding;
+- sapper / breacher interaction;
+- filling, draining and defensive balance.
 
-Do **not** implement a moat as an unconditional Vanilla-style `Impassable` terrain ring.
-
-RimWorld standard raiders prefer pathable targets and change behavior when no path exists; breachers primarily destroy impassable **buildings** such as walls. An unattackable impassable terrain ring can therefore become an absolute AI barrier rather than a strong but interactable defense.
-
-Player-facing semantics should be:
-
-> ordinary walking cannot simply cross a moat as normal ground, but capable pawns retain a costly special traversal fallback when no proper crossing exists.
-
-Implementation direction:
-
-- Bridges, causeways and prepared ramps are ordinary low-cost crossings and should be strongly preferred by pathfinding.
-- Dry-moat traversal, when allowed, should represent descent / climb rather than normal walking.
-- Water-moat traversal, when allowed, should represent wading / swimming rather than ordinary walking.
-- The pathfinder must see a finite fallback cost for pawns that are allowed to cross, so fully enclosing a base does not produce a no-path AI deadlock.
-- The fallback cost must be high enough that raiders prefer a reasonable bridge/causeway route but will still attempt a moat crossing if the alternative is effectively impossible.
-- Do not let the ordinary path-cost system alone define the entire experience; entering/crossing a moat should be able to apply a special traversal state, delay or combat disadvantage.
-- Pawns that cannot use the special traversal mode must still have a valid raid-strategy fallback (bridge/causeway, breach/fill/ramp behavior, or another route) rather than becoming permanently stuck.
-
-A possible low-level representation is a pass-through-capable terrain/path node with very high cost plus custom traversal logic, rather than `Impassable`. Exact RimWorld 1.6 pathing hooks must be prototyped before this is committed to implementation.
-
-### 17.3 Dry moat behavior target
-
-A dry moat should be much stronger than ordinary rough terrain.
-
-Target behavior:
-
-- no ordinary seamless walk across;
-- descent/climb traversal consumes substantial time;
-- pawns in the moat are tactically disadvantaged;
-- bridge / causeway / prepared ramp is the preferred crossing;
-- moat terrain itself has no HP and cannot be punched away;
-- future breach-oriented raids may gain explicit filling / ramping behavior if needed for AI fairness.
-
-The exact combat penalty is not yet fixed. Avoid giving free high cover to attackers simply because they are inside the ditch.
-
-### 17.4 Water moat behavior target
-
-Do not rely on Odyssey's recreational **Going swimming** job as the combat traversal implementation. Vanilla deep water remains a different passability problem, and recreational swimming does not by itself provide a general raider deep-water pathing mode.
-
-A Waterworks water moat should therefore own its combat traversal semantics if/when implemented.
-
-Target behavior:
-
-- stronger traversal penalty than a dry moat;
-- explicit wading/swimming state where appropriate;
-- meaningful combat disadvantage while crossing;
-- bridges / causeways remain strategically important;
-- draining reverts to the dry-moat traversal model;
-- no absolute uncounterable barrier for every ordinary ground raid.
-
-### 17.5 AI validation gate
-
-Before shipping moat functionality, automated/runtime tests must cover at least:
-
-- standard edge raid with a bridge available chooses a sensible crossing;
-- standard raid with no prepared crossing does not deadlock at map edge;
-- dry-moat fallback traversal works and is substantially slower than bridge routing;
-- water-moat fallback traversal works for eligible pawn classes;
-- gate/bridge/path changes trigger route recalculation;
-- sappers/breachers do not become permanently confused by an unattackable terrain ring;
-- manhunters / animals / mechanoids have explicitly defined behavior rather than accidental pathing;
-- colonists do not choose a dangerous moat crossing when a materially better bridge route exists;
-- no infinite repath loop or severe pathfinder performance regression.
-
-Balance target: a moat should be a powerful defensive investment and force attackers into bad approaches, but not function as an AI exploit equivalent to an indestructible wall.
+Waterworks must not absorb those systems merely because water can be supplied to a moat.
 
 ## 18. Open implementation values
 
