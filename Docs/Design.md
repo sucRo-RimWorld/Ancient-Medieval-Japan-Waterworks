@@ -217,6 +217,28 @@ The player may designate a canal cell for fill-in.
 
 The dug canal is a shallow, walkable ditch.
 
+### 7.1 Vanilla bridge reuse
+
+Waterworks does **not** add a custom bridge in v1.
+
+The dug-canal TerrainDef should expose Vanilla's `Bridgeable` terrain affordance so the standard RimWorld 1.6 bridge can be constructed across/over canal cells.
+
+Rationale:
+
+- bridge construction is already a Vanilla responsibility;
+- adding a Waterworks-specific bridge would duplicate an existing general structure;
+- Vanilla 1.6 bridges occupy the foundation layer above the underlying natural terrain, which fits a canal remaining present below the crossing;
+- using the standard bridge also preserves normal Vanilla construction cost, damage, destruction and rebuild behavior.
+
+Rendering/earthwork rules:
+
+- supplied-water rendering must not draw visibly over the top surface of an existing bridge/foundation;
+- destroying/removing the bridge reveals the canal below without changing canal topology;
+- `Fill canal` should not silently erase or invalidate a bridge/foundation above it; require removal of the overlying foundation first in v1;
+- the bridge is a crossing only and does not interrupt canal connectivity or supply.
+
+Vanilla bridges solve ordinary pawn crossings. A future culvert should therefore be added only if actual settlement layouts need water to pass beneath structures that Vanilla bridges cannot reasonably support.
+
 - Pawns may cross it.
 - It has a meaningful movement penalty compared with ordinary ground.
 - It must not function as a road or movement shortcut.
@@ -365,6 +387,9 @@ The first vertical prototype is successful when automated/runtime checks demonst
 - marshy soil does not supply the canal;
 - marsh does not supply the canal;
 - marshy-soil excavation/restoration works in supported cases;
+- Vanilla bridge placement is valid on dug-canal terrain;
+- bridge presence does not interrupt canal connectivity/supply;
+- canal fill is rejected while an overlying bridge/foundation remains;
 - a connected branch becomes wet through the same component;
 - breaking the connection dries the disconnected component;
 - reconnecting it restores wet state;
@@ -377,6 +402,8 @@ Visual manual checks are limited to:
 - wet canal reads as water-filled;
 - dry canal reads as a ditch;
 - transitions and junctions look acceptable;
+- Vanilla bridge can be placed on the canal and visually covers the water surface correctly;
+- removing/destroying the bridge reveals the intact canal below;
 - movement penalty feels understandable.
 
 Do not block this prototype on DBH, gates, culverts, hot springs, stone lining or public API work.
