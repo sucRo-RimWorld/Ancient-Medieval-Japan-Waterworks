@@ -217,27 +217,35 @@ The player may designate a canal cell for fill-in.
 
 The dug canal is a shallow, walkable ditch.
 
-### 7.1 Vanilla bridge reuse
+### 7.1 Vanilla bridge reuse as crossing / canal cover
 
-Waterworks does **not** add a custom bridge in v1.
+Waterworks does **not** add a custom bridge or canal-lid building in v1.
 
-The dug-canal TerrainDef should expose Vanilla's `Bridgeable` terrain affordance so the standard RimWorld 1.6 bridge can be constructed across/over canal cells.
+The dug-canal TerrainDef should expose Vanilla's `Bridgeable` terrain affordance so the standard RimWorld 1.6 bridge can be built over one or more canal cells.
+
+For a one-cell-wide canal, the same Vanilla bridge naturally serves two player-facing roles:
+
+- a crossing placed perpendicular to the canal;
+- a wooden cover / plank walkway placed along consecutive canal cells.
+
+Waterworks does not create a separate mechanical distinction between "bridge" and "canal lid". Both are the standard Vanilla bridge foundation over an intact canal.
 
 Rationale:
 
-- bridge construction is already a Vanilla responsibility;
-- adding a Waterworks-specific bridge would duplicate an existing general structure;
-- Vanilla 1.6 bridges occupy the foundation layer above the underlying natural terrain, which fits a canal remaining present below the crossing;
-- using the standard bridge also preserves normal Vanilla construction cost, damage, destruction and rebuild behavior.
+- bridge/foundation construction is already a Vanilla responsibility;
+- adding a Waterworks-specific bridge or lid would duplicate an existing general structure;
+- Vanilla 1.6 bridges occupy the foundation layer above the underlying natural terrain, so the canal can remain present and connected below;
+- standard bridge construction cost, damage, destruction and rebuild behavior remain Vanilla-owned.
 
 Rendering/earthwork rules:
 
 - supplied-water rendering must not draw visibly over the top surface of an existing bridge/foundation;
 - destroying/removing the bridge reveals the canal below without changing canal topology;
 - `Fill canal` should not silently erase or invalidate a bridge/foundation above it; require removal of the overlying foundation first in v1;
-- the bridge is a crossing only and does not interrupt canal connectivity or supply.
+- a bridge/cover does not interrupt canal connectivity or supply;
+- Waterworks does not patch the standard bridge into supporting structures it cannot normally support.
 
-Vanilla bridges solve ordinary pawn crossings. A future culvert should therefore be added only if actual settlement layouts need water to pass beneath structures that Vanilla bridges cannot reasonably support.
+The normal Vanilla bridge supports only the structures Vanilla permits on that foundation. Therefore it can solve ordinary crossings and covered walkways, but it is **not** a universal substitute for a future culvert beneath arbitrary heavy buildings or walls. Reconsider a culvert only if real settlement layouts demonstrate that unmet need.
 
 - Pawns may cross it.
 - It has a meaningful movement penalty compared with ordinary ground.
