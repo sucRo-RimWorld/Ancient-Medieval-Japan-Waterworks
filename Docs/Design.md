@@ -91,7 +91,8 @@ These invariants may change only when a concrete consumer or gameplay problem de
 The following are deferred until a concrete use case requires them:
 
 - manual water gates;
-- culverts / underground crossings;
+- reinforced canal cover / heavy foundation;
+- true culverts / underground crossings if a reinforced cover still cannot solve the actual layout problem;
 - stone-lined canals;
 - hot-spring source classification;
 - dedicated Waterworks overlay;
@@ -246,6 +247,29 @@ Rendering/earthwork rules:
 - Waterworks does not patch the standard bridge into supporting structures it cannot normally support.
 
 The normal Vanilla bridge supports only the structures Vanilla permits on that foundation. Therefore it can solve ordinary crossings and covered walkways, but it is **not** a universal substitute for a future culvert beneath arbitrary heavy buildings or walls. Reconsider a culvert only if real settlement layouts demonstrate that unmet need.
+
+### 7.2 Reinforced canal cover / heavy foundation
+
+If normal settlement play demonstrates a need to keep a canal running beneath walls or other structures that the Vanilla bridge cannot support, Waterworks should first add **one canal-specific reinforced cover/foundation** rather than a separate underground pipe/grid system or a large bridge pack.
+
+Design intent:
+
+- ordinary crossing and wooden covering remain the Vanilla bridge's job;
+- the reinforced cover exists only to preserve an intact Waterworks canal beneath heavier construction;
+- it should use the same general foundation/layer approach as a bridge where RimWorld 1.6 permits, so the canal TerrainDef and Waterworks connectivity remain underneath;
+- it must not become a general-purpose heavy bridge for unrelated water, marsh or open terrain;
+- placement should be restricted to Waterworks canal cells, plus only whatever transition cells are technically unavoidable;
+- removing/destroying the reinforced cover should reveal the intact canal below;
+- filling the canal should require removing the reinforced cover / supported structure first;
+- exact stone material, work cost, support affordances and Def implementation remain implementation-audit values.
+
+Player-facing concept may be a **stone canal cover / stone-lined covered channel** rather than an engineering-heavy "heavy bridge". Final naming should fit pre-Edo Japanese waterworks.
+
+This is intentionally a narrow convenience feature. Waterworks does **not** add multiple bridge tiers, decorative bridge families or a general foundation overhaul.
+
+Existing reinforced-bridge/foundation mods such as VE-family architecture content remain prior art and optional coexistence targets, not dependencies. The presence of similar functionality elsewhere does not justify requiring a large external mod for this single Waterworks-specific need.
+
+A true culvert / hidden underground network should be reconsidered only if this simple foundation-layer solution cannot support a real required layout or consumer use case.
 
 - Pawns may cross it.
 - It has a meaningful movement penalty compared with ordinary ground.
@@ -423,7 +447,7 @@ After the minimal core works in play, add features only in response to demonstra
 Candidate order:
 
 1. **first real consumer integration** — likely DBH or another already-existing use;
-2. **crossing solution** — culvert/covered channel only if open canals make normal settlement layouts unnecessarily awkward;
+2. **heavy-structure crossing solution** — first try the single Waterworks reinforced canal cover/foundation; consider a true culvert only if that cannot solve the demonstrated need;
 3. **manual water control** — gate only if branch control has actual gameplay value;
 4. **additional source classes** — e.g. hot spring, only when a consumer exists;
 5. **cosmetic/advanced canal types** — e.g. stone lining, only if they create a worthwhile choice.
@@ -449,4 +473,5 @@ Still intentionally unfixed:
 - exact TerrainDef / rendering implementation;
 - safe fallback when original terrain cannot be restored;
 - first consumer integration and its API shape;
+- exact material/work/support rules for the future reinforced canal cover;
 - whether any feature beyond the minimal core belongs in the first public release.
