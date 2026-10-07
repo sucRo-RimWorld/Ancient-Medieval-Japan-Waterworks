@@ -63,11 +63,12 @@ Scope:
 1. choose final packageId / DefName prefix before public implementation;
 2. add minimal RimWorld 1.6 About/load structure;
 3. implement dug-canal TerrainDef plus Dig/Fill canal semantics;
-4. audit and define the explicit Vanilla 1.6 fresh-natural-water TerrainDef whitelist;
-5. supply a canal component directly when any canal cell is orthogonally adjacent to a valid natural-water cell;
-6. implement per-map event-driven connectivity state;
-7. render supplied vs dry canal state;
-8. automate direct-source adjacency, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
+4. implement the audited Vanilla 1.6 source rules: moving freshwater always valid; standing `WaterShallow`/`WaterDeep` requires a 9-cell connected body; ocean/marsh/wet soil/mud invalid;
+5. implement Diggable-based excavation eligibility with Ice/water/road/artificial-floor exclusions, including AMJ Environment `AMJ_ThinSoil` without a dedicated patch;
+6. use Construction work with initial values 500 dig / 300 fill and canal `pathCost=10`;
+7. implement per-map event-driven connectivity state;
+8. render supplied vs dry canal state;
+9. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
 
