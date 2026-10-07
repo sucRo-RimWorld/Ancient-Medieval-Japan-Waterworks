@@ -85,3 +85,22 @@ Confirmed boundary:
 **Durable source:** `Docs/Design.md`, scope correction commit `e9e529e01c4f4a83fa612bec0bad58875ba858ad`.
 
 **Next action:** none in Waterworks. The unowned candidate is now tracked in `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/DefensiveEarthworksCandidate.md`; revisit there until an owning repository exists.
+
+
+### DES-REINFORCED-COVER-001 — canal-specific reinforced cover
+
+**Requested by:** author (2026-10-07 JST)  
+**Owner:** Waterworks  
+**Status:** DONE — design direction confirmed; implementation deferred until after minimal core
+
+Confirmed direction:
+- ordinary canal crossings and wooden covers use the Vanilla bridge;
+- Waterworks will not become a general bridge/foundation pack;
+- if heavier structures must remain above an intact canal, Waterworks may add one canal-specific reinforced cover/foundation, conceptually a stone canal cover / covered channel;
+- that reinforced cover is restricted to Waterworks canal use and should preserve the canal TerrainDef/connectivity underneath where the RimWorld 1.6 foundation model permits;
+- do not require VFE Architect or another large bridge mod merely for this single Waterworks function; similar mods remain prior art / optional coexistence targets;
+- do not build a separate underground culvert grid first. Reconsider a true culvert only if the reinforced-foundation approach fails a demonstrated layout or integration need.
+
+**Durable sources:** `AGENTS.md` commit `ac80fee83508d3c0994cff260cf62a00bb9e61a2`; `Docs/Design.md` commit `d00df5349b8593361265b34e491c5d06df0818e3`.
+
+**Next action:** none before the minimal direct-source canal prototype is green. When heavy-structure crossings become necessary, audit current RimWorld 1.6 foundation/support affordances and prototype only this one canal-specific cover.
