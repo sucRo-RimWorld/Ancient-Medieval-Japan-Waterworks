@@ -2,512 +2,363 @@
 
 > **Authoritative design source for AMJ Waterworks.**
 >
-> This repository owns the Waterworks design and implementation. Other AMJ repositories should keep only ownership / compatibility summaries and link here for Waterworks details.
+> Waterworks owns only the natural-surface-water / open-canal infrastructure layer. Consumer gameplay such as rice cultivation, hot springs, hygiene, drinking, irrigation bonuses, defensive moats or water power belongs elsewhere.
 
-## 1. Purpose
+## 1. Product identity
 
-AMJ Waterworks represents **visible, gravity-fed open waterways drawing directly from natural surface water**.
+AMJ Waterworks is a small standalone infrastructure mod for **drawing visible open waterways from natural fresh water**.
 
-Its defining gameplay is:
+The defining interaction is deliberately narrow:
 
-`natural fresh water -> intake -> dug open canal -> optional gates / culverts -> external use`
+`river / pond -> dig canal -> connected canal becomes wet -> disconnect it and it becomes dry -> fill it back in`
 
-Waterworks is not a general plumbing, hygiene, drinking, sewage, irrigation-crop, rice-cultivation, or water-power overhaul.
+The mod should remain useful as a lightweight shared water-infrastructure layer, not grow into a general water simulation.
 
-The mod exists only while this open-waterway construction loop remains meaningfully distinct from existing pipe-network mods.
+Waterworks is distinct from Dubs Bad Hygiene (DBH):
+
+- DBH primarily models wells, pumps, storage, PipeNet and consumers.
+- Waterworks models direct natural intake and visible gravity-style open channels.
+- Waterworks does not use DBH PipeNet internally and does not require DBH.
 
 ## 2. Ownership boundary
 
 Waterworks owns:
 
-- natural surface-water intake;
+- recognition of compatible natural fresh-water sources;
 - dug open canals;
-- short culvert / covered crossings;
-- manual water gates;
-- canal network state and visualization;
-- ordinary-water / hot-spring-water source attributes;
-- a minimal optional integration surface for other mods to query supplied water;
-- hot-spring intake / conveyance infrastructure when a compatible hot-spring source exists.
+- supplied / unsupplied canal-network state;
+- wet / dry canal presentation;
+- canal excavation and fill-in;
+- a minimal optional integration surface when a real consumer needs it.
 
 Waterworks does **not** own:
 
 - rice paddies, rice plants, rice items or rice processing;
 - generic crop irrigation bonuses;
-- wells, pumps, tanks or closed plumbing that duplicate DBH;
-- drinking / thirst;
-- toilets, bladder need, sewage, hygiene;
-- firefighting systems;
+- wells, pumps, tanks or closed plumbing;
+- thirst, drinking, toilets, bladder, sewage or hygiene;
+- firefighting;
 - water wheels, mechanical power or electricity;
 - generic water-quality simulation;
 - flood control;
-- erosion / sediment / canal-maintenance simulation.
+- erosion, silt, leakage or routine canal maintenance;
+- dry moats, water moats, bridges, traversal or raid AI.
 
-Rice Cultivation and Hot Springs remain standalone mods and must not require Waterworks.
+Rice Cultivation, Hot Springs, DBH compatibility and any future defensive-earthworks mod are consumers / integrations, not extensions of Waterworks' core responsibility.
 
-## 3. v1 minimum game loop
+## 3. Minimal v1 core
 
-v1 is complete when the player can:
+### 3.1 Required features
 
-1. place a valid natural-water intake beside an eligible fresh-water terrain;
-2. designate and dig an open canal from it;
-3. see the canal become visibly supplied when connected;
-4. branch the canal using ordinary T / cross junctions;
-5. interrupt or restore a branch with a manual water gate;
-6. cross walls, gates, roads and floors using a culvert section;
-7. inspect supplied / unsupplied state through a Waterworks overlay;
-8. allow another optional mod to query whether a location has supplied ordinary or hot-spring water.
+The **v1 core** requires only:
 
-Required v1 elements:
+1. a `Dig canal` designation;
+2. a one-cell-wide dug-canal terrain;
+3. recognition of valid adjacent natural fresh water;
+4. four-direction canal connectivity;
+5. binary supplied / unsupplied network state;
+6. visibly wet supplied canals and visibly dry unsupplied canals;
+7. a `Fill canal` / backfill action that restores the previous natural terrain where valid.
 
-- natural-water intake;
-- dug open canal;
-- culvert;
-- manual water gate.
+That is the complete mandatory gameplay loop.
 
-Stone-lined canals are not a v1 completion requirement.
+### 3.2 No mandatory intake building
 
-## 4. Network model
+A separate intake building is **not required for v1**.
 
-Waterworks v1 uses a **binary supplied / unsupplied connectivity network**, not a fluid simulation.
+A canal component is supplied when at least one canal cell is orthogonally adjacent to a registered valid natural fresh-water source.
 
-- Connections are orthogonal only: north / east / south / west.
-- Diagonal contact alone does not connect canals.
-- Any connected component with at least one valid open intake is supplied.
-- Multiple valid intakes may feed the same component.
-- Closing a gate cuts connectivity at that cell.
-- T and cross junctions distribute supply automatically; no dedicated divider building is required.
-- The network does not track per-cell volume, pressure, flow rate, velocity, head, slope, evaporation, leakage, demand or attenuation.
-- External consumers query supply state; they do not subtract water in v1.
-- Flow direction is not a gameplay requirement. A visual hint may use graph distance from an intake, but no exact multi-source flow solver is required.
-- Recalculate supply when topology or source validity changes rather than running fluid calculations every tick.
+This represents a simple cut / intake at the canal mouth without forcing the player to construct a special object merely to connect a ditch to a river or pond.
 
-## 5. Water sources
+A dedicated intake structure, weir, headgate or improved intake may be reconsidered later only if it creates a real control, balance or visual benefit.
 
-### 5.1 Ordinary water
+### 3.3 What is explicitly not required for v1
 
-The default ordinary-water source set consists of explicit compatible **fresh natural surface-water terrains**, such as rivers, streams, lakes and shallow fresh water.
+The following are deferred until a concrete use case requires them:
 
-- Ocean / salt water is not an ordinary-water source in v1.
-- Do not infer compatibility from DefName substrings.
-- Maintain an explicit source registry / extension point.
-- Other mods may register compatible water terrains or source objects through optional integration.
-- The exact RimWorld 1.6 TerrainDef whitelist must be audited immediately before implementation.
+- manual water gates;
+- culverts / underground crossings;
+- stone-lined canals;
+- hot-spring source classification;
+- dedicated Waterworks overlay;
+- public consumer API beyond what the first real integration needs;
+- DBH adapter;
+- Rice Cultivation adapter;
+- Hot Springs adapter;
+- any defensive application.
 
-### 5.2 Hot-spring water
+Do not implement these merely because they were present in earlier drafts.
 
-Compatible Hot Springs implementations may register a source as hot-spring water.
+## 4. Natural-water sources
 
-The network distinguishes at least:
+### 4.1 v1 source class
 
-- ordinary water;
-- hot-spring water;
-- mixed / ordinary-qualified supply.
+v1 has only one source class: **ordinary fresh natural water**.
 
-If an otherwise isolated hot-spring component becomes connected to an ordinary-water source, it no longer qualifies as pure hot-spring supply for external effects. Players may isolate systems with gates.
+Candidate sources include:
 
-Waterworks does not simulate continuous temperature or chemistry.
+- rivers;
+- streams;
+- ponds / lakes;
+- shallow fresh natural water.
 
-## 6. Natural-water intake
+Ocean / salt water is not a valid v1 source.
 
-The baseline intake is a **1x1 shore-side structure**.
+The exact RimWorld 1.6 TerrainDef whitelist must be audited immediately before implementation. Do not infer eligibility from DefName substrings.
 
-- At least one orthogonally adjacent cell must be a registered valid source.
-- The intake must also connect orthogonally to the Waterworks network.
-- No pump, electricity or pressure is required.
-- Intake orientation may affect graphics but is not a hydraulic direction requirement.
-- Intakes may be damaged like ordinary buildings.
-- Waterworks does not add a generic well or pump.
+### 4.2 Source registration
 
-## 7. Dug open canal
+Keep source recognition extensible, but do not build a large framework before it is needed.
 
-The baseline canal is a visible one-cell-wide dug channel.
+The initial implementation may use an explicit internal whitelist of Vanilla 1.6 source terrains. Add a stable external registration mechanism only when the first optional source-providing integration actually needs it.
 
-### Construction
+## 5. Network semantics
 
-- Use a **Dig canal** designation rather than placing a normal building.
-- Baseline dug canal requires work but no construction material.
-- Store the replaced terrain so fill-in can restore it where practical.
-- Do not destructively convert every filled canal to Soil.
-- Existing roads / floors that must remain intact should use a culvert crossing instead.
+Waterworks v1 uses connectivity, not fluid simulation.
 
-### Terrain behavior
+- Connectivity is north / east / south / west only.
+- Diagonal contact does not connect canals.
+- A connected component is **supplied** if any canal cell in that component is orthogonally adjacent to a valid natural-water source.
+- Otherwise the component is **unsupplied**.
+- T and cross junctions connect automatically.
+- Multiple natural sources may supply the same component.
+- There is no required flow direction.
+- There is no per-cell water quantity, pressure, flow rate, velocity, elevation, head, slope, consumption, evaporation, leakage or attenuation.
+- A supplied canal does not become less supplied because it is long.
+- Recalculate after canal/source topology changes rather than simulating water every tick.
 
-- Open canals are walkable shallow channels.
-- They impose a meaningful movement penalty compared with ordinary ground.
-- Exact movement cost is set during implementation by comparison with Vanilla shallow-water terrain.
-- They are not fast paths and do not replace roads.
-- Walls, major buildings and ordinary floors do not coexist directly on the open-canal cell.
-- Canal terrain itself has no HP; remove it by filling it in.
-- Intake and gate buildings remain normal damageable structures.
+The network deliberately answers one question:
 
-### Explicit v1 exclusions
+> Is this canal component connected to usable natural fresh water?
 
-Do not simulate:
+Nothing more is required in v1.
 
+## 6. Canal construction
+
+### 6.1 Dig canal
+
+The player uses a `Dig canal` designation.
+
+Baseline rules:
+
+- requires work;
+- requires no construction material;
+- produces a one-cell-wide canal terrain;
+- does not behave like placing a wall or pipe building;
+- should be available early without a dedicated Waterworks research chain.
+
+For the first implementation, restrict excavation to uncomplicated surface cells:
+
+- no edifice occupying the cell;
+- no existing constructed floor that Waterworks would have to destroy implicitly;
+- no natural water cell itself;
+- no impassable natural rock / mountain tunneling.
+
+This keeps the initial tool predictable. Crossings and covered channels can be added later if actual play demonstrates the need.
+
+### 6.2 Original terrain
+
+When a canal is excavated, record the natural terrain it replaced.
+
+The purpose is limited to safe fill-in restoration.
+
+Do not treat this as a general terrain-history system.
+
+### 6.3 Fill canal
+
+The player may designate a canal cell for fill-in.
+
+- Filling requires work.
+- The canal disappears.
+- Restore the recorded original terrain when it is still valid.
+- If the recorded terrain can no longer be restored safely because the map context changed, fail safely or use a deliberately defined fallback rather than forcing an invalid terrain.
+- Filling one cell may split the former canal component; affected components then recalculate supplied state.
+
+## 7. Terrain and movement behavior
+
+The dug canal is a shallow, walkable ditch.
+
+- Pawns may cross it.
+- It has a meaningful movement penalty compared with ordinary ground.
+- It must not function as a road or movement shortcut.
+- Exact path cost is an implementation/balance value and should be compared with current Vanilla shallow-water terrain.
+- The canal terrain itself has no HP and cannot be destroyed by weapon attacks.
+- Removal is an earthwork action: fill it in.
+
+Wet vs dry state does not change the logical path category in v1 unless testing demonstrates a clear gameplay reason.
+
+Waterworks v1 does not simulate:
+
+- freezing shutdown;
+- snow blockage;
 - erosion;
 - leakage;
-- silt;
-- clogging;
+- sediment;
 - cleaning;
-- routine repair;
-- water contamination;
-- rainfall-dependent flow;
-- snow blockage;
-- freezing-dependent supply shutdown.
+- periodic maintenance;
+- contamination;
+- rainfall-driven flow changes.
 
-Waterworks should not invent a canal-freezing simulation while RimWorld's ordinary natural rivers lack a corresponding continuous freeze system.
+## 8. Wet / dry presentation
 
-Roofs do not affect supply in v1.
+Normal map view must communicate the state without requiring a diagnostic overlay.
 
-## 8. Culverts / covered crossings
+### Dry canal
 
-Culverts use the same logical network as open canals but represent water passing below a constructed surface.
+An unsupplied canal should visibly read as an excavated shallow ditch.
 
-They exist to preserve **visible open waterways as the default**, not to create an unrestricted hidden pipe network.
+### Wet canal
 
-Rules:
+A supplied canal should visibly read as the same ditch containing water.
 
-- Open canal and culvert cells connect directly with no separate mandatory transition building.
-- The transition may render a culvert mouth / inlet graphic for readability.
-- Culverts may pass beneath walls, doors / gates, roads and floors without destroying the surface structure.
-- Surface movement and ordinary building behavior remain unchanged by the hidden culvert.
-- Culverts appear clearly in the Waterworks overlay.
-- Culverts may turn or connect as required under a legitimate crossing.
-- Do not allow players to replace the entire open-canal network with arbitrary hidden culverts across open ground.
-- Baseline placement should therefore be limited to cells occupied by or reserved for a valid surface crossing / built surface, plus the minimum entrance / exit transition needed to connect back to open canal.
-- Do not tunnel freely beneath natural rock / mountain as part of the baseline culvert tool. That would be a separate tunneling feature.
-- Exact work and small material cost are implementation-balance values, not yet fixed.
+Preferred implementation shape:
 
-## 9. Water gate
+- keep one persistent dug-canal TerrainDef for the excavation;
+- render supplied water as a Waterworks visual layer / overlay;
+- do not repeatedly swap TerrainDefs merely because supply changed.
 
-The baseline gate is a 1x1 manual control point on the canal network.
+The exact renderer is an implementation decision and may change after a prototype.
 
-- Open: network connects normally through the cell.
-- Closed: connectivity is cut at the gate.
-- No gate is required for ordinary branching.
-- v1 has no automation, schedules, demand control or logic circuits.
-- The gate is a normal damageable building.
+A dedicated network overlay is optional and should only be added if normal visuals and inspection text prove insufficient.
 
-## 10. Stone-lined canal
+## 9. Runtime architecture
 
-Stone-lined canal remains a later optional feature.
+The architecture should remain proportionate to the tiny v1 model.
 
-If implemented:
+### 9.1 Per-map state
 
-- use the same supply model as dug canal;
-- do not grant larger flow capacity or introduce another hydraulic simulation;
-- keep benefits modest: construction appearance, settlement aesthetics, possibly reduced movement penalty or other small convenience;
-- connect progression to generic stoneworking where practical rather than adding a Waterworks research chain;
-- never require stone lining for advanced external consumers to function.
+A per-map Waterworks component may own:
 
-## 11. Progression
+- known canal cells / connectivity cache;
+- supplied / unsupplied component results;
+- recorded original terrain for restoration.
 
-Waterworks v1 does not need a multi-tier proprietary research tree.
+Derived component IDs and wet/dry caches should be rebuilt after load rather than treated as permanent authoritative save data.
 
-- Dug canal, intake, basic gate and culvert are early-access water-management tools.
-- The main cost of a large network is excavation work and occupied route space.
-- Intake / gate / culvert may use small amounts of wood or stone, with exact costs fixed through balance tests.
-- MO is not required.
-- If MO is present, existing research/material concepts may be integrated conditionally, but Base Waterworks must remain standalone.
+### 9.2 Invalidations
 
-## 12. External integration contract
+Invalidate / recalculate when relevant state changes, such as:
 
-External mods should not traverse Waterworks' internal graph themselves.
+- canal excavation;
+- canal fill-in;
+- a valid adjacent natural-water terrain changing.
 
-Waterworks should expose a minimal stable query surface for questions such as:
+Do not scan every canal cell every tick.
 
-- Is this cell / building near a supplied Waterworks connection?
-- Is that supplied connection ordinary water, pure hot-spring water, or mixed / non-hot-spring-qualified water?
+Because another mod may alter source terrain without notifying Waterworks, a low-frequency source-validity check is acceptable if implementation requires one.
 
-Rules:
+## 10. Integration philosophy
 
-- Consumer-specific ranges belong to the consumer mod.
-- Waterworks must not contain constants such as paddy irrigation radius.
-- Optional integration must fail safely when Waterworks is absent.
-- Adding a new source type should not require hard-coding another mod's DefNames into Waterworks core.
+Waterworks core must be complete without any integration, even though its standalone economic value is intentionally small.
 
-## 13. DBH / DBH for Medieval compatibility
+A future consumer should ask Waterworks only for the minimum fact it needs, typically:
 
-DBH is an **official optional compatibility target**, not a dependency.
+> Is a supplied canal present at / adjacent to this location?
 
-The intended ownership split is:
+Do not publish a broad framework API before a real consumer defines the need.
 
-### DBH / DBH for Medieval
+### 10.1 DBH
 
-- wells;
-- pumps;
-- tanks;
-- PipeNet;
-- ordinary plumbing;
-- sewage;
-- hygiene;
-- thirst / drinking where enabled;
-- sprinkler-style irrigation.
+DBH is an official optional compatibility candidate, not a dependency.
 
-### Waterworks
+The author may use DBH with Thirst / Bladder / Hygiene disabled while retaining DBH water infrastructure. Waterworks must not assume those needs exist.
 
-- direct intake from natural surface water;
-- pump-free gravity-fed visible open canals;
-- culverts;
-- manual canal gates;
-- hot-spring conveyance;
-- external supplied-water queries.
+If a DBH adapter is later implemented:
 
-### 13.1 Overlap audit
+- Waterworks' canal graph remains independent;
+- do not convert canals into DBH PipeNet;
+- use a boundary adapter / inlet;
+- DBH keeps ownership of storage, PipeNet, quality/quantity and its consumers;
+- DBH Lite Mode may remove the systems needed for the adapter; in that case only the adapter disables itself.
+
+The first DBH integration should be designed only after current DBH 1.6 API semantics are re-audited.
+
+### 10.2 Rice Cultivation
+
+Rice Cultivation remains independently playable without Waterworks.
+
+If integrated later, Rice Cultivation owns all paddy-specific conditions and distances. Waterworks only reports supplied canal presence.
+
+### 10.3 Hot Springs
+
+Hot-spring source classification is **not part of v1 core**.
+
+When Hot Springs integration is actually designed, extend source semantics only as far as that integration needs.
+
+### 10.4 Defensive earthworks
+
+Dry moats, water moats, bridges, swimming/climbing traversal, raid pathfinding and breach behavior belong to a separate future defensive-earthworks / fortification responsibility.
+
+Such a mod may consume Waterworks supply state to fill a water moat. Waterworks owns only water delivery, not defense behavior.
+
+## 11. DBH / DBH for Medieval prior-art finding
 
 The supplied DBH for Medieval 1.6-era assets were audited on 2026-10-07.
 
-Observed implementation:
+Observed:
 
-- `ES_IrrigationCanal` derives from `DubsDirtyPipeBase` and uses `DubsBadHygiene.CompProperties_Pipe`.
-- Its pipe mode is DBH `Sewage`; it is not a separate natural-surface-water canal graph.
-- `ES_SluiceGate` uses `DubsBadHygiene.CompProperties_Sprinkler` and a per-cell water-usage model.
-- `ES_ManualPump` uses DBH pipe / water-pumping components.
-- Primitive-well integration adds a DBH `CompProperties_WaterInlet`.
-- The DLL contains DBH-oriented symbols such as `PipeNet`, `HygienePipeMapComp`, `IrrigationGrid` and `FindBestIrrigationSource`.
+- `ES_IrrigationCanal` derives from `DubsDirtyPipeBase` and uses DBH `CompProperties_Pipe`.
+- `ES_SluiceGate` uses DBH sprinkler behavior.
+- `ES_ManualPump` uses DBH pipe / pumping components.
+- Primitive-well integration adds a DBH water inlet.
 
-Therefore DBH for Medieval does not eliminate the specific Waterworks niche of **direct natural intake -> visible gravity-fed open canal**.
+Therefore DBH for Medieval does not directly replace Waterworks' narrow purpose of **direct natural-water connection plus visible open canal**.
 
-### 13.2 DBH configuration compatibility
+Waterworks must nevertheless avoid reimplementing DBH's pumps, tanks, pipes or water consumers.
 
-Current DBH 1.6 exposes separate controls for:
+## 12. Existing-mod / VE audit status
 
-- thirst need;
-- bladder need;
-- hygiene need;
-- Lite Mode.
+The AMJ project-wide prior-art audit currently classifies Waterworks as **independent implementation continued** because the desired natural-intake / visible-open-canal responsibility is not satisfied by the audited broad medieval packages without importing unrelated systems.
 
-Its own 1.6 localization states that Lite Mode removes **pipes, water and sewage management**, so Lite Mode is not the profile to use when the player wants DBH's water infrastructure.
+Vanilla Factions Expanded - Medieval 2 remains a broad medieval faction/technology/economy/warfare expansion rather than the Waterworks design baseline. VE remains a comparison priority, not a dependency.
 
-Waterworks must support the author's intended **DBH water-infrastructure-only style profile**:
+Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow core.
 
-- DBH loaded;
-- Thirst disabled;
-- Bladder need disabled;
-- Hygiene need disabled if desired;
-- Lite Mode disabled so DBH water management remains available.
+## 13. Prototype acceptance gate
 
-Waterworks code and compatibility patches must not assume any of those pawn needs exist.
+The first vertical prototype is successful when automated/runtime checks demonstrate:
 
-Required behavior:
+- a canal disconnected from natural fresh water is dry;
+- a canal orthogonally connected to a valid river/pond source is wet;
+- diagonal-only source contact does not supply the canal;
+- a connected branch becomes wet through the same component;
+- breaking the connection dries the disconnected component;
+- reconnecting it restores wet state;
+- fill-in restores recorded prior terrain in supported cases;
+- save/load preserves excavation/restoration state and rebuilds supplied state;
+- runtime ERROR count attributable to Waterworks is zero.
 
-- Waterworks core remains fully functional regardless of DBH need settings.
-- If DBH water management / PipeNet is available, an optional adapter may activate.
-- If DBH Lite Mode removes the required water-management Defs / systems, the adapter must disable itself cleanly while Waterworks itself continues to function.
-- Do not re-enable thirst, bladder or hygiene as a side effect of Waterworks compatibility.
-- Release testing must include both ordinary DBH configuration and the water-infrastructure-focused profile with pawn needs disabled.
+Visual manual checks are limited to:
 
-### 13.3 Compatibility direction
+- wet canal reads as water-filled;
+- dry canal reads as a ditch;
+- transitions and junctions look acceptable;
+- movement penalty feels understandable.
 
-Waterworks must not turn its whole canal graph into DBH `PipeNet`.
+Do not block this prototype on DBH, gates, culverts, hot springs, stone lining or public API work.
 
-If useful after current-API audit, provide a **boundary adapter** rather than duplicate networks. The preferred initial direction is one-way supply from a valid Waterworks ordinary-water canal into a DBH-side inlet / storage interface, while leaving DBH's own quality, tank, pressure and consumer rules under DBH ownership.
+## 14. Post-core decision gates
 
-Do not route DBH sewage into Waterworks in v1.
+After the minimal core works in play, add features only in response to demonstrated need.
 
-Do not treat Waterworks hot-spring-qualified water as automatically equivalent to DBH clean drinking water.
+Candidate order:
 
-Exact DBH API / water-quality semantics must be re-audited against the installed current 1.6 version before implementation; this document fixes the ownership boundary, not unverified API calls.
+1. **first real consumer integration** — likely DBH or another already-existing use;
+2. **crossing solution** — culvert/covered channel only if open canals make normal settlement layouts unnecessarily awkward;
+3. **manual water control** — gate only if branch control has actual gameplay value;
+4. **additional source classes** — e.g. hot spring, only when a consumer exists;
+5. **cosmetic/advanced canal types** — e.g. stone lining, only if they create a worthwhile choice.
 
-## 14. Waterworks standalone value
+None of these is automatically part of v1 merely because it is technically feasible.
 
-Waterworks is intentionally infrastructure-first.
-
-It does **not** add generic irrigation, firefighting, hygiene, drinking or water power merely to manufacture standalone economic value.
-
-Its v1 success criterion is:
-
-> The player can visibly draw water from natural surface water through a controllable medieval-style open canal network, and other mods can reliably consume that supplied-state information.
-
-If future simplification removes the visible open-canal construction loop and leaves only an abstract water API, Waterworks should be reconsidered rather than retained as a redundant standalone mod.
-
-## 15. Recommended implementation architecture
-
-This section fixes the **implementation shape**, not final class names.
-
-### 15.1 Open canal representation
-
-Use a Waterworks-owned **TerrainDef for the dug channel** as the persistent surface state.
-
-- The TerrainDef represents the excavated ditch itself, not whether it currently contains water.
-- Keep movement cost and basic terrain affordances on that TerrainDef.
-- Do not swap the TerrainDef back and forth between separate dry/wet terrain every time supply changes.
-- Render supplied water as a Waterworks visual overlay / section layer above the canal terrain.
-- An unsupplied canal therefore remains the same ditch terrain but renders dry.
-- This keeps topology/state changes from repeatedly rewriting the map terrain grid.
-
-For fill-in restoration, persist the replaced TerrainDef for each excavated canal cell. Restoration must validate that the stored terrain is still legal; if another mod has materially changed the cell context, fail safely rather than forcing an invalid terrain.
-
-### 15.2 Culvert representation
-
-Represent culverts as **persistent per-map underground state**, not as a normal TerrainDef or edifice.
-
-Reason:
-
-- culverts must coexist with roads, floors, walls and gates;
-- a normal TerrainDef would replace the surface;
-- an ordinary building/edifice cannot safely occupy the same cell as every supported surface structure.
-
-A Waterworks MapComponent should therefore own a saved culvert grid / cell set and expose it to:
-
-- construction/removal jobs;
-- topology calculation;
-- Waterworks overlay rendering;
-- external supply queries.
-
-Culvert state remains invisible in normal map rendering except where an entrance/exit mouth should be drawn.
-
-### 15.3 Intake and gate representation
-
-Natural-water intakes and manual gates should remain normal damageable Things / Buildings with Waterworks comps.
-
-- Intake comp reports whether an adjacent registered natural source is valid.
-- Gate comp exposes open / closed state.
-- Both notify the map network component when their state changes.
-- Gate destruction removes/cuts the gate node according to the resulting canal terrain/structure state; do not leave a phantom connection.
-
-### 15.4 Map network component
-
-Use a per-map Waterworks component as the authoritative runtime network manager.
-
-It should own or index:
-
-- open-canal cells;
-- culvert cells;
-- intake nodes;
-- gate nodes and open/closed state;
-- source classification;
-- connected-component / supplied-state cache;
-- original terrain restoration data;
-- overlay data needed for player diagnostics.
-
-Topology should be **invalidated by events** such as:
-
-- canal excavation / fill-in;
-- culvert build / removal;
-- gate open / close / destruction;
-- intake spawn / despawn;
-- source registration changes.
-
-After invalidation, rebuild connected components by graph traversal when needed. v1 does not require a continuously simulated graph.
-
-Because other mods may alter natural-water terrains without Waterworks receiving a direct event, intake source validity may also be revalidated at a low-frequency safe checkpoint or before a cached source result is reused. Do not compensate by scanning every canal cell every tick.
-
-### 15.5 Graphics and overlay
-
-Use two visual layers:
-
-1. **normal map view**
-   - dug ditch terrain always visible;
-   - supplied canals visibly contain water;
-   - unsupplied canals visibly read as dry channels;
-   - intake and gate buildings render normally;
-   - culvert mouths may render where open canal transitions below a crossing.
-
-2. **Waterworks overlay**
-   - supplied vs unsupplied network;
-   - intake nodes and validity;
-   - gate state;
-   - hidden culvert path;
-   - source class where relevant.
-
-The overlay is diagnostic; normal map view should still communicate wet/dry state without requiring it.
-
-### 15.6 External query API shape
-
-Expose a small stable API from Waterworks rather than exposing internal grids directly.
-
-Conceptual queries:
-
-- supplied connection at / near a cell;
-- source class for the supplied component;
-- optional nearest supplied connection for a caller-defined radius.
-
-Return neutral/no-supply results when no Waterworks map component exists.
-
-Do not expose mutable internal collections and do not require consumer mods to know Waterworks DefNames or graph representation.
-
-### 15.7 Save/load
-
-Persistent save state must include at least:
-
-- culvert cells;
-- original TerrainDefs for excavated/restorable canal cells;
-- manual gate state if not already saved by the ThingComp;
-- any source registrations that are save-specific rather than Def-driven.
-
-Derived values such as connected-component IDs, supplied flags and overlay caches should be rebuilt after load rather than serialized as authoritative state.
-
-### 15.8 Why not reuse DBH PipeNet internally
-
-Do not use DBH PipeNet as Waterworks' internal network even when DBH is loaded.
-
-That would:
-
-- make DBH a practical implementation dependency;
-- inherit volume/pipe semantics Waterworks intentionally does not simulate;
-- make Waterworks behavior differ structurally between DBH and non-DBH profiles;
-- recreate the same overlap identified in DBH for Medieval.
-
-DBH compatibility belongs at an adapter boundary after both independent systems are valid.
-
-## 16. v1 automated validation targets
-
-When implementation begins, automate at least:
-
-- valid / invalid intake placement;
-- orthogonal connectivity and no diagonal-only connectivity;
-- dry network with no valid intake;
-- wet network with one or multiple intakes;
-- T / cross branching;
-- gate open / close splitting and recombining components;
-- open canal <-> culvert connectivity;
-- culvert coexistence with supported surface structures;
-- rejection of unrestricted culvert placement across open ground;
-- fill-in restoration of recorded prior terrain;
-- ordinary / hot-spring / mixed source classification;
-- topology recalculation after build, fill, gate toggle and source validity changes;
-- optional consumer query behavior with Waterworks present and absent;
-- DBH absent profile;
-- DBH present compatibility profile;
-- DBH present with Thirst / Bladder / Hygiene disabled and Lite Mode off;
-- DBH Lite Mode profile: Waterworks works, DBH adapter disables safely;
-- runtime ERROR = 0.
-
-Use RimTest Redux for graph / state logic where practical and Pickle for loaded-Def / map / placement / integration behavior.
-
-## 17. Defensive-earthworks compatibility boundary
-
-Dry moats, water moats, bridges, causeways, climbing/swimming combat traversal, raid pathfinding and siege/breach behavior are **not owned by Waterworks**.
-
-If a future AMJ defensive-earthworks / fortification mod implements those systems, Waterworks may provide only the water-supply side of the integration:
-
-- expose whether a moat intake / fill point is connected to supplied Waterworks water;
-- allow the consumer mod to distinguish ordinary vs hot-spring-qualified supply if it has a use for that distinction;
-- allow Waterworks gates/topology to cut or restore supply to that consumer.
-
-The defensive mod owns:
-
-- dry-moat excavation;
-- water-moat terrain/state;
-- bridge / causeway / ramp behavior;
-- traversal rules;
-- swimming / climbing / combat penalties;
-- enemy pathfinding;
-- sapper / breacher interaction;
-- filling, draining and defensive balance.
-
-Waterworks must not absorb those systems merely because water can be supplied to a moat.
-
-## 18. Open implementation values
+## 15. Open implementation values
 
 Still intentionally unfixed:
 
-- exact intake-compatible Vanilla TerrainDefs;
-- exact excavation work;
-- exact intake / gate / culvert material costs;
-- exact open-canal movement penalty;
-- final TerrainDef / ThingDef / C# representation;
-- final overlay presentation;
-- current DBH 1.6 adapter API details;
-- whether stone-lined canal ships in the first public release after v1 functionality is stable.
+- exact Vanilla 1.6 source TerrainDef whitelist;
+- exact excavation and fill work;
+- exact canal movement penalty;
+- exact TerrainDef / rendering implementation;
+- safe fallback when original terrain cannot be restored;
+- first consumer integration and its API shape;
+- whether any feature beyond the minimal core belongs in the first public release.
