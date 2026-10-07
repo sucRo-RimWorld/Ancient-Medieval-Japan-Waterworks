@@ -67,7 +67,7 @@ Scope:
 5. supply a canal component directly when any canal cell is orthogonally adjacent to a valid natural-water cell;
 6. implement per-map event-driven connectivity state;
 7. render supplied vs dry canal state;
-8. automate direct-source adjacency, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
+8. automate direct-source adjacency, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge placement/non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
 
 Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
 
