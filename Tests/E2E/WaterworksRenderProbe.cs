@@ -30,11 +30,26 @@ namespace AncientMedievalJapan.Waterworks.E2E
             Dump(result, typeof(SectionLayer_Terrain));
             Dump(result, typeof(SectionLayer_Dynamic));
             Dump(result, typeof(LayerSubMesh));
-            Dump(result, typeof(SectionLayer_Watergen));
-            Dump(result, typeof(RimWorld.SectionLayer_BridgeProps));
+            DumpGameType(result, "Verse.SectionLayer_Watergen");
+            DumpGameType(result, "RimWorld.SectionLayer_BridgeProps");
             Dump(result, typeof(TerrainGrid));
             DumpCurrentLayers(result, focus);
             File.WriteAllText(Path.Combine(outputDirectory, "render-api.txt"), result.ToString());
+        }
+
+        // Some SectionLayer implementations are internal to Assembly-CSharp.
+        // Resolve their names at runtime instead of referencing inaccessible
+        // types in a different test assembly (CS0122).
+        private static void DumpGameType(StringBuilder sb, string fullName)
+        {
+            Type type = typeof(SectionLayer).Assembly.GetType(fullName, false);
+            if (type == null)
+            {
+                sb.AppendLine();
+                sb.AppendLine("TYPE " + fullName + " unavailable in loaded game");
+                return;
+            }
+            Dump(sb, type);
         }
 
         private static void DumpCurrentLayers(StringBuilder sb, IntVec3 focus)
