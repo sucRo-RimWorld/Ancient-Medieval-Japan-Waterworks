@@ -521,3 +521,10 @@ Preflight review immediately after the initial native SectionLayer prototype fou
 **Status:** SOURCE FIX COMMITTED — Windows build pending
 
 Author ran `Scripts/validate-source.ps1` unparameterized from `.../RimWorld/Mods/AncientMedievalJapanWaterWorks`. Static audit passed; no C# build ran because the script default only used `RIMWORLD_DIR`. Updated `Scripts/validate-source.ps1` to infer `<RimWorld>/Mods/<mod>` relative to the script location only when both explicit `-RimWorldDir` and environment variable are absent. Require the actual game `Assembly-CSharp.dll` to be present before accepting the inferred path. Preserve parameter/environment precedence and explicit failure for other layouts. Updated `Tests/static_audit.py` to guard the fallback contract. No gameplay, Def, save, or visuals were changed; Windows compilation remains unverified. `run-visual-e2e.ps1` already supplies the explicit parameter.
+
+### ADD-CHANGENOTE-20261008 — Versioned Workshop update notes
+
+**Owner:** Ancient-Medieval-Japan-Waterworks packaging/release
+**Status:** SOURCE IMPLEMENTED — dedicated metadata CI pending; gameplay/release gates unchanged
+
+Project `Docs/WorkshopChangenotes.md` now applies here: `About/Manifest.xml`, `About/Changelog.txt` and `About.xml` agree on `0.1.0-dev`. A narrow new workflow checks the metadata and YADA retention without running unowned gameplay tests. These subscriber metadata files have no effect on gameplay, packageId or Mod dependency rules. No Steam publishing or new runtime verification occurred.

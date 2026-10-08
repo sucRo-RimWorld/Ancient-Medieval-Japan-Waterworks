@@ -1,0 +1,31 @@
+name: Add Changenote metadata validation
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'About/About.xml'
+      - 'About/Manifest.xml'
+      - 'About/Changelog.txt'
+      - '.rimignore'
+      - 'Tests/validate_add_changenote.py'
+      - '.github/workflows/add-changenote.yml'
+  pull_request:
+    paths:
+      - 'About/About.xml'
+      - 'About/Manifest.xml'
+      - 'About/Changelog.txt'
+      - '.rimignore'
+      - 'Tests/validate_add_changenote.py'
+      - '.github/workflows/add-changenote.yml'
+concurrency:
+  group: add-changenote-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python Tests/validate_add_changenote.py

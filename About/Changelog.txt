@@ -1,0 +1,7 @@
+# Ancient-Medieval-Japan-Waterworks
+# Add Changenote reads the current version block during a supported Workshop upload.
+
+0.1.0-dev - Waterworks development metadata / 水路開発版の更新履歴整備
+- Prepared versioned Workshop changenotes for the independent canal-infrastructure module.
+- 独立した水路設備Modにバージョン別Workshop更新履歴を用意しました。
+- Visual acceptance, real runtime and release gates remain separate and unclaimed. / 描画受入・実機・公開判定は別途未完了です。
