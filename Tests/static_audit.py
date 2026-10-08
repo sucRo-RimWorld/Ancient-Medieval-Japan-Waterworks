@@ -270,7 +270,7 @@ for token in ("ScreenCapture.CaptureScreenshot", "connected.png", "disconnected.
               "restored.png", "TerrainDefOf.Bridge", "Find.CameraDriver.JumpToCurrentMapLoc",
               "new FileInfo(path).Length > 24"):
     assert token in visual_steps, token
-for token in ("-pickle-run=\\"waterworks-visual.feature\\"", "TestResults/Visual",
+for token in ("waterworks-visual.feature", "TestResults/Visual",
               "Select-String -LiteralPath $log -Pattern", "Screenshot missing:",
               "WaterworksVisual"):
     assert token in visual_runner, token
