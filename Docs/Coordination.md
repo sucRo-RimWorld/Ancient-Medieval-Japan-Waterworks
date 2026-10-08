@@ -576,3 +576,11 @@ The author's explicit objection to three independently generated atlases was cor
 **Status:** SOURCE RESTRUCTURED; validation/publication evidence is recorded in Project `Docs/RuleAudit.md` and actual commit/CI results, not inferred here.
 
 AGENTS now routes through Project `Docs/SharedRules.md` stop conditions and task procedures. New development requires VE and non-VE source/evidence comparison plus a justified implementation decision. Static/runtime/specification/distribution/publication remain separate states. Historical records below/above retain their original scope; this entry does not reopen paused work, change gameplay/dependencies/art/versions, or supersede owner runtime/release blockers. Main-only Coordination means one authoritative integrated log, not deleting branch snapshots. No Steam/2game update is claimed.
+
+
+### VIS-WATERWORKS-020 — cross-chat connected tile workflow retained in canonical sources (2026-10-08)
+
+**Owner:** Waterworks art/production
+**Status:** DOCUMENTATION LINKAGE DONE; imagery and renderer approval still OPEN
+
+The author pointed out that a previous chat (“マップチップ生成のコツ”) cannot reliably be read in full from a new task/chat, and shared chat URLs are not a dependable canonical technical reference. AMJ Project now documents the reusable connected-map-tile production procedure in `Docs/GoldenPaths/TextureAssetPipeline.md` under “Connected map tiles — reusable workflow” (Project commit `ef444d6a2257b1482dbfba1135ade2583545f290`). The Waterworks formal design `Docs/Design.md` §8 now links this path as a startup production route. The link/decision is a technical *distillation of known prior guidance*, not a claim that the original chat's entire transcript was recovered. Previous stage `VIS-WATERWORKS-019` remains the status authority for the unapproved candidate ZIP, pending artistic approval and renderer integration. No gameplay, texture, original-ground rendering, build or loaded-game validation was performed for this documentation handoff.
