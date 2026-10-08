@@ -303,9 +303,12 @@ for mask in range(16):
     assert len(rectangles) == 1 + bin(mask).count("1")
     for x0,z0,x1,z1 in rectangles:
         assert -0.5 <= x0 < x1 <= 0.5 and -0.5 <= z0 < z1 <= 0.5
-    for other, bit, opposite in ((1,1,4),(2,2,8),(4,4,1),(8,8,2)):
-        # A shared boundary is spanned by precisely the matching arms.
-        if mask & bit:
-            assert (mask & bit) != 0 and (other & opposite) == 0 or mask & bit
+    # Edge exits appear if and only if their cardinal mask bit is set.
+    exits = {1: any(z1 == 0.5 for _,_,_,z1 in rectangles),
+             2: any(x1 == 0.5 for _,_,x1,_ in rectangles),
+             4: any(z0 == -0.5 for _,z0,_,_ in rectangles),
+             8: any(x0 == -0.5 for x0,_,_,_ in rectangles)}
+    for bit, present in exits.items():
+        assert present == bool(mask & bit), (mask, bit)
 
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
