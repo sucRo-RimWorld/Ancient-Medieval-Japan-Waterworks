@@ -365,6 +365,21 @@ Before commissioning or generating dedicated canal textures, prototype the dry/w
 
 This prioritizes reuse of the existing river artwork over creating new wet/dry illustrations.
 
+### 8.0.1 Narrow-channel rendering prototype decision (2026-10-08)
+
+The first real rendered-frame comparison (`connected(1).png`, `disconnected(1).png`, `restored(1).png`) established that direct reuse of full-cell wet water terrain and tinted dry soil does **not** achieve the required narrow excavated channel. The wet/dry transition is visible, but VIS-02 is a confirmed appearance failure.
+
+**Preserve gameplay TerrainDefs and their existing state machine.** Their graph connectivity, bridge affordance, path cost, source semantics, original-terrain persistence and job behavior must not change for a drawing-only correction.
+
+Before production implementation, prototype these approaches in the following order:
+
+1. **Data/material-only feasibility:** check whether a custom alpha-bearing material/texture can preserve surrounding natural earth within a Waterworks terrain tile using RimWorld 1.6's actual section layers and water shader. Plain `edgeType`, `renderPrecedence` or `color` alone do not prescribe a center-channel width. Verify opacity and whether the water-depth shader accepts alpha correctly. Do not assume transparency reveals the recorded original terrain (which currently is save metadata, not an independently rendered lower terrain layer).
+2. **Minimal channel-specific section/overlay:** if the TerrainDef-only trial cannot show original banks, preserve a neutral underlying canal cell and draw a narrow, cardinal-neighbor-aware wet/dry channel with banks as a dedicated Waterworks rendering layer. A line, elbow, end, T and cross must join without seams, and the source mouth must visibly meet water. Rendering must invalidate on the existing terrain-change events and must not scan/simulate the whole canal graph each frame.
+3. **Bridge/foundation interaction:** confirm the layer draws below Vanilla foundations or skips/occludes foundation-covered cells appropriately. A full-cell transparent bridge trick, external foundation pack dependency, or global rendering Harmony patch is not an acceptable default.
+4. **Assets:** reuse Vanilla materials when visually sufficient. Create only the smallest original graphics needed after the chosen rendering path is proven in a live 1.6 scene. Keep accepted masters under `Art/Sources` when asset work is authorized. Do not copy bundled Vanilla textures into the Mod.
+
+**No arbitrary width or bank color is fixed yet.** The channel must be visibly narrower than one tile, but its exact fraction, material, corners and edge shading require side-by-side actual game frames and evaluation against `Docs/GoldenPaths/VisualAcceptance.md`. Neither a PNG capture success nor a loaded-Def check constitutes visual acceptance.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
