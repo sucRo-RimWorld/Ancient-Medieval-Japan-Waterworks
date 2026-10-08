@@ -23,6 +23,8 @@ Adding this Mod to a pre-existing game is [b]still being tested[/b]. Safe remova
 
 Details: [url=https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Waterworks]GitHub README[/url]
 
+[hr][/hr]
+
 [h2]日本語 / Japanese[/h2]
 
 [b]河川や池の自然水から直接取水する開渠（水路）を掘り、埋め戻せるようにする独立Modの開発版です。[/b]
