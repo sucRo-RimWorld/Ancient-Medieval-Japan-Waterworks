@@ -4,13 +4,21 @@ using Verse;
 
 namespace AncientMedievalJapan.Waterworks
 {
-    /// <summary>Binary, four-direction canal supply and original terrain restoration.</summary>
+    /// <summary>
+    /// Binary four-direction canal supply. The grid index is reconstructed once
+    /// on load, then maintained by earthwork and MapEvents.TerrainChanged.
+    /// </summary>
     public sealed class CanalMapComponent : MapComponent
     {
         private Dictionary<int, string> originals = new Dictionary<int, string>();
+        private readonly HashSet<IntVec3> canalCells = new HashSet<IntVec3>();
         private readonly HashSet<IntVec3> visited = new HashSet<IntVec3>();
         private readonly Queue<IntVec3> queue = new Queue<IntVec3>();
         private readonly List<IntVec3> component = new List<IntVec3>();
+        private readonly List<IntVec3> staleCells = new List<IntVec3>();
+        private bool subscribed;
+        private bool changingCanalTerrain;
+        private bool needsRecalculation;
 
         public CanalMapComponent(Map map) : base(map) { }
 
@@ -26,25 +34,74 @@ namespace AncientMedievalJapan.Waterworks
         public override void FinalizeInit()
         {
             base.FinalizeInit();
+            RebuildCanalIndex();
             Recalculate();
+            if (map.events != null && !subscribed)
+            {
+                map.events.TerrainChanged += OnTerrainChanged;
+                subscribed = true;
+            }
+        }
+
+        public override void MapRemoved()
+        {
+            if (subscribed && map.events != null)
+                map.events.TerrainChanged -= OnTerrainChanged;
+            subscribed = false;
+            base.MapRemoved();
         }
 
         public override void MapComponentTick()
         {
-            if (Find.TickManager.TicksGame % 2500 == 0) Recalculate();
+            // One batched recalculation on the next tick after a source change.
+            // No periodic full-map scan and no per-tick fluid simulation.
+            if (needsRecalculation)
+                Recalculate();
+        }
+
+        private void OnTerrainChanged(IntVec3 cell)
+        {
+            if (changingCanalTerrain || !cell.InBounds(map)) return;
+
+            // Also handles an externally replaced canal cell without retaining a
+            // stale graph vertex. Unknown externally created canals cannot be
+            // filled safely because no original-terrain record exists.
+            if (IsCanal(cell))
+                canalCells.Add(cell);
+            else
+                canalCells.Remove(cell);
+
+            // Even a standing-water cell away from the canal can change whether
+            // a small pond meets the nine-cell threshold. Coalesce all terrain
+            // notifications rather than attempt unsafe adjacency-only filtering.
+            if (canalCells.Count > 0)
+                needsRecalculation = true;
+        }
+
+        private void RebuildCanalIndex()
+        {
+            canalCells.Clear();
+            for (int index = 0; index < map.cellIndices.NumGridCells; index++)
+            {
+                IntVec3 cell = map.cellIndices.IndexToCell(index);
+                if (IsCanal(cell))
+                    canalCells.Add(cell);
+            }
         }
 
         public bool IsCanal(IntVec3 c)
         {
             if (!c.InBounds(map)) return false;
             TerrainDef t = map.terrainGrid.TopTerrainAt(c);
-            return t == AMJW_Defs.AMJW_DugCanalDry || t == AMJW_Defs.AMJW_DugCanalWet;
+            return t == AMJW_Defs.AMJW_DugCanalDry ||
+                   t == AMJW_Defs.AMJW_DugCanalWet;
         }
 
         public AcceptanceReport CanDig(IntVec3 c)
         {
             if (!c.InBounds(map) || c.Fogged(map)) return false;
             if (IsCanal(c)) return "AMJW_AlreadyCanal".Translate();
+
             TerrainGrid grid = map.terrainGrid;
             TerrainDef t = grid.TopTerrainAt(c);
             if (t.IsRoad) return "AMJW_RoadBlocked".Translate();
@@ -56,10 +113,12 @@ namespace AncientMedievalJapan.Waterworks
                 if (thing is Plant || thing.def.category == ThingCategory.Building)
                     return "AMJW_Blocked".Translate();
             }
-            if (t == TerrainDefOf.Ice || t.IsWater || t.defName == "Marsh" ||
-                t.defName == "Mud" || t.affordances == null ||
+            if (!t.natural || t.IsFloor || t.IsIce || t.IsWater ||
+                t.defName == "Marsh" || t.defName == "Mud" ||
+                t.affordances == null ||
                 !t.affordances.Contains(TerrainAffordanceDefOf.Diggable))
                 return "AMJW_CannotDig".Translate();
+
             return AcceptanceReport.WasAccepted;
         }
 
@@ -69,7 +128,9 @@ namespace AncientMedievalJapan.Waterworks
             if (!IsCanal(c)) return "AMJW_NotCanal".Translate();
             if (map.terrainGrid.FoundationAt(c) != null ||
                 map.terrainGrid.UnderTerrainAt(c) != null ||
-                c.GetFirstBuilding(map) != null) return "AMJW_Blocked".Translate();
+                c.GetFirstBuilding(map) != null)
+                return "AMJW_Blocked".Translate();
+
             string oldDefName;
             if (!originals.TryGetValue(map.cellIndices.CellToIndex(c), out oldDefName) ||
                 DefDatabase<TerrainDef>.GetNamedSilentFail(oldDefName) == null)
@@ -80,8 +141,18 @@ namespace AncientMedievalJapan.Waterworks
         public bool Dig(IntVec3 c)
         {
             if (!CanDig(c).Accepted) return false;
-            originals[map.cellIndices.CellToIndex(c)] = map.terrainGrid.TopTerrainAt(c).defName;
-            map.terrainGrid.SetTerrain(c, AMJW_Defs.AMJW_DugCanalDry);
+            originals[map.cellIndices.CellToIndex(c)] =
+                map.terrainGrid.TopTerrainAt(c).defName;
+            changingCanalTerrain = true;
+            try
+            {
+                map.terrainGrid.SetTerrain(c, AMJW_Defs.AMJW_DugCanalDry);
+            }
+            finally
+            {
+                changingCanalTerrain = false;
+            }
+            canalCells.Add(c);
             Recalculate();
             return true;
         }
@@ -92,31 +163,44 @@ namespace AncientMedievalJapan.Waterworks
             int index = map.cellIndices.CellToIndex(c);
             TerrainDef original = DefDatabase<TerrainDef>.GetNamedSilentFail(originals[index]);
             if (original == null) return false;
-            map.terrainGrid.SetTerrain(c, original);
+
+            changingCanalTerrain = true;
+            try
+            {
+                map.terrainGrid.SetTerrain(c, original);
+            }
+            finally
+            {
+                changingCanalTerrain = false;
+            }
             originals.Remove(index);
+            canalCells.Remove(c);
             Recalculate();
             return true;
         }
 
         private static bool IsStanding(TerrainDef t)
-            => t.defName == "WaterShallow" || t.defName == "WaterDeep";
+        {
+            return t.defName == "WaterShallow" || t.defName == "WaterDeep";
+        }
 
         private bool SourceAt(IntVec3 c)
         {
             if (!c.InBounds(map)) return false;
             TerrainDef t = map.terrainGrid.TopTerrainAt(c);
-            if (t.defName == "WaterMovingShallow" || t.defName == "WaterMovingChestDeep")
+            if (t.defName == "WaterMovingShallow" ||
+                t.defName == "WaterMovingChestDeep")
                 return true;
             return IsStanding(t) && StandingBodyHasNineCells(c);
         }
 
         private bool StandingBodyHasNineCells(IntVec3 start)
         {
-            // Bounded BFS; do not traverse a whole lake once nine cells are found.
+            // Bounded flood-fill: stop at 9, even for a large lake.
             HashSet<IntVec3> seen = new HashSet<IntVec3> { start };
             Queue<IntVec3> pending = new Queue<IntVec3>();
             pending.Enqueue(start);
-            while (pending.Count != 0)
+            while (pending.Count > 0)
             {
                 IntVec3 at = pending.Dequeue();
                 if (seen.Count >= 9) return true;
@@ -134,41 +218,61 @@ namespace AncientMedievalJapan.Waterworks
 
         public void Recalculate()
         {
+            needsRecalculation = false;
             visited.Clear();
-            for (int index = 0; index < map.cellIndices.NumGridCells; index++)
+            staleCells.Clear();
+            changingCanalTerrain = true;
+            try
             {
-                IntVec3 start = map.cellIndices.IndexToCell(index);
-                if (!IsCanal(start) || !visited.Add(start)) continue;
-                queue.Clear();
-                component.Clear();
-                queue.Enqueue(start);
-                bool supplied = false;
-                while (queue.Count > 0)
+                foreach (IntVec3 start in canalCells)
                 {
-                    IntVec3 here = queue.Dequeue();
-                    component.Add(here);
-                    foreach (IntVec3 d in GenAdj.CardinalDirections)
+                    if (!IsCanal(start))
                     {
-                        IntVec3 next = here + d;
-                        if (!next.InBounds(map)) continue;
-                        if (IsCanal(next))
+                        staleCells.Add(start);
+                        continue;
+                    }
+                    if (!visited.Add(start)) continue;
+
+                    queue.Clear();
+                    component.Clear();
+                    queue.Enqueue(start);
+                    bool supplied = false;
+
+                    while (queue.Count > 0)
+                    {
+                        IntVec3 here = queue.Dequeue();
+                        component.Add(here);
+                        foreach (IntVec3 d in GenAdj.CardinalDirections)
                         {
-                            if (visited.Add(next)) queue.Enqueue(next);
-                        }
-                        else if (!supplied && SourceAt(next))
-                        {
-                            supplied = true;
+                            IntVec3 next = here + d;
+                            if (!next.InBounds(map)) continue;
+                            if (IsCanal(next))
+                            {
+                                if (visited.Add(next))
+                                    queue.Enqueue(next);
+                            }
+                            else if (!supplied && SourceAt(next))
+                            {
+                                supplied = true;
+                            }
                         }
                     }
-                }
-                TerrainDef desired = supplied ? AMJW_Defs.AMJW_DugCanalWet :
-                                              AMJW_Defs.AMJW_DugCanalDry;
-                foreach (IntVec3 cell in component)
-                {
-                    if (map.terrainGrid.TopTerrainAt(cell) != desired)
-                        map.terrainGrid.SetTerrain(cell, desired);
+
+                    TerrainDef desired = supplied ?
+                        AMJW_Defs.AMJW_DugCanalWet : AMJW_Defs.AMJW_DugCanalDry;
+                    foreach (IntVec3 cell in component)
+                    {
+                        if (map.terrainGrid.TopTerrainAt(cell) != desired)
+                            map.terrainGrid.SetTerrain(cell, desired);
+                    }
                 }
             }
+            finally
+            {
+                changingCanalTerrain = false;
+            }
+            foreach (IntVec3 stale in staleCells)
+                canalCells.Remove(stale);
         }
     }
 }

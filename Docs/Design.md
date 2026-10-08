@@ -359,6 +359,7 @@ Before commissioning or generating dedicated canal textures, prototype the dry/w
 - Explicitly check the water shader's rendering, edge blending, depth/animation assumptions and bridge/foundation occlusion in RimWorld 1.6. Reusing its visual resources is a **candidate**, not a tested guarantee.
 - If the wet water surface works but the canal lacks visible excavated edges, add only a minimal transparent soil-bank/rim overlay. Do not make this or new water art a prerequisite for the functional prototype.
 - If the unmodified Vanilla visuals are readable and visually acceptable, ship without dedicated production canal textures.
+- **Visual scale decision (2026-10-08):** the excavated water channel should appear **substantially narrower than the full one-cell footprint**. Leave visible adjacent ground/earth banks within the tile. The earlier wide/deep trench concept images are not production assets. Defer all new image creation until after runtime behavior and Vanilla river-art reuse have been tested.
 
 This prioritizes reuse of the existing river artwork over creating new wet/dry illustrations.
 
@@ -437,7 +438,13 @@ Invalidate / recalculate when relevant state changes, such as:
 
 Do not scan every canal cell every tick.
 
-Because another mod may alter source terrain without notifying Waterworks, a low-frequency source-validity check is acceptable if implementation requires one.
+RimWorld 1.6 provides `map.events.TerrainChanged`. The runtime implementation subscribes to this event after map initialization and releases it on removal; affected source changes are coalesced into a single recalculation on the next component tick. Canal jobs recalculate immediately on completion.
+
+- Maintain the set of canal cells rather than enumerating all map cells every time.
+- Build the index once during map initialization/load; keep it synchronized as canal terrain is added/removed.
+- Invalidation is broad enough to catch a standing-water body changing from 9 cells to 8, even when the altered pond cell is not immediately next to the canal.
+- Ignore this mod's own wet/dry TerrainDef replacements to avoid self-triggered update loops.
+- Mod code that mutates `topGrid` without sending normal terrain events is outside guaranteed compatibility; do not compensate with regular map-wide polling unless a real integration demonstrates a need.
 
 ## 10. Player interaction / UX
 

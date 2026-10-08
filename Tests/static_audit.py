@@ -78,7 +78,7 @@ for required in (
     "FoundationAt(c)",
     "originals.Remove(index)",
     "t.IsRoad",
-    "t == TerrainDefOf.Ice",
+    "t.IsIce",
 ):
     assert required in source, required
 assert 't.defName == "Marsh"' in source
@@ -99,6 +99,20 @@ all_defnames = []
 for xml_path in (root / "Defs").rglob("*.xml"):
     all_defnames += [node.text for node in ET.parse(xml_path).iter("defName")]
 assert len(all_defnames) == len(set(all_defnames)), "duplicate local DefName"
+
+# RimWorld 1.6 event invalidation: retain map index and avoid full-map polling.
+component_source = (root / "Source/CanalMapComponent.cs").read_text(encoding="utf-8")
+for marker in (
+    "map.events.TerrainChanged += OnTerrainChanged;",
+    "map.events.TerrainChanged -= OnTerrainChanged;",
+    "RebuildCanalIndex();",
+    "foreach (IntVec3 start in canalCells)",
+    "if (needsRecalculation)",
+    "changingCanalTerrain = true;",
+    "changingCanalTerrain = false;",
+):
+    assert marker in component_source, marker
+assert "TicksGame %" not in component_source, "Periodic full-map polling is not permitted"
 
 assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 print("[OK] XML and RimWorld 1.6 draw-style contract checked (runtime not tested)")

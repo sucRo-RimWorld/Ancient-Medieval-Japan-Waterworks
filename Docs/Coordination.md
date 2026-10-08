@@ -192,3 +192,16 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Added `Scripts/validate-source.ps1` for non-interactive static + Windows RimWorld DLL build.
 - Canonical repository procedure: `Docs/GoldenPaths/SourceValidation.md`.
 - Unmet gates: actual 1.6 C# build, non-interactive Pickle/RimTest Redux, runtime ERROR=0, save/load and actual wet-water shader/bridge appearance.
+
+
+### PROTO-WATERWORKS-EVENT-001 — terrain-change invalidation, narrow visual intent
+
+**Owner:** Waterworks implementation
+**Status:** DONE for source-level design/implementation; build/runtime still pending
+
+- Use RimWorld 1.6 `MapEvents.TerrainChanged` notifications and coalesce them to the next map tick; no periodic full-map scan.
+- Maintain a per-map set of Waterworks canal cells; rebuild it during map initialization/load and update on excavation/fill and external changes.
+- Prevent graph recalc from recursively reacting to its own wet/dry TerrainDef changes.
+- Broad terrain-change invalidation supports standing-water size changes away from an adjacent canal.
+- Image production is on hold; when revisited, render the excavated center channel substantially **narrower** than the one-cell terrain footprint. The previous wide concept images are not accepted production art.
+- Remaining acceptance: game build, Pickle/RimTest Redux, no runtime ERRORs, and water/bridge shader rendering.
