@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
     [string]$RimWorldDir = 'D:\SteamLibrary\steamapps\common\RimWorld',
-    [ValidateRange(60, 1800)][int]$TimeoutSeconds = 360
+    [ValidateRange(60, 1800)][int]$TimeoutSeconds = 600
 )
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -90,7 +90,7 @@ $isolated = @"
     $isolated, (New-Object System.Text.UTF8Encoding($false)))
 Write-Host '[INFO] Normal ModsConfig.xml was not modified.'
 Write-Host "[INFO] Isolated SaveData: $save"
-Write-Host '[INFO] Five Pickle graph/bridge/pawn-work scenarios; render path remains enabled.'
+Write-Host '[INFO] Six Pickle graph/bridge/pawn-work/save-load scenarios; render path remains enabled.'
 $psi = New-Object System.Diagnostics.ProcessStartInfo
 $psi.FileName = $exe
 $psi.WorkingDirectory = $RimWorldDir
@@ -104,7 +104,7 @@ $psi.Arguments = @(
     '-pickle-mode=fast',
     '-pickle-report-dir="' + $report + '"',
     '-pickle-no-browser',
-    '-pickle-run-timeout=5'
+    '-pickle-run-timeout=8'
 ) -join ' '
 $process = New-Object System.Diagnostics.Process
 $process.StartInfo = $psi
@@ -120,20 +120,21 @@ finally { $process.Dispose() }
 $summaryPath = Join-Path $report 'summary.json'
 Check (Test-Path -LiteralPath $summaryPath) "Fresh Pickle summary missing: $summaryPath"
 $summary = Get-Content -LiteralPath $summaryPath -Raw | ConvertFrom-Json
-Check (([int]$summary.total -eq 5) -and ([int]$summary.passed -eq 5) -and
-    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 5/5 gate failed: $summaryPath"
+Check (([int]$summary.total -eq 6) -and ([int]$summary.passed -eq 6) -and
+    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 6/6 gate failed: $summaryPath"
 $required = @(
     'Waterworks production Defs load correctly',
     'Four-direction canal branches connect and disconnect',
     'Standing freshwater requires nine adjacent cells',
     'Vanilla bridge preserves canal flow and terrain restoration',
-    'Construction pawn completes real dig and fill jobs'
+    'Construction pawn completes real dig and fill jobs',
+    'Save and reload restores canal supply and original ground'
 )
 $names = @($summary.scenarios | ForEach-Object { [string]$_.name })
 foreach ($name in $required) { Check ($names -contains $name) "Missing scenario: $name" }
 Check (Test-Path -LiteralPath $log) 'Isolated Player.log missing.'
 $errorCount = @([regex]::Matches((Get-Content -LiteralPath $log -Raw), '(?im)^.*\[ERROR\].*$')).Count
 Check ($errorCount -eq 0) "$errorCount ERROR-level runtime entries: $log"
-Write-Host '[OK] Five Waterworks Pickle scenarios passed; no [ERROR] runtime lines.'
+Write-Host '[OK] Six Waterworks Pickle scenarios passed; no [ERROR] runtime lines.'
 Write-Host "[INFO] Reports: $report"
-Write-Warning 'Save/load and visual checks are still open.'
+Write-Warning 'Visual rendering and addition to an existing save remain open.'

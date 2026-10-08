@@ -18,3 +18,9 @@ Feature: Waterworks independent canal core
   @quickstart:WaterworksQuickstart @timeout:180
   Scenario: Construction pawn completes real dig and fill jobs
     Then a construction pawn actually digs and fills a canal
+
+  @quickstart:WaterworksQuickstart @timeout:300
+  Scenario: Save and reload restores canal supply and original ground
+    Given Waterworks has supplied and dry canals with distinct original ground
+    When I save and reload
+    Then Waterworks rebuilds supply and restores both saved ground types

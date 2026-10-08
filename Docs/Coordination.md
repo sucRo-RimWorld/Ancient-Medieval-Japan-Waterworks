@@ -272,10 +272,26 @@ Following the user's clean production build, a first developer-only Pickle/Quick
 ### TEST-WATERWORKS-E2E-002 — real pawn earthwork jobs
 
 **Owner:** Waterworks implementation
-**Status:** IN PROGRESS — fifth Pickle scenario authored, local build/runtime not yet checked
+**Status:** DONE — author confirmed expanded 5/5 suite passed (2026-10-08 JST)
 
 Following the author's passing 4/4 suite, the fifth scenario checks a capable real Construction pawn, actual map designations, production WorkGiver-generated Dig and Fill jobs, pawn JobTracker execution with engine ticks, wet canal state after excavation, restored Soil after filling, and removal of completed designations. It does not call the direct `CanalMapComponent.Dig/Fill` methods as the operation under test.
 
 The runner and static feature contract now require **5/5** exact scenarios and zero isolated `[ERROR]` entries. The test remains in the isolated Quickstarts/Pickle mod; the player's normal mod settings are not altered.
 
-**Next gate:** build E2E test DLLs and execute `Scripts/run-e2e.ps1`. Investigate any compilation/job failure before expanding the suite. Cross-session save/load and visual presentation remain OPEN.
+**Observed:** user reported passing the expanded suite without errors. Production Construction-pawn Dig/Fill E2E is accepted. The next persistence gate is TEST-WATERWORKS-E2E-003; visual presentation remains OPEN.
+
+
+### TEST-WATERWORKS-E2E-003 — real .rws round trip and original-ground persistence
+
+**Owner:** Waterworks implementation  
+**Status:** IN PROGRESS — sixth Pickle scenario authored, runtime build/execution pending
+
+Following user-confirmed **5/5**, the new scenario creates a wet canal originally dug from Gravel and an isolated dry canal originally dug from Soil, uses Pickle's own built-in `When I save and reload` engine step to write and reload an actual `.rws`, then obtains a **new** `Find.CurrentMap.GetComponent<CanalMapComponent>()` and checks:
+- wet/dry terrain states rebuilt after reload;
+- original-terrain records are deserialized (`CanFill` accepted for each);
+- a source change after reload dries/rewets the connected canal through `TerrainChanged`;
+- filling the loaded canals restores the distinct original Gravel and Soil TerrainDefs.
+
+The original Quickstart map belongs only to isolated TestResults SaveData; Pickle's round-trip save is temporary and removed by Pickle. E2E requires **6/6** exactly named scenarios with zero isolated `[ERROR]` entries.
+
+**Next gate:** run the existing `Scripts/run-e2e.ps1` after pulling `main`; repair any compile/runtime issues before marking 6/6 passed. Visual appearance, narrow trench treatment and testing addition to an existing pre-Waterworks save are independently pending. Do not make new images yet.

@@ -579,7 +579,11 @@ Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow
 
 ### Initial loaded-map test gate
 
-The first automated RimWorld E2E stage is a four-scenario Pickle/Quickstarts suite for loaded production Defs, actual MapComponent/terrain connectivity, the 9-cell freshwater threshold, and bridge/foundation-preserving restoration. It manipulates the test map's terrain through the **real game API** rather than a mock graph. The author reported the original 4/4 suite passed without errors. The expanded five-scenario test adds genuine Construction work: a pawn receives a Waterworks designation through the production WorkGiver, completes Dig and Fill jobs through its JobDriver, and verifies the changed terrain and cleared designation. The expanded gate requires 5/5 named scenarios and no runtime `[ERROR]` entries. Cross-session save/load and visual acceptance remain separate, unverified gates.
+The first automated RimWorld E2E stage is a four-scenario Pickle/Quickstarts suite for loaded production Defs, actual MapComponent/terrain connectivity, the 9-cell freshwater threshold, and bridge/foundation-preserving restoration. It manipulates the test map's terrain through the **real game API** rather than a mock graph. The author reported the original **5/5** suite passed without errors, including genuine Construction work: a pawn received a Waterworks designation through the production WorkGiver, completed Dig and Fill through its JobDriver, and cleared the completed designations.
+
+The sixth scenario adds a **real in-process disk save/reload via Pickle's built-in engine step**. A map containing one wet canal on originally Gravel ground and one dry canal on originally Soil ground is written as a temporary `.rws` and reloaded into a new `Game`. Validation retrieves the **reloaded map's** Waterworks component, checks the states rebuilt by `FinalizeInit`, verifies fresh terrain-event reactions and fills the two canals back to their two different original TerrainDefs. An in-memory serialize/deserialize substitute does **not** satisfy this gate.
+
+The expanded automated gate requires **6/6** named scenarios and no runtime `[ERROR]` entries. Real save/reload execution and visual acceptance remain **unverified until the 6/6 test is run**. Adding Waterworks to a pre-existing save is a separate test, not implied by a save/reload round trip.
 
 ## 14. Prototype acceptance gate
 
@@ -663,7 +667,7 @@ Initial support target:
 - **Adding Waterworks to an existing RimWorld 1.6 save:** should be supported once runtime-tested. Existing terrain is untouched until the player designates canal work.
 - **Removing Waterworks from a save that has ever used Waterworks terrain/state:** not supported by default.
 
-Before public release, test adding to an existing save explicitly. Do not advertise safe removal merely because all visible canals were filled; custom map/save state may still make removal unsafe.
+The six-scenario E2E round trip verifies retention of Waterworks-created state; it does **not** verify adding the mod to a save originally created without it. Before public release, test adding to an existing save explicitly. Do not advertise safe removal merely because all visible canals were filled; custom map/save state may still make removal unsafe.
 
 ## 19. First implementation slice
 

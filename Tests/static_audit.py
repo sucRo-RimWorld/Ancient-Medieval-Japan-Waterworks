@@ -140,18 +140,20 @@ assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 # Pickle feature/step synchronization check; does not execute RimWorld.
 feature = (root / "Tests/E2E/TestMod/Pickle/Features/waterworks-core.feature").read_text(encoding="utf-8")
 e2e_steps = (root / "Tests/E2E/WaterworksSteps.cs").read_text(encoding="utf-8")
-assert feature.count("  Scenario:") == 5
-assert feature.count("@quickstart:WaterworksQuickstart") == 4
+assert feature.count("  Scenario:") == 6
+assert feature.count("@quickstart:WaterworksQuickstart") == 5
 for step in (
     "Waterworks loaded Defs preserve the canal contract",
     "cardinal canal branches connect disconnect and reconnect",
     "standing ponds use the nine cell freshwater threshold",
     "Vanilla bridge preserves water and gravel restoration",
     "a construction pawn actually digs and fills a canal",
+    "Waterworks rebuilds supply and restores both saved ground types",
 ):
     assert "Then " + step in feature
     assert '[Then("' + step + '")]' in (
-        e2e_steps + (root / "Tests/E2E/WaterworksPawnJobs.cs").read_text(encoding="utf-8")
+        e2e_steps + (root / "Tests/E2E/WaterworksPawnJobs.cs").read_text(encoding="utf-8") +
+        (root / "Tests/E2E/WaterworksPersistenceSteps.cs").read_text(encoding="utf-8")
     )
 assert "TestResults/" in (root / ".rimignore").read_text(encoding="utf-8")
 assert (root / "Scripts/run-e2e.ps1").exists()
@@ -167,5 +169,24 @@ for required in (
     "AMJW_FillCanalJob",
 ):
     assert required in pawn_source, required
+
+# Pickle supplies the real disk round-trip step; do not replace it with
+# in-process MapComponent serialization (which would miss load events).
+assert 'When I save and reload' in feature
+assert 'Given Waterworks has supplied and dry canals with distinct original ground' in feature
+persist_source = (root / "Tests/E2E/WaterworksPersistenceSteps.cs").read_text(encoding="utf-8")
+assert '[Given("Waterworks has supplied and dry canals with distinct original ground")]' in persist_source
+for expected in (
+    'loadedMap.GetComponent<CanalMapComponent>()',
+    'loaded.CanFill(suppliedCell).Accepted',
+    'loaded.CanFill(dryCell).Accepted',
+    'loaded.Fill(suppliedCell)',
+    'loaded.Fill(dryCell)',
+    'AMJW_DugCanalWet',
+    'AMJW_DugCanalDry',
+):
+    assert expected in persist_source, expected
+assert '<Compile Include="WaterworksPersistenceSteps.cs"/>' in (
+    root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
 
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
