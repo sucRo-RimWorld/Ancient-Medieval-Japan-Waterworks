@@ -380,6 +380,16 @@ Before production implementation, prototype these approaches in the following or
 
 **No arbitrary width or bank color is fixed yet.** The channel must be visibly narrower than one tile, but its exact fraction, material, corners and edge shading require side-by-side actual game frames and evaluation against `Docs/GoldenPaths/VisualAcceptance.md`. Neither a PNG capture success nor a loaded-Def check constitutes visual acceptance.
 
+### 8.0.2 Native section-layer prototype (2026-10-08; unaccepted)
+
+RimWorld 1.6's `Section` discovers non-abstract `SectionLayer` subclasses in loaded mod assemblies. A Waterworks-only `SectionLayer_AMJW_Canal` uses the already implemented 16-mask center/arm geometry and emits quads into RimWorld `LayerSubMesh` on terrain regeneration. Draw calls use the engine's ordinary `SectionLayer.DrawLayer` lifecycle; no Harmony patch or bespoke per-frame simulation is required.
+
+For this **first visible prototype**, both existing canal TerrainDefs use the Vanilla Soil underlay while retaining their identities, movement, wet/dry side effects, and saved terrain restoration. The old full-cell `Map/WaterDepth` shader on wet terrain is removed because it would paint the entire canal tile; a narrow section-mesh uses shared Vanilla soil and shallow-water textures with `TerrainHard` shader. This initial water appearance is **not yet animated**. Narrow water width=0.40 cell, wider brown earth rim=0.68 cell are provisional comparison parameters, not accepted art measurements.
+
+An ordinary Vanilla bridge foundation suppresses Waterworks overlay quads on that foundation cell rather than risking water being drawn above the bridge. The graph still includes that cell and remains connected. The render layer reacts to Terrain mesh flags and adjacent-section invalidation during dig/fill/external terrain change.
+
+**Known unresolved matters:** the neutral Soil underlay does not reproduce every cell's original Gravel/RichSoil colour before restoration; surface materials and overlap at river mouths, T/cross seams, snow, shallow-water movement, and the appearance beneath Vanilla foundations require in-game images. Passing compilation or finding the SectionLayer in an E2E test does not approve VIS-01 through VIS-07. Revisit either underlying per-cell bank matching or a narrower alternative only after reviewing a real frame, and do not widen the gameplay subsystem to solve visuals.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.

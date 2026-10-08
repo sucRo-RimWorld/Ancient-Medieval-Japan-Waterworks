@@ -5,7 +5,7 @@
     <label>dry dug canal</label>
     <description>An excavated channel without a fresh-water connection.</description>
     <texturePath>Terrain/Surfaces/Soil</texturePath>
-    <color>(0.72, 0.64, 0.54)</color>
+    <color>(1, 1, 1)</color>
     <edgeType>FadeRough</edgeType>
     <renderPrecedence>388</renderPrecedence>
     <pathCost>10</pathCost>
@@ -18,10 +18,10 @@
     <defName>AMJW_DugCanalWet</defName>
     <label>supplied dug canal</label>
     <description>An open dug canal connected to a valid natural freshwater source.</description>
-    <texturePath>Terrain/Surfaces/WaterShallowRamp</texturePath>
-    <waterDepthShader>Map/WaterDepth</waterDepthShader>
-    <waterDepthShaderParameters><_UseWaterOffset>1</_UseWaterOffset></waterDepthShaderParameters>
-    <edgeType>Water</edgeType>
+    <!-- Neutral soil under the narrow Waterworks section-layer surface. -->
+    <texturePath>Terrain/Surfaces/Soil</texturePath>
+    <color>(1, 1, 1)</color>
+    <edgeType>FadeRough</edgeType>
     <renderPrecedence>389</renderPrecedence>
     <pathCost>10</pathCost>
     <fertility>0</fertility>

@@ -82,6 +82,13 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     context.Assert(water.triangles.Length == 6 * (1 + CountArms(mask)), "Mesh triangle count " + mask);
                     UnityEngine.Object.Destroy(water);
                 }
+                Section sourceSection = map.mapDrawer.SectionAt(center);
+                context.Require(sourceSection != null, "Scene section missing");
+                SectionLayer renderLayer = sourceSection.GetLayer(typeof(SectionLayer_AMJW_Canal));
+                context.Require(renderLayer != null, "Narrow canal SectionLayer not registered");
+                sourceSection.RegenerateSingleLayer(renderLayer);
+                context.Assert(renderLayer.subMeshes.Exists(s => s.finalized && s.verts.Count > 0),
+                    "Narrow canal SectionLayer emitted no render geometry");
                 Find.CameraDriver.JumpToCurrentMapLoc(center);
                 output = Path.Combine(GenFilePaths.SaveDataFolderPath, "WaterworksVisual");
                 Directory.CreateDirectory(output);

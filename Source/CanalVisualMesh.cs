@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Verse;
 
 namespace AncientMedievalJapan.Waterworks
 {
@@ -12,6 +13,34 @@ namespace AncientMedievalJapan.Waterworks
     /// </summary>
     public static class CanalVisualMesh
     {
+        /// <summary>
+        /// Append the same center/arm rectangles into a persistent SectionLayer
+        /// submesh. This avoids allocating one Unity Mesh per canal tile.
+        /// </summary>
+        public static void Append(LayerSubMesh submesh, int mask, float halfWidth,
+            Vector3 center, float elevation)
+        {
+            foreach (CanalVisualTopology.Rectangle rect in
+                     CanalVisualTopology.Rectangles(mask, halfWidth))
+            {
+                int i = submesh.verts.Count;
+                float x0 = center.x + rect.XMin, x1 = center.x + rect.XMax;
+                float z0 = center.z + rect.ZMin, z1 = center.z + rect.ZMax;
+                submesh.verts.Add(new Vector3(x0, elevation, z0));
+                submesh.verts.Add(new Vector3(x0, elevation, z1));
+                submesh.verts.Add(new Vector3(x1, elevation, z1));
+                submesh.verts.Add(new Vector3(x1, elevation, z0));
+                submesh.uvs.Add(new Vector3(x0, z0, 0f));
+                submesh.uvs.Add(new Vector3(x0, z1, 0f));
+                submesh.uvs.Add(new Vector3(x1, z1, 0f));
+                submesh.uvs.Add(new Vector3(x1, z0, 0f));
+                for (int j = 0; j < 4; j++)
+                    submesh.colors.Add(new Color32(255, 255, 255, 255));
+                submesh.tris.Add(i); submesh.tris.Add(i + 1); submesh.tris.Add(i + 2);
+                submesh.tris.Add(i); submesh.tris.Add(i + 2); submesh.tris.Add(i + 3);
+            }
+        }
+
         public static Mesh Build(int mask, float halfWidth, Vector3 center, float elevation)
         {
             CanalVisualTopology.Rectangles(mask, halfWidth); // validate mask/width

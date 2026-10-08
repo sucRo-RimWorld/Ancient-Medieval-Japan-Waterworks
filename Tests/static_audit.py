@@ -331,4 +331,26 @@ for target in ("typeof(SectionLayer)", "typeof(Section)", "typeof(MapDrawer)",
                "typeof(SectionLayer_Terrain)", "typeof(TerrainGrid)"):
     assert target in render_probe, target
 
+# Native SectionLayer prototype is auto-registered by RimWorld 1.6's Section
+# subclass enumeration. Its earth bank and water surface must not replace
+# gameplay terrain identity or its save data.
+canal_section = (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
+canal_mesh = (root / "Source/CanalVisualMesh.cs").read_text(encoding="utf-8")
+canal_runtime = (root / "Source/CanalMapComponent.cs").read_text(encoding="utf-8")
+terrain_defs = (root / "Defs/TerrainDefs/AMJW_Canals.xml").read_text(encoding="utf-8")
+assert "public sealed class SectionLayer_AMJW_Canal : SectionLayer" in canal_section
+assert "relevantChangeTypes = MapMeshFlagDefOf.Terrain" in canal_section
+assert "override void Regenerate()" in canal_section
+assert "CanalVisualMesh.Append(GetSubMesh(" in canal_section
+assert "grid.FoundationAt(cell) != null" in canal_section
+assert "FinalizeMesh(MeshParts.All)" in canal_section
+assert "public static void Append(LayerSubMesh submesh" in canal_mesh
+assert "InvalidateVisualAt(c);" in canal_runtime
+assert "MapMeshDirty(cell, MapMeshFlagDefOf.Terrain, true, true)" in canal_runtime
+assert "GetLayer(typeof(SectionLayer_AMJW_Canal))" in visual_steps
+assert "Narrow canal SectionLayer emitted no render geometry" in visual_steps
+assert "waterDepthShader>" not in terrain_defs
+assert terrain_defs.count("<texturePath>Terrain/Surfaces/Soil</texturePath>") == 2
+assert "<edgeType>Water</edgeType>" not in terrain_defs
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")

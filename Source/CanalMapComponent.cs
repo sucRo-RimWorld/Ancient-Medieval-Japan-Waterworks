@@ -62,6 +62,18 @@ namespace AncientMedievalJapan.Waterworks
         private void OnTerrainChanged(IntVec3 cell)
         {
             if (changingCanalTerrain || !cell.InBounds(map)) return;
+            bool touchedCanal = canalCells.Contains(cell) || IsCanal(cell);
+            // Neighboring terrain affects the mouths and four-direction geometry.
+            foreach (IntVec3 direction in GenAdj.CardinalDirections)
+            {
+                IntVec3 adjacent = cell + direction;
+                if (adjacent.InBounds(map) && IsCanal(adjacent))
+                {
+                    touchedCanal = true;
+                    break;
+                }
+            }
+            if (touchedCanal) InvalidateVisualAt(cell);
 
             // Also handles an externally replaced canal cell without retaining a
             // stale graph vertex. Unknown externally created canals cannot be
@@ -161,6 +173,7 @@ namespace AncientMedievalJapan.Waterworks
             }
             canalCells.Add(c);
             Recalculate();
+            InvalidateVisualAt(c);
             return true;
         }
 
@@ -183,7 +196,16 @@ namespace AncientMedievalJapan.Waterworks
             originals.Remove(index);
             canalCells.Remove(c);
             Recalculate();
+            InvalidateVisualAt(c);
             return true;
+        }
+
+        private void InvalidateVisualAt(IntVec3 cell)
+        {
+            // TerrainGrid already dirties its own cell. Adjacent section meshes
+            // also need a redraw when an arm starts/ends at a section boundary.
+            if (map.mapDrawer != null)
+                map.mapDrawer.MapMeshDirty(cell, MapMeshFlagDefOf.Terrain, true, true);
         }
 
         private static bool IsStanding(TerrainDef t)
