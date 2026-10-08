@@ -47,7 +47,7 @@ function Stage-TestMod([string]$destination, [string]$expectedId, [string]$sourc
         Require ((Test-Path -LiteralPath $aboutFile) -and ((Get-Content -LiteralPath $aboutFile -Raw) -match [regex]::Escape("<packageId>$expectedId</packageId>"))) "Refusing to replace unrelated Mod directory: $destination"
         Remove-Item -LiteralPath $destination -Recurse -Force
     }
-    foreach ($relative in @('About','Assemblies','Pickle/Assemblies','Pickle/Features')) {
+    foreach ($relative in @('About','Assemblies','Defs/ThingCategoryDefs','Pickle/Assemblies','Pickle/Features')) {
         $null = New-Item -ItemType Directory -Force -Path (Join-Path $destination $relative)
     }
     Copy-Item -LiteralPath (Join-Path $root "Tests/E2E/$sourceName/About/About.xml") -Destination (Join-Path $destination 'About/About.xml')
@@ -59,6 +59,9 @@ Copy-Item -LiteralPath (Join-Path $root 'TestResults/E2E/Build/Bootstrap/Ancient
 Copy-Item -LiteralPath (Join-Path $root 'TestResults/E2E/Build/Steps/AncientMedievalJapanWaterworks.E2E.Steps.dll') -Destination (Join-Path $addMod 'Pickle/Assemblies')
 Copy-Item -LiteralPath (Join-Path $root 'Tests/E2E/BootstrapMod/Pickle/Features/waterworks-before-install.feature') -Destination (Join-Path $bootstrapMod 'Pickle/Features')
 Copy-Item -LiteralPath (Join-Path $root 'Tests/E2E/AddToSaveMod/Pickle/Features/waterworks-add-to-save.feature') -Destination (Join-Path $addMod 'Pickle/Features')
+# Pickle/Features alone is not recognized as loaded game content in RimWorld 1.6.
+# Add a harmless test-only ThingCategoryDef to prevent an empty-mod ERROR.
+Copy-Item -LiteralPath (Join-Path $root 'Tests/E2E/AddToSaveMod/Defs/ThingCategoryDefs/AMJW_E2E_Marker.xml') -Destination (Join-Path $addMod 'Defs/ThingCategoryDefs')
 
 # Only the dedicated scratch folder is reset. Never touch a user's game saves.
 if (Test-Path -LiteralPath $results) { Remove-Item -LiteralPath $results -Recurse -Force }
