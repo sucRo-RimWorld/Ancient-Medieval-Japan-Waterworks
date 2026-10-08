@@ -118,12 +118,12 @@ namespace AncientMedievalJapan.Waterworks
                 if (thing.def.category == ThingCategory.Building)
                     return "AMJW_Blocked".Translate();
             }
-            // Vanilla natural soil does not necessarily set TerrainDef.natural.
-            // Diggable is the explicit excavation affordance.
+            // Diggable exists in RimWorld XML, but is not a TerrainAffordanceDefOf field.
+            // Check the loaded affordance DefName without assuming that field exists.
             if (t.IsFloor || t.IsIce || t.IsWater ||
                 t.defName == "Marsh" || t.defName == "Mud" ||
                 t.affordances == null ||
-                !t.affordances.Contains(TerrainAffordanceDefOf.Diggable))
+                !t.affordances.Exists(affordance => affordance != null && affordance.defName == "Diggable"))
                 return "AMJW_CannotDig".Translate();
 
             return AcceptanceReport.WasAccepted;

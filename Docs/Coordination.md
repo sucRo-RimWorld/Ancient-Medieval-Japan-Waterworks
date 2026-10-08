@@ -239,3 +239,15 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - The authoritative eligibility contract is `Diggable` plus explicit exclusions; synthetic constructions/roads/water remain rejected.
 - Added a static regression check to prevent this accidental all-soil rejection returning.
 - Next runtime acceptance includes soil, rich soil, gravel, sand, marshy soil, and AMJ Environment `AMJ_ThinSoil`.
+
+
+### BUILD-WATERWORKS-001 — missing Diggable DefOf member (2026-10-08)
+
+**Owner:** Waterworks implementation
+**Status:** FIXED IN SOURCE — user-side rebuild required; compile gate still OPEN
+
+The author's `Scripts/validate-source.ps1` completed its existing static contract check but C# build failed with CS0117 at `Source/CanalMapComponent.cs`: `TerrainAffordanceDefOf.Diggable` is not defined in RimWorld 1.6.
+
+Confirmed in the decompiled 1.6 `RimWorld/TerrainAffordanceDefOf.cs`: the class has no `Diggable` member; the terrain XML still defines the `Diggable` affordance. Fix uses `TerrainDef.affordances.Exists(...defName == "Diggable")`, not a nonexistent DefOf symbol. Updated `Tests/static_audit.py` to reject the old reference and require the loaded-Def lookup. Clarified `NaturalTerrainBase`'s `natural=true` inheritance in the formal design.
+
+**Next action:** rerun `Scripts/validate-source.ps1` with the same RimWorldDir; treat further compiler errors as build blockers. Do not launch Pickle/E2E until the C# build succeeds.

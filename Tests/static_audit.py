@@ -84,7 +84,9 @@ for required in (
 assert 't.defName == "Marsh"' in source
 assert 't.defName == "Mud"' in source
 assert "!t.natural" not in component_source if "component_source" in globals() else "!t.natural" not in source
-assert "TerrainAffordanceDefOf.Diggable" in source
+assert 'affordance.defName == "Diggable"' in component_source if "component_source" in globals() else 'affordance.defName == "Diggable"' in source
+assert "TerrainAffordanceDefOf.Diggable" not in source
+assert '!t.affordances.Exists(affordance => affordance != null && affordance.defName == "Diggable")' in source
 
 
 localization_keys = (

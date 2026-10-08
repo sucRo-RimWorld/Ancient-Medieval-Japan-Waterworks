@@ -215,7 +215,7 @@ For the first implementation, the terrain must satisfy all of the following:
 - no edifice occupies the cell;
 - it is not impassable natural rock / mountain tunneling.
 
-Vanilla soil definitions do not necessarily set the `TerrainDef.natural` Boolean. Therefore excavation **must not** require `terrain.natural == true`; use the actual `Diggable` affordance plus water/wetland, ice, road, constructed-floor, foundation and structure exclusions. This prevents ordinary soil from becoming incorrectly ineligible.
+Vanilla 1.6's `NaturalTerrainBase` defines `natural=true`, which ordinary soil terrain inherits. However, Waterworks deliberately uses the **loaded `Diggable` affordance** rather than relying on the `natural` flag alone, while excluding water/wetland, ice, roads, floors, foundations and occupied structures. `Diggable` is an XML affordance but **not** a member of the RimWorld 1.6 `TerrainAffordanceDefOf` class. Inspect the loaded `TerrainDef.affordances` by `defName` (or a resolved Def reference), never `TerrainAffordanceDefOf.Diggable`.
 
 This property-based rule intentionally supports compatible natural soils without per-mod patches. For example, AMJ Environment's `AMJ_ThinSoil` already exposes `Diggable` and therefore qualifies automatically unless another exclusion applies.
 
