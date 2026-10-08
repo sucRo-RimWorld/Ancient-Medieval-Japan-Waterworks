@@ -109,6 +109,52 @@ namespace AncientMedievalJapan.Waterworks
                    t == AMJW_Defs.AMJW_DugCanalWet;
         }
 
+        private bool OccupiesCanalWidth(IntVec3 c, bool includePendingDig)
+        {
+            if (!c.InBounds(map)) return false;
+            if (IsCanal(c)) return true;
+            return includePendingDig && map.designationManager != null &&
+                map.designationManager.DesignationAt(c, AMJW_Defs.AMJW_DigCanal) != null;
+        }
+
+        private bool WouldExceedOneCellWidth(IntVec3 c, bool includePendingDig)
+        {
+            // Any continuous two-cell-wide run necessarily contains a filled 2x2
+            // block. Reject only the candidate cell that would complete such a
+            // block, preserving ordinary corners, T junctions and crosses.
+            for (int originX = -1; originX <= 0; originX++)
+            {
+                for (int originZ = -1; originZ <= 0; originZ++)
+                {
+                    bool complete = true;
+                    for (int dx = 0; dx <= 1 && complete; dx++)
+                    {
+                        for (int dz = 0; dz <= 1; dz++)
+                        {
+                            IntVec3 at = c + new IntVec3(originX + dx, 0, originZ + dz);
+                            if (at == c) continue;
+                            if (!OccupiesCanalWidth(at, includePendingDig))
+                            {
+                                complete = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (complete) return true;
+                }
+            }
+            return false;
+        }
+
+        public AcceptanceReport CanDesignateDig(IntVec3 c, bool allowWildPlants = false)
+        {
+            AcceptanceReport basic = CanDig(c, allowWildPlants);
+            if (!basic.Accepted) return basic;
+            if (WouldExceedOneCellWidth(c, includePendingDig: true))
+                return "AMJW_TooWide".Translate();
+            return AcceptanceReport.WasAccepted;
+        }
+
         public AcceptanceReport CanDig(IntVec3 c, bool allowWildPlants = false)
         {
             if (!c.InBounds(map) || c.Fogged(map)) return false;
@@ -137,6 +183,8 @@ namespace AncientMedievalJapan.Waterworks
                 t.affordances == null ||
                 !t.affordances.Exists(affordance => affordance != null && affordance.defName == "Diggable"))
                 return "AMJW_CannotDig".Translate();
+            if (WouldExceedOneCellWidth(c, includePendingDig: false))
+                return "AMJW_TooWide".Translate();
 
             return AcceptanceReport.WasAccepted;
         }

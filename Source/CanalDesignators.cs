@@ -46,7 +46,7 @@ namespace AncientMedievalJapan.Waterworks
             base("AMJW_DigLabel", "AMJW_DigDesc", "UI/Designators/Mine") { }
         protected override DesignationDef EarthworkDef => AMJW_Defs.AMJW_DigCanal;
         protected override AcceptanceReport Validate(IntVec3 c)
-            => Map.GetComponent<CanalMapComponent>().CanDig(c, allowWildPlants: true);
+            => Map.GetComponent<CanalMapComponent>().CanDesignateDig(c, allowWildPlants: true);
     }
 
     public sealed class Designator_FillCanal : Designator_Canal

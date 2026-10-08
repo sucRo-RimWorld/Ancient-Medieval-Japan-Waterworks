@@ -78,6 +78,31 @@ namespace AncientMedievalJapan.Waterworks.E2E
             });
         }
 
+        [Then("one cell width rejects broad canals but keeps junctions")]
+        public Task OneCellWidth(PickleContext c)
+        {
+            return GameThread.Run(delegate
+            {
+                using (var f = new Fixture(c))
+                {
+                    IntVec3 center = f.Cell(0, 0);
+                    IntVec3 west = f.Cell(-1, 0), east = f.Cell(1, 0);
+                    IntVec3 north = f.Cell(0, 1), south = f.Cell(0, -1);
+                    c.Require(f.Canal.Dig(center) && f.Canal.Dig(west) &&
+                        f.Canal.Dig(east) && f.Canal.Dig(north) && f.Canal.Dig(south),
+                        "L/T/cross-compatible one-cell network should remain legal");
+
+                    IntVec3 broad = f.Cell(1, 1);
+                    c.Assert(!f.Canal.CanDesignateDig(broad, allowWildPlants: true).Accepted,
+                        "Designator accepted a cell that completes a 2x2 canal block");
+                    c.Assert(!f.Canal.CanDig(broad).Accepted,
+                        "Runtime accepted a cell that completes a 2x2 canal block");
+                    c.Assert(!f.Canal.Dig(broad),
+                        "Dig created a canal wider than one cell");
+                }
+            });
+        }
+
         [Then("standing ponds use the nine cell freshwater threshold")]
         public Task Standing(PickleContext c)
         {
