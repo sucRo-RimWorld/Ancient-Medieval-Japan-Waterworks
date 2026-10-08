@@ -1,13 +1,15 @@
 # Waterworks v1 visual acceptance
 
-This is the concrete rendering acceptance procedure for the `Docs/Design.md` §7–8 baseline. It is **not** evidence that the current Vanilla asset reuse already passes. Do not create replacement art before evaluating the live render path.
+This is the concrete rendering acceptance procedure for the `Docs/Design.md` §7–8 baseline. It is **not** evidence that the current Vanilla asset reuse already passes. The original full-cell and narrow-material trial frames have been evaluated. Approve a concrete visual target before resuming renderer iterations or new production artwork.
 
 ## Current source baseline (not visually accepted)
 
-- `AMJW_DugCanalWet`: `Terrain/Surfaces/WaterShallowRamp`, `Map/WaterDepth`, `edgeType=Water`, `renderPrecedence=389`.
-- `AMJW_DugCanalDry`: `Terrain/Surfaces/Soil`, tint `(0.72, 0.64, 0.54)`, `edgeType=FadeRough`, `renderPrecedence=388`.
-- Both occupy an entire terrain cell. Neither Def presently implements a narrower central ditch shape. The required visually narrow watercourse therefore remains **UNVERIFIED**, and must not be inferred from the connectivity E2E.
-- `Bridgeable` permits a Vanilla bridge foundation and the existing E2E verifies graph/terrain preservation; it does **not** assert water shader occlusion under the bridge.
+- **Legacy rejected visuals:** wet `WaterShallowRamp` + `Map/WaterDepth` and dry tinted soil occupied full cells; subsequent Waterworks-only narrow-section-layer screenshots did not show a legible channel. These captures do **not** meet VIS-01/VIS-02.
+- **Current code prototype:** both `AMJW_DugCanalWet` and `AMJW_DugCanalDry` retain distinct gameplay TerrainDefs but use Soil as the full-cell underlay. `SectionLayer_AMJW_Canal` attempts a narrower bank (0.68 cell) and water/earth bed (0.40 cell), via `CanalVisualMesh.Append`; final visibility/material queues and foundations remain unaccepted.
+- **Next art baseline:** see `Docs/Design.md` §8.0.3: MO 1.6's `DankPyon_Trench` **壕** and its earth-cut connected atlas are a *verified visual reference*, not a dependency or approved copied asset. Wet and dry should share the same sculpted banks.
+- `Bridgeable` permits a Vanilla foundation and the connectivity E2E validates state preservation; screenshots, not a Def assertion, must establish bridge occlusion.
+
+**Visual approval gate before another round of renderer changes:** inspect and agree on a dry/wet side-by-side proposed look and connected variants, based on the verified MO reference. Do not run repeated full rendered E2E trials to compensate for an undecided visual target.
 
 ## Minimum reproducible visual scene
 
@@ -33,7 +35,7 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 2. Prefer a deterministic Pickle/Quickstarts fixture that prepares the above scene and captures **actual rendered frames** into isolated `TestResults` (when a verified capture API is available). Keep render enabled and require zero `[ERROR]` messages. A terrain-Def assertion or screenshot of an off-screen/unrendered map is not visual evidence.
 3. Until an actual capture path is verified, a single in-game scene and screenshot set is sufficient for the subjective parts; do not demand repeated manual campaigns. Record the version/commit, Mod list, map zoom and whether water animation was observed.
 4. For each VIS item mark PASS / FAIL with image evidence. Do not label all rendering PASS just because E2E passes.
-5. If VIS-02 fails, first test whether Vanilla materials/edge behavior can be constrained to a visibly narrow channel without changing the graph or source semantics. Otherwise design only the minimum bank/rim overlay; keep new art postponed until the specific failure is understood.
+5. VIS-02 has already failed for full-cell materials and remained illegible in the initial thin-mesh capture. Compare a clear dry/wet reference concept based on MO's excavated earth ditch (§8.0.3), approve its geometry/art first, and only then resume focused implementation. Do not re-run the same visual gate with arbitrary width/color guesses.
 6. If VIS-05 fails, inspect RimWorld's foundation/terrain render ordering and shader flags before altering network mechanics or inventing a custom bridge.
 
 ## Boundaries

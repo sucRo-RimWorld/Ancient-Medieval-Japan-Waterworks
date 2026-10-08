@@ -363,7 +363,7 @@ Before commissioning or generating dedicated canal textures, prototype the dry/w
 - If the unmodified Vanilla visuals are readable and visually acceptable, ship without dedicated production canal textures.
 - **Visual scale decision (2026-10-08):** the excavated water channel should appear **substantially narrower than the full one-cell footprint**. Leave visible adjacent ground/earth banks within the tile. The earlier wide/deep trench concept images are not production assets. Defer all new image creation until after runtime behavior and Vanilla river-art reuse have been tested.
 
-This prioritizes reuse of the existing river artwork over creating new wet/dry illustrations.
+**Historical prototype note:** the direct reuse of Vanilla river artwork was tried, but the screenshots showed a full-cell river ribbon and then nearly invisible narrow meshes. This is not the current visual-design priority; MO's actual ditch assets are the primary shape reference (§8.0.3).
 
 ### 8.0.1 Narrow-channel rendering prototype decision (2026-10-08)
 
@@ -390,6 +390,25 @@ An ordinary Vanilla bridge foundation suppresses Waterworks overlay quads on tha
 
 **Known unresolved matters:** the neutral Soil underlay does not reproduce every cell's original Gravel/RichSoil colour before restoration; surface materials and overlap at river mouths, T/cross seams, snow, shallow-water movement, and the appearance beneath Vanilla foundations require in-game images. Passing compilation or finding the SectionLayer in an E2E test does not approve VIS-01 through VIS-07. Revisit either underlying per-cell bank matching or a narrower alternative only after reviewing a real frame, and do not widen the gameplay subsystem to solve visuals.
 
+### 8.0.3 Medieval Overhaul earth-ditch visual reference (2026-10-08; visual concept, **NOT** final art approval)
+
+The author proposed examining Medieval Overhaul (MO) rather than continuing repeated render/compile trials without a fixed appearance. Verified against MO 1.6 workshop package **3219596926** and its Japanese localization package **2665554648**:
+
+- `DankPyon_Trench`, translated **壕**, is a *Building* under Security, not a TerrainDef or an open-water system. Its 1.6 Def is `1.6/Defs/ThingDefs_Buildings/Buildings_Structure.xml`.
+- The dry-earth appearance is provided by `Textures/Things/Building/Linked/Trench_Atlas.png` (320 × 320 RGBA, a four-by-four linked-image atlas). The Def uses `Graphic_Single`, `linkType=Basic`, `linkFlags=Custom5`, and `altitudeLayer=FloorEmplacement`. The visual depicts earth-cut banks, side shading and a lower dark ditch bed.
+- MO also defines `DankPyon_RTrench`, which uses `RTrench_Atlas.png` with stone-reinforced edges. This is **not** the default appearance of a simple agricultural Waterworks canal.
+- The commented-out `DankPyon_TrenchTerrain` in `1.6/Defs/TerrainDefs/Terrain_Floors.xml` is **not** MO's active ditch rendering mechanism. Do not mistakenly treat that unused TerrainDef as an implementation model.
+- The MO building obstructs traversal (`pathCost=300`), whereas Waterworks is infrastructure (`pathCost=10`, bridgeable and no canal HP). **Reference the artwork's excavated cross-section only, not MO mechanics or Def inheritance.**
+
+**Visual proposal to settle before further rendering iterations:**
+
+1. **Dry:** imitate the visual *idea* of MO's natural-soil ditch — legible shaded banks on either side, visibly depressed, dark earth bed, continuous corners/T/cross forms. Waterworks' own artwork/geometry may be simpler/narrower.
+2. **Wet:** use the **same physical ditch banks and geometry**, changing only the bed/interior to shallow visible water. Do not swap the whole terrain tile to a river texture. Preserve the same alignment when supply switches.
+3. **Mouth and bridges:** connect the wet bed cleanly to the natural river/pond; let Vanilla bridge cover or visually interrupt the canal without breaking network semantics.
+4. **Production boundaries:** MO is **not** a mandatory dependency. Do not bundle or copy its actual texture files into Waterworks without verified reuse permission; use the inspected assets as a style/shape reference when producing original assets. Stone-reinforced variants remain outside the v1 default.
+
+**Order of work:** first prepare a visible, side-by-side dry/wet image proposal in RimWorld's top-down perspective, including straight, corner, T and cross variants; obtain visual acceptance and only then fix artwork dimensions, bank shading and material choices. Next implement/test once against the approved reference. Do **not** repeatedly request full E2E captures to decide an appearance that is not yet specified. No new artwork or renderer changes are authorized by this research note alone.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
@@ -399,7 +418,7 @@ An ordinary Vanilla bridge foundation suppresses Waterworks overlay quads on tha
 - Terrain switching occurs only on topology/source invalidation or load correction, never as a per-tick fluid simulation.
 - Foundation/bridge layers above the canal remain untouched when the underlying canal switches wet/dry.
 
-This is preferred over a custom water-render overlay because it keeps v1 rendering and common terrain behavior data-driven and easier to test.
+The initial preference was a data-only wet/dry TerrainDef solution. The recorded narrow-channel prototype already uses a separate rendering layer, so this historical preference must not block the approved visual design. Keep wet/dry semantics data-driven regardless of the renderer.
 
 ### 8.2 Shared movement/support behavior
 

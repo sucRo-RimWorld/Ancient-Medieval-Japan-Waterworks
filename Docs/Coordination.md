@@ -528,3 +528,13 @@ Author ran `Scripts/validate-source.ps1` unparameterized from `.../RimWorld/Mods
 **Status:** SOURCE IMPLEMENTED — dedicated metadata CI pending; gameplay/release gates unchanged
 
 Project `Docs/WorkshopChangenotes.md` now applies here: `About/Manifest.xml`, `About/Changelog.txt` and `About.xml` agree on `0.1.0-dev`. A narrow new workflow checks the metadata and YADA retention without running unowned gameplay tests. These subscriber metadata files have no effect on gameplay, packageId or Mod dependency rules. No Steam publishing or new runtime verification occurred.
+
+
+### VIS-WATERWORKS-016 — Medieval Overhaul 壕 art-first reference verified (2026-10-08)
+
+**Owner:** Waterworks visual design
+**Status:** RESEARCH COMPLETE; SIDE-BY-SIDE DRY/WET IMAGE PROPOSAL PENDING; render-code trial loop PAUSED
+
+User suggested basing the canal depiction on MO's actual dry-earth `壕` instead of continuing unproductive implementation/screenshot iterations. Inspected supplied 1.6 Medieval Overhaul archive `3219596926.zip` and Japanese translation archive `2665554648.zip`. Active MO building `DankPyon_Trench` references `Things/Building/Linked/Trench_Atlas` (four-by-four 320×320 earth ditch texture), `Graphic_Single`, `linkType Basic`, `Custom5`, `FloorEmplacement`; reinforced `DankPyon_RTrench` is stone-lined and not a standard agrarian canal reference. The apparent `DankPyon_TrenchTerrain` is commented out. These are visual precedents, not reusable game-state mechanics or permission to redistribute MO artwork.
+
+Formal design now records the MO earth-ditch visual basis, dry and wet should share banks and differ at the bed; `Docs/GoldenPaths/VisualAcceptance.md` corrects stale pre-prototype TerrainDef assertions and adds an art-approval gate. Stop speculative renderQueue/width fixes and repeated user E2E requests until a demonstrable side-by-side visual target is accepted. No production texture or C# change occurred in this action; no direct copying of MO textures into the Mod.
