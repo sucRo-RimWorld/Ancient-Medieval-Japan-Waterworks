@@ -28,7 +28,9 @@ Check the following before art approval:
 
 **Selected adaptation:** see §8.0.5. Original terrain material must be explicitly drawn from Waterworks' saved DefName; grayscale relief mask must be transparent over its actual texture. A colored monochrome replacement tile is not equivalent. Inspect matching Soil, Gravel and Rich Soil soil/stone granularity in addition to the shared contour.
 
-**Current status:** contour specification and adaptive material architecture chosen; art proposal and compositing acceptance OPEN. Do not mark VIS-01…VIS-08 passed until real game frames of the implemented approved art are inspected.
+**Current status:** contour specification and adaptive material architecture chosen; art proposal and compositing acceptance OPEN.
+
+**2026-10-08 asset-pipeline checkpoint:** the geometric 80px candidate and three independently generated ImageGen atlases were rejected: artificial regularity, missing/duplicated directions and mismatched water vs. excavation. An independent single-mask generator has now produced 16 connected indices and separate grayscale shade/light, shared bed support, and clipped water textures in a downloadable but **UNAPPROVED** ZIP. Its numeric QA (720 assertions on water containment, reachability, directional edges and opposite-side seams) is evidence of mechanical correctness only. It is **not** proof of hand-dug visual quality, compatibility with real Soil/Gravel/RichSoil textures, or working RimWorld SectionLayer rendering. Until actual accepted source art and in-engine composition are established, do not stage these as Workshop textures or claim any VIS PASS. Do not mark VIS-01…VIS-08 passed until real game frames of the implemented approved art are inspected.
 
 ## Minimum reproducible visual scene
 
