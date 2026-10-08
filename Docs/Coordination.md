@@ -329,3 +329,13 @@ To avoid repeating this class of avoidable failure, `Scripts/validate-source.ps1
 After the PowerShell parser fix, the author reran the isolated existing-save test. The Phase B `AfterInstall` runner reached its runtime error gate and stopped: **one `[ERROR]` line** in `TestResults/AddToSave/Reports/AfterInstall/Player.log`. This proves the earlier parser blocker was bypassed but is **not** a passing two-phase test. The author message includes only the runner's summary, not the actual underlying Player.log error, so no root cause can yet be assigned. The previously verified standalone **6/6** core E2E is unaffected.
 
 The runner now prints each ERROR entry with 12 following context/stack-trace lines (up to five entries) before aborting, while continuing to enforce ERROR=0. The existing log is the primary next diagnostic source; a repeat run is **not** required just to recover the original error. The next step is to inspect the first real ERROR message and stack, determine whether it belongs to Waterworks production, the upgraded-save test fixture, Pickle/Quickstarts, or third-party services, and then change the actual owner code/test if needed. Do not weaken the error gate or claim compatibility before Phase A and Phase B are both clean.
+
+
+### TEST-WATERWORKS-E2E-004-ERROR-002 — empty test Mod content (2026-10-08)
+
+**Owner:** Waterworks existing-save acceptance
+**Status:** FIXED IN SOURCE — two-phase runtime rerun pending
+
+The author supplied the Phase B log: `Mod [DEV] Waterworks Existing Save Integration E2E did not load any content. Following load folders were used:`. The Phase B fixture held only About/Pickle data, and RimWorld 1.6 reported it as an empty mod. Added a test-only `ThingCategoryDef` marker under `Tests/E2E/AddToSaveMod/Defs`, staged it into `Defs/ThingCategoryDefs` by `Scripts/run-add-to-save-e2e.ps1`, and added static regression assertions. This marker is not a production Waterworks Def and has no intended save/gameplay behavior.
+
+Next: run `Scripts/validate-source.ps1` and `Scripts/run-add-to-save-e2e.ps1` on the author's RimWorld installation. Require Phase A 1/1, Phase B 1/1 and zero runtime ERRORs; no acceptance or compatibility claim until then. If a further error occurs, inspect the saved Player.log rather than rerunning only to retrieve its message.
