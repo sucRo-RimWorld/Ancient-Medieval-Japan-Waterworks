@@ -1,15 +1,14 @@
 # Waterworks v1 visual acceptance
 
-This is the concrete rendering acceptance procedure for the `Docs/Design.md` §7–8 baseline. It is **not** evidence that the current Vanilla asset reuse already passes. The original full-cell and narrow-material trial frames have been evaluated. Approve a concrete visual target before resuming renderer iterations or new production artwork.
+This is the concrete rendering acceptance procedure for the `Docs/Design.md` §7–8 baseline. It owns acceptance evidence, not prototype history or current work status; those belong in `main:Docs/Coordination.md`. `Docs/Design.md` §8 remains authoritative for contour and rendering architecture.
 
-## Current source baseline (not visually accepted)
+## Visual target and approval gate
 
-- **Legacy rejected visuals:** wet `WaterShallowRamp` + `Map/WaterDepth` and dry tinted soil occupied full cells; subsequent Waterworks-only narrow-section-layer screenshots did not show a legible channel. These captures do **not** meet VIS-01/VIS-02.
-- **Current code prototype:** both `AMJW_DugCanalWet` and `AMJW_DugCanalDry` retain distinct gameplay TerrainDefs but use Soil as the full-cell underlay. `SectionLayer_AMJW_Canal` attempts a narrower bank (0.68 cell) and water/earth bed (0.40 cell), via `CanalVisualMesh.Append`; final visibility/material queues and foundations remain unaccepted.
-- **Next art baseline:** see `Docs/Design.md` §8.0.3: MO 1.6's `DankPyon_Trench` **壕** and its earth-cut connected atlas are a *verified visual reference*, not a dependency or approved copied asset. Wet and dry should share the same sculpted banks.
-- `Bridgeable` permits a Vanilla foundation and the connectivity E2E validates state preservation; screenshots, not a Def assertion, must establish bridge occlusion.
+- Use `Docs/Design.md` §8.0.3's verified MO 1.6 `DankPyon_Trench` **壕** only as a visual reference, not a dependency or copied asset.
+- Dry and wet variants share the same excavated banks; only the recessed bed contents differ.
+- Connectivity/state tests do not establish bridge occlusion or rendered appearance; inspect actual frames.
 
-**Visual approval gate before another round of renderer changes:** inspect and agree on a dry/wet side-by-side proposed look and connected variants, based on the verified MO reference. Do not run repeated full rendered E2E trials to compensate for an undecided visual target.
+Before another renderer iteration, agree on the dry/wet connected visual target. Do not repeat full rendered E2E runs merely to choose aesthetics.
 
 ## Art review specification (prior to runtime acceptance)
 
@@ -27,10 +26,6 @@ Check the following before art approval:
 - Width, bank lighting, color palette and junction widening receive **visual sign-off** before replacing runtime prototypes; no false PASS is inferred from a generated concept or an automated geometry test.
 
 **Selected adaptation:** see §8.0.5. Original terrain material must be explicitly drawn from Waterworks' saved DefName; grayscale relief mask must be transparent over its actual texture. A colored monochrome replacement tile is not equivalent. Inspect matching Soil, Gravel and Rich Soil soil/stone granularity in addition to the shared contour.
-
-**Current status:** contour specification and adaptive material architecture chosen; art proposal and compositing acceptance OPEN.
-
-**2026-10-08 asset-pipeline checkpoint:** the geometric 80px candidate and three independently generated ImageGen atlases were rejected: artificial regularity, missing/duplicated directions and mismatched water vs. excavation. An independent single-mask generator has now produced 16 connected indices and separate grayscale shade/light, shared bed support, and clipped water textures in a downloadable but **UNAPPROVED** ZIP. Its numeric QA (720 assertions on water containment, reachability, directional edges and opposite-side seams) is evidence of mechanical correctness only. It is **not** proof of hand-dug visual quality, compatibility with real Soil/Gravel/RichSoil textures, or working RimWorld SectionLayer rendering. Until actual accepted source art and in-engine composition are established, do not stage these as Workshop textures or claim any VIS PASS. Do not mark VIS-01…VIS-08 passed until real game frames of the implemented approved art are inspected.
 
 ## Minimum reproducible visual scene
 
