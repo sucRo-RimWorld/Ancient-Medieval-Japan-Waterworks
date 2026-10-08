@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef><defName>AMJW_DigCanalJob</defName><driverClass>AncientMedievalJapan.Waterworks.JobDriver_DigCanal</driverClass><reportString>digging a canal at TargetA.</reportString><suspendable>false</suspendable></JobDef>
+  <JobDef><defName>AMJW_FillCanalJob</defName><driverClass>AncientMedievalJapan.Waterworks.JobDriver_FillCanal</driverClass><reportString>filling a canal at TargetA.</reportString><suspendable>false</suspendable></JobDef>
+</Defs>

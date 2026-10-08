@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AMJW_DigLabel>Dig canal</AMJW_DigLabel>
+  <AMJW_DigDesc>Excavate a one-cell-wide open canal. Connected natural fresh water supplies it.</AMJW_DigDesc>
+  <AMJW_FillLabel>Fill canal</AMJW_FillLabel>
+  <AMJW_FillDesc>Restore the original ground. Remove bridges and other buildings first.</AMJW_FillDesc>
+  <AMJW_CannotDig>Cannot dig canal on this terrain.</AMJW_CannotDig>
+  <AMJW_Blocked>Remove the existing floor, foundation, plant or building first.</AMJW_Blocked>
+  <AMJW_RoadBlocked>Cannot remove a road by digging a canal.</AMJW_RoadBlocked>
+  <AMJW_AlreadyCanal>Already a dug canal.</AMJW_AlreadyCanal>
+  <AMJW_NotCanal>No Waterworks canal to fill here.</AMJW_NotCanal>
+  <AMJW_AlreadyDesignated>An earthwork is already designated here.</AMJW_AlreadyDesignated>
+  <AMJW_CannotRestore>Original ground is unavailable.</AMJW_CannotRestore>
+</LanguageData>

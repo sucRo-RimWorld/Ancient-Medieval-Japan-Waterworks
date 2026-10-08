@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <DesignationDef><defName>AMJW_DigCanal</defName><texturePath>UI/Designators/Mine</texturePath><targetType>Cell</targetType></DesignationDef>
+  <DesignationDef><defName>AMJW_FillCanal</defName><texturePath>UI/Designators/RemoveFloor</texturePath><targetType>Cell</targetType></DesignationDef>
+</Defs>

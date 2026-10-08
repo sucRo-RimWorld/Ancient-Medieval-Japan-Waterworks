@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/DesignationCategoryDef[defName="Orders"]/specialDesignatorClasses</xpath>
+    <value><li>AncientMedievalJapan.Waterworks.Designator_DigCanal</li><li>AncientMedievalJapan.Waterworks.Designator_FillCanal</li></value>
+  </Operation>
+</Patch>

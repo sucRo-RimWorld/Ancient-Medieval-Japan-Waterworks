@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AMJW_DigLabel>水路を掘る</AMJW_DigLabel>
+  <AMJW_DigDesc>幅1セルの素掘り水路を掘ります。利用可能な自然淡水とつながれば通水します。</AMJW_DigDesc>
+  <AMJW_FillLabel>水路を埋め戻す</AMJW_FillLabel>
+  <AMJW_FillDesc>元の地面に埋め戻します。橋や建築物は先に撤去してください。</AMJW_FillDesc>
+  <AMJW_CannotDig>この地面には水路を掘れません。</AMJW_CannotDig>
+  <AMJW_Blocked>床・橋・植物・建造物を先に撤去してください。</AMJW_Blocked>
+  <AMJW_RoadBlocked>この操作では道路を撤去できません。</AMJW_RoadBlocked>
+  <AMJW_AlreadyCanal>すでに水路があります。</AMJW_AlreadyCanal>
+  <AMJW_NotCanal>ここに埋め戻せる水路はありません。</AMJW_NotCanal>
+  <AMJW_AlreadyDesignated>すでに土工作業が指定されています。</AMJW_AlreadyDesignated>
+  <AMJW_CannotRestore>元の地面を復元できません。</AMJW_CannotRestore>
+</LanguageData>

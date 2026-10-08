@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>AMJW_DugCanalDry</defName>
+    <label>dry dug canal</label>
+    <description>An excavated channel without a fresh-water connection.</description>
+    <texturePath>Terrain/Surfaces/Soil</texturePath>
+    <color>(0.72, 0.64, 0.54)</color>
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>388</renderPrecedence>
+    <pathCost>10</pathCost>
+    <fertility>0</fertility>
+    <affordances><li>Bridgeable</li></affordances>
+    <avoidWander>true</avoidWander>
+    <tags><li>AMJW_Canal</li></tags>
+  </TerrainDef>
+  <TerrainDef ParentName="NaturalTerrainBase">
+    <defName>AMJW_DugCanalWet</defName>
+    <label>supplied dug canal</label>
+    <description>An open dug canal connected to a valid natural freshwater source.</description>
+    <texturePath>Terrain/Surfaces/WaterShallowRamp</texturePath>
+    <waterDepthShader>Map/WaterDepth</waterDepthShader>
+    <waterDepthShaderParameters><_UseWaterOffset>1</_UseWaterOffset></waterDepthShaderParameters>
+    <edgeType>Water</edgeType>
+    <renderPrecedence>389</renderPrecedence>
+    <pathCost>10</pathCost>
+    <fertility>0</fertility>
+    <affordances><li>Bridgeable</li></affordances>
+    <holdSnow>false</holdSnow>
+    <takeSplashes>true</takeSplashes>
+    <extinguishesFire>true</extinguishesFire>
+    <traversedThought>SoakingWet</traversedThought>
+    <avoidWander>true</avoidWander>
+    <!-- Does not use the generic River/Water tag; keep source recognition explicit. -->
+    <tags><li>AMJW_Canal</li></tags>
+  </TerrainDef>
+</Defs>

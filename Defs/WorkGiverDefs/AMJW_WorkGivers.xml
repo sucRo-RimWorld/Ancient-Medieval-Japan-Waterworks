@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorkGiverDef>
+    <defName>AMJW_DigCanalWork</defName><label>dig canal</label>
+    <giverClass>AncientMedievalJapan.Waterworks.WorkGiver_DigCanal</giverClass>
+    <workType>Construction</workType><priorityInType>62</priorityInType>
+    <verb>dig</verb><gerund>digging canal</gerund>
+    <requiredCapacities><li>Manipulation</li></requiredCapacities>
+    <scanThings>false</scanThings><scanCells>true</scanCells>
+  </WorkGiverDef>
+  <WorkGiverDef>
+    <defName>AMJW_FillCanalWork</defName><label>fill canal</label>
+    <giverClass>AncientMedievalJapan.Waterworks.WorkGiver_FillCanal</giverClass>
+    <workType>Construction</workType><priorityInType>62</priorityInType>
+    <verb>fill</verb><gerund>filling canal</gerund>
+    <requiredCapacities><li>Manipulation</li></requiredCapacities>
+    <scanThings>false</scanThings><scanCells>true</scanCells>
+  </WorkGiverDef>
+</Defs>

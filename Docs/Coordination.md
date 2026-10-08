@@ -57,7 +57,7 @@ Historical source commits in Grains:
 ### PROTO-WATERWORKS-001 — minimal independent canal prototype
 
 **Owner:** Waterworks implementation  
-**Status:** OPEN — repository handoff complete; implementation not started
+**Status:** IN PROGRESS — uncompiled prototype source checkpoint; build/runtime pending
 
 Scope:
 1. use the fixed package/Def identity from `Docs/Design.md` and add the minimal RimWorld 1.6 About/load structure;
@@ -160,3 +160,13 @@ Project-level Japanization architecture confirms:
 **Status:** DONE — current AGENTS and shared-rule references route to Project
 
 Canonical shared rules and Workshop template/tooling now live in Project `Docs/SharedRules.md` and its linked sources. Grains old Markdown paths are migration pointers only. Existing historical coordination entries retain their original commit/path provenance; resolve future work through the new Project index. Mod-specific implementation, tests and accepted content art remain with this repository. No runtime behavior, new preview generation or Steam publication is part of this migration.
+
+
+### PROTO-WATERWORKS-002 — source checkpoint
+
+**Owner:** Waterworks
+**Status:** IN PROGRESS — source only, not compiled/runtime-tested
+
+The baseline source prototype contains metadata, dry/wet TerrainDefs with Vanilla water/soil paths, designators, Construction jobs, graph state, natural source checks, save/restore, a csproj, and a static audit script. No imagery has been generated/copied and no public release is authorized.
+
+Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pickle/RimTest Redux runtime tests; inspect bridge/foundation coexistence and shader behavior. Require zero Waterworks ERROR entries before closing.
