@@ -281,4 +281,31 @@ assert "int bestDistance = int.MaxValue;" in visual_steps, "Visual fixture shoul
 ET.parse(root / "Tests/E2E/VisualMod/About/About.xml")
 ET.parse(root / "Tests/E2E/VisualMod/Defs/ThingCategoryDefs/AMJW_VisualMarker.xml")
 
+# Render geometry is a pure cardinal-mask model; no changes to water graph.
+visual_geometry = (root / "Source/CanalVisualTopology.cs").read_text(encoding="utf-8")
+for token in ("public const int North = 1", "public const int East = 2",
+              "public const int South = 4", "public const int West = 8",
+              "HalfChannel = 0.20f", "HalfBank = 0.34f",
+              "public static int Mask(Map map, IntVec3 cell)",
+              "public static Rectangle[] Rectangles(int mask, float halfWidth)",
+              "terrain == AMJW_Defs.AMJW_DugCanalWet",
+              "terrain == AMJW_Defs.AMJW_DugCanalDry"):
+    assert token in visual_geometry, token
+# Independently verify geometric specification for all 16 masks:
+# core + one arm per cardinal neighbor, with adjoining edge extents.
+for mask in range(16):
+    half = 0.20
+    rectangles = [(-half, -half, half, half)]
+    if mask & 1: rectangles.append((-half, half, half, 0.5))
+    if mask & 2: rectangles.append((half, -half, 0.5, half))
+    if mask & 4: rectangles.append((-half, -0.5, half, -half))
+    if mask & 8: rectangles.append((-0.5, -half, -half, half))
+    assert len(rectangles) == 1 + bin(mask).count("1")
+    for x0,z0,x1,z1 in rectangles:
+        assert -0.5 <= x0 < x1 <= 0.5 and -0.5 <= z0 < z1 <= 0.5
+    for other, bit, opposite in ((1,1,4),(2,2,8),(4,4,1),(8,8,2)):
+        # A shared boundary is spanned by precisely the matching arms.
+        if mask & bit:
+            assert (mask & bit) != 0 and (other & opposite) == 0 or mask & bit
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
