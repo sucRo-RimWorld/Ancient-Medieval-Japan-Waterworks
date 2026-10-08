@@ -181,3 +181,14 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - The dig/fill designators now expose the dedicated `AMJW_CanalLine` category with only Vanilla `Line` style; single-cell and cardinal straight drag are retained.
 - A static contract check guards against reintroducing the old property.
 - This is an **API-source audit**, not a successful compilation or in-game validation.
+
+
+### TEST-WATERWORKS-STATIC-001 — repeatable source validation
+
+**Owner:** Waterworks implementation  
+**Status:** DONE for static/build tooling; runtime verification remains OPEN
+
+- Enhanced `Tests/static_audit.py` with loaded class references, DefOf bindings, localization and the 1.6 draw-style regression check.
+- Added `Scripts/validate-source.ps1` for non-interactive static + Windows RimWorld DLL build.
+- Canonical repository procedure: `Docs/GoldenPaths/SourceValidation.md`.
+- Unmet gates: actual 1.6 C# build, non-interactive Pickle/RimTest Redux, runtime ERROR=0, save/load and actual wet-water shader/bridge appearance.
