@@ -13,6 +13,7 @@ New features cannot enter implementation before the Project [existing-Mod audit 
 - Specification: `Docs/Design.md`; preserve the ownership and DBH boundary below.
 - Source validation: `Docs/GoldenPaths/SourceValidation.md`; runtime: `Docs/GoldenPaths/E2EValidation.md`; real existing-save addition: `Docs/GoldenPaths/AddToExistingSave.md`.
 - Appearance: `Docs/GoldenPaths/VisualFixture.md` and `Docs/GoldenPaths/VisualAcceptance.md`. Successful graph/save tests do not establish rendered canal appearance or bridge occlusion.
+- Connected canal candidate production: `Docs/GoldenPaths/CanalTilePipeline.md`; topology/validation must pass before any candidate is shown or promoted.
 - Use RimTest Redux for graph/state logic where practical and Pickle for loaded Defs, placement, integration and save/load; follow Project's non-interactive rendering and runtime ERROR gates.
 - Accepted high-resolution masters belong under `Art/Sources/`; `Textures/` contains derivatives. Apply Project's source-preservation pipeline before art work.
 - Release metadata: `Tests/validate_add_changenote.py`; use the actual owning release path, not a nonexistent common payload command.

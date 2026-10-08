@@ -584,3 +584,15 @@ AGENTS now routes through Project `Docs/SharedRules.md` stop conditions and task
 **Status:** DOCUMENTATION LINKAGE DONE; imagery and renderer approval still OPEN
 
 The author pointed out that a previous chat (“マップチップ生成のコツ”) cannot reliably be read in full from a new task/chat, and shared chat URLs are not a dependable canonical technical reference. AMJ Project now documents the reusable connected-map-tile production procedure in `Docs/GoldenPaths/TextureAssetPipeline.md` under “Connected map tiles — reusable workflow” (Project commit `ef444d6a2257b1482dbfba1135ade2583545f290`). The Waterworks formal design `Docs/Design.md` §8 now links this path as a startup production route. The link/decision is a technical *distillation of known prior guidance*, not a claim that the original chat's entire transcript was recovered. Previous stage `VIS-WATERWORKS-019` remains the status authority for the unapproved candidate ZIP, pending artistic approval and renderer integration. No gameplay, texture, original-ground rendering, build or loaded-game validation was performed for this documentation handoff.
+
+### VIS-WATERWORKS-021 — deterministic EW candidate gate (2026-10-09)
+
+**Owner:** Waterworks art/production tooling  
+**Status:** TOOLING IMPLEMENTED; MECHANICAL LOCAL TEST PASS; visual approval and production assets remain OPEN
+
+Added a repository-owned candidate pipeline so the connected-tile rule is no longer prose-only. `Scripts/build-canal-tile.ps1 -Mask EW` routes to a deterministic Python builder that fixes the EW connection geometry, derives Dry/Wet from the same shadow/highlight/bed layers, clips water to the bed, validates exact E/W edge equality and PNG integrity, and writes only to `TestResults/CanalTiles/EW` after all checks pass. Unsupported masks and `-All` are intentionally rejected until the EW visual target is explicitly approved. `Tests/test_canal_tile_pipeline.py` also verifies deterministic SHA-256 reproduction and both rejection paths.
+
+Local implementation check: the first candidate run correctly failed its mechanical gate because antialiasing left mismatched edge/containment pixels; the generator was corrected and the regression test then passed. This is evidence that the stop gate actually blocks bad output rather than merely documenting a preference.
+
+The current generated water/relief is debug material only and is not accepted art. No candidate PNG, `Art/Sources` master, production `Textures`, renderer source, gameplay code, save data, Workshop payload or Steam metadata is changed by this tooling commit. `VIS-WATERWORKS-019/020` remain the authority for prior unapproved art and the shared connected-tile procedure; `Docs/Design.md` §8 and `Docs/GoldenPaths/VisualAcceptance.md` remain the visual acceptance authority.
+
