@@ -321,8 +321,11 @@ assert "RUNTIME SECTION LAYER ORDER" in render_probe
 assert "SectionAt(focus)" in render_probe
 assert "typeof(MapDrawLayer)" in render_probe
 assert "typeof(LayerSubMesh)" in render_probe
-assert "typeof(SectionLayer_Watergen)" in render_probe
-assert "typeof(RimWorld.SectionLayer_BridgeProps)" in render_probe
+assert 'DumpGameType(result, "Verse.SectionLayer_Watergen");' in render_probe
+assert 'DumpGameType(result, "RimWorld.SectionLayer_BridgeProps");' in render_probe
+assert 'typeof(SectionLayer).Assembly.GetType(fullName, false)' in render_probe
+assert 'typeof(SectionLayer_Watergen)' not in render_probe
+assert 'typeof(RimWorld.SectionLayer_BridgeProps)' not in render_probe
 assert "virtual=" in render_probe
 for target in ("typeof(SectionLayer)", "typeof(Section)", "typeof(MapDrawer)",
                "typeof(SectionLayer_Terrain)", "typeof(TerrainGrid)"):
