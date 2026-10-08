@@ -478,6 +478,9 @@ Fill canal follows the same single-cell / straight-segment interaction over exis
 
 - A designation is only a work order; terrain does not change until work finishes.
 - Canceling an unfinished designation leaves terrain unchanged.
+- Before assigning work, Construction work givers revalidate the current cell. Invalidated cells are not assigned repeatedly.
+- While a dig/fill job runs, its driver revalidates the terrain/structure condition and aborts if invalid; it must **not** consume the designation on a failed effect.
+- Removing the temporary obstruction or repairing an invalid cell allows the still-pending designation to be worked again.
 - Completed canal cells recalculate the affected network immediately.
 - Fill designations are rejected while a bridge/foundation or supported structure still occupies the canal cell.
 - Re-designating an already matching state should be rejected/no-op rather than stacking duplicate work.
@@ -515,7 +518,7 @@ A future consumer should ask Waterworks only for the minimum fact it needs, typi
 
 Do not publish a broad framework API before a real consumer defines the need.
 
-### 10.1 DBH
+### 11.1 DBH
 
 DBH is an official optional compatibility candidate, not a dependency.
 
@@ -531,19 +534,19 @@ If a DBH adapter is later implemented:
 
 The first DBH integration should be designed only after current DBH 1.6 API semantics are re-audited.
 
-### 10.2 Rice Cultivation
+### 11.2 Rice Cultivation
 
 Rice Cultivation remains independently playable without Waterworks.
 
 If integrated later, Rice Cultivation owns all paddy-specific conditions and distances. Waterworks only reports supplied canal presence.
 
-### 10.3 Hot Springs
+### 11.3 Hot Springs
 
 Hot-spring source classification is **not part of v1 core**.
 
 When Hot Springs integration is actually designed, extend source semantics only as far as that integration needs.
 
-### 10.4 Defensive earthworks
+### 11.4 Defensive earthworks
 
 Dry moats, water moats, bridges, swimming/climbing traversal, raid pathfinding and breach behavior belong to a separate future defensive-earthworks / fortification responsibility.
 

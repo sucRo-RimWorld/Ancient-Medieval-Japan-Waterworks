@@ -123,6 +123,13 @@ designators_source = (root / "Source/CanalDesignators.cs").read_text(encoding="u
 assert "JobMaker.MakeJob(JobDefOf.CutPlant, wildPlant)" in jobs_source
 assert "wildPlant.sown || wildPlant.IsForbidden(pawn)" in jobs_source
 assert "CanDig(c, allowWildPlants: true)" in designators_source
+assert "public override bool HasJobOnCell" in jobs_source
+assert "if (!HasJobOnCell(pawn, c, forced)) return null;" in jobs_source
+assert "this.FailOn(() => !CanAffect(" in jobs_source
+assert "component.CanDig(cell, allowWildPlants: true)" in jobs_source
+assert "component.CanDig(cell);" in jobs_source
+assert "component.CanFill(cell);" in jobs_source
+
 
 assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 print("[OK] XML and RimWorld 1.6 draw-style contract checked (runtime not tested)")

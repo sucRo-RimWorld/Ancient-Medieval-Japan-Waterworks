@@ -217,3 +217,14 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - The final terrain replacement still rejects occupied plant cells, avoiding silent crop/tree destruction.
 - A static audit protects the split between placement eligibility and actual excavation.
 - Test in RimWorld with wild grass/trees, protected plants, cultivated fields, and cases where cutting is forbidden.
+
+
+### PROTO-WATERWORKS-JOB-001 — work-order validity throughout execution
+
+**Owner:** Waterworks implementation
+**Status:** DONE in source; game-compile and runtime assertions remain pending
+
+- Construction work givers revalidate Dig/Fill eligibility before assigning jobs.
+- Vanilla `JobDriver_AffectFloor` consumes its designation after calling `DoEffect`; the canal job driver therefore installs a fail condition that checks eligibility while work is running, preventing a stalled/invalid cell from losing its work designation as a silent no-op.
+- Wild-plant cutting remains a prerequisite, whereas actual excavation requires the cleared cell.
+- Regression markers added to `Tests/static_audit.py`; verify with actual runtime that adding a floor/bridge during a pending or in-progress earthwork leaves the designation recoverable.
