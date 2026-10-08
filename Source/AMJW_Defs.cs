@@ -12,5 +12,6 @@ namespace AncientMedievalJapan.Waterworks
         public static DesignationDef AMJW_FillCanal;
         public static JobDef AMJW_DigCanalJob;
         public static JobDef AMJW_FillCanalJob;
+        public static DrawStyleCategoryDef AMJW_CanalLine;
     }
 }

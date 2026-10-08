@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
 xmls = list(root.glob("About/*.xml")) + list(root.glob("Defs/**/*.xml")) + list(root.glob("Patches/*.xml")) + list(root.glob("Languages/**/*.xml"))
-assert len(xmls) == 8, (len(xmls), [str(p) for p in xmls])
+assert len(xmls) == 9, (len(xmls), [str(p) for p in xmls])
 for path in xmls:
     ET.parse(path)
 about = ET.parse(root / "About/About.xml").getroot()
@@ -27,6 +27,14 @@ source = "\n".join(p.read_text(encoding="utf-8") for p in (root / "Source").glob
 for marker in ("WaterMovingShallow", "WaterMovingChestDeep", "WaterShallow", "WaterDeep",
                "seen.Count >= 9", "GenAdj.CardinalDirections", "FoundationAt(c)",
                "LookMode.Value, LookMode.Value", "BaseWorkAmount => 500",
-               "BaseWorkAmount => 300", "DraggableDimensions => 1"):
+               "BaseWorkAmount => 300", "DrawStyleCategory => AMJW_Defs.AMJW_CanalLine"):
     assert marker in source, marker
-print("[OK] XML and contract invariants verified (runtime not tested)")
+draw_style = ET.parse(root / "Defs/DrawStyleCategoryDefs/AMJW_CanalLine.xml").getroot()
+category = draw_style.find("DrawStyleCategoryDef")
+assert category is not None
+assert category.findtext("defName") == "AMJW_CanalLine"
+assert [style.text for style in category.find("styles")] == ["Line"]
+assert "public static DrawStyleCategoryDef AMJW_CanalLine;" in source
+assert "DraggableDimensions" not in source, "RimWorld 1.6 removed this Designator API"
+assert "protected override DesignationDef Designation => EarthworkDef;" in source
+print("[OK] XML and RimWorld 1.6 draw-style contract checked (runtime not tested)")

@@ -454,6 +454,9 @@ A two-command feature does not justify its own category.
 
 ### 10.2 Drag behavior
 
+RimWorld 1.6 implementation uses a Waterworks-specific `DrawStyleCategoryDef` containing **only Vanilla `Line`**, not the pre-1.6 `DraggableDimensions` designator property. This ensures ordinary click/straight cardinal drag without default rectangle or freeform area creation.
+
+
 The dig designator should behave like a one-cell-wide construction line:
 
 - single-cell click is allowed;

@@ -170,3 +170,14 @@ Canonical shared rules and Workshop template/tooling now live in Project `Docs/S
 The baseline source prototype contains metadata, dry/wet TerrainDefs with Vanilla water/soil paths, designators, Construction jobs, graph state, natural source checks, save/restore, a csproj, and a static audit script. No imagery has been generated/copied and no public release is authorized.
 
 Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pickle/RimTest Redux runtime tests; inspect bridge/foundation coexistence and shader behavior. Require zero Waterworks ERROR entries before closing.
+
+
+### PROTO-WATERWORKS-API-001 — RimWorld 1.6 draw-style compatibility
+
+**Owner:** Waterworks implementation
+**Status:** DONE — source correction committed; build/runtime verification still required
+
+- Audited RimWorld 1.6 `Verse.Designator`, `DesignatorManager` and `DrawStyle_Line`: `DraggableDimensions` is a removed/obsolete API.
+- The dig/fill designators now expose the dedicated `AMJW_CanalLine` category with only Vanilla `Line` style; single-cell and cardinal straight drag are retained.
+- A static contract check guards against reintroducing the old property.
+- This is an **API-source audit**, not a successful compilation or in-game validation.

@@ -6,9 +6,10 @@ namespace AncientMedievalJapan.Waterworks
 {
     public abstract class Designator_Canal : Designator_Cells
     {
-        public override int DraggableDimensions => 1;
+        public override DrawStyleCategoryDef DrawStyleCategory => AMJW_Defs.AMJW_CanalLine;
         public override bool DragDrawMeasurements => true;
         protected abstract DesignationDef EarthworkDef { get; }
+        protected override DesignationDef Designation => EarthworkDef;
         protected abstract AcceptanceReport Validate(IntVec3 cell);
 
         protected Designator_Canal(string label, string desc, string iconPath)

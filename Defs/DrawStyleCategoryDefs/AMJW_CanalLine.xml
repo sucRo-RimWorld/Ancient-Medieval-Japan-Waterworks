@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- RimWorld 1.6 uses DrawStyle instead of obsolete DraggableDimensions.
+       The Vanilla Line style permits one-cell-wide cardinal dig/fill segments. -->
+  <DrawStyleCategoryDef>
+    <defName>AMJW_CanalLine</defName>
+    <styles>
+      <li>Line</li>
+    </styles>
+  </DrawStyleCategoryDef>
+</Defs>
