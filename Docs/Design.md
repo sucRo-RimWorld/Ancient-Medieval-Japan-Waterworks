@@ -244,7 +244,7 @@ The dig action has no material cost. Fill-in also has no material refund/cost; i
 
 When a canal is excavated, record the natural terrain it replaced.
 
-The purpose is limited to safe fill-in restoration.
+The recorded original TerrainDef serves two narrow Waterworks responsibilities: safe fill-in restoration **and visual reproduction of the excavated ground material** (see §8.0.5). A stored terrain DefName is save metadata and is **not** automatically visible beneath the canal TerrainDef. Do not turn this into a general terrain-history system. Original per-cell color overrides and pollution/snow presentation are not currently part of that record and require separate feasibility and save-compatibility checks.
 
 Do not treat this as a general terrain-history system.
 
@@ -438,7 +438,28 @@ The author proposed examining Medieval Overhaul (MO) rather than continuing repe
 
 **Mouths, covers, ground:** open the appropriate channel end at a supplied natural freshwater edge without an earth plug. A bridge sits across an intact channel and should visually cover it; network connectivity continues beneath. Outside the excavation use the terrain's visual context rather than a mandatory full-square brown plate; filling must restore normal ground without ghost banks. Wet water should not appear across a closed end or over a bridge. The existing Waterworks-only topology, bridge and save rules remain authoritative.
 
-**Design status / staging:** contour behavior and wet/dry identity above are the agreed **text specification**. The sketches are not approved production textures. Exact bank-to-bed ratio, junction bulge, side-wall illumination, earth/water palette, material animation, atlas packing and mesh-vs-graphic choice are **OPEN** until the user inspects a first RimWorld-style visual concept. Existing `CanalVisualTopology.Rectangles` and `SectionLayer_AMJW_Canal` are earlier unaccepted *rectangular* prototypes; do not reinterpret their `HalfChannel=0.20f` / `HalfBank=0.34f` as final art values. No further arbitrary renderQueue/width patches or reruns of the complete visual E2E simply to choose aesthetics; approve the reference sheet first, then choose implementation and verify it.
+**Design status / staging:** contour behavior and wet/dry identity above are the agreed **text specification**. The sketches are not approved production textures. Exact bank-to-bed ratio, junction bulge, side-wall illumination, earth/water palette, material animation, atlas packing and mesh-vs-graphic choice are **OPEN** until the user inspects a first RimWorld-style visual concept. Existing `CanalVisualTopology.Rectangles` and `SectionLayer_AMJW_Canal` are earlier unaccepted *rectangular* prototypes; do not reinterpret their `HalfChannel=0.20f` / `HalfBank=0.34f` as final art values. No further arbitrary renderQueue/width patches or reruns of the complete visual E2E simply to choose aesthetics; approve the reference sheet first, then implement the selected ground-adaptive rendering architecture (§8.0.5) and verify it.
+
+### 8.0.5 Ground-adaptive grayscale relief rendering — selected architecture (2026-10-08)
+
+**Choice:** preserve the **original excavation terrain's texture/material**, overlay **transparent achromatic light/dark masks** for excavated banks and dry-bed shading, and draw an **independent, narrow water surface only over the recessed bed** when supplied. One reusable geometry/mask family covers Soil, Gravel, Rich Soil and other supported diggable ground. Do **not** use one universal brown/gray background, color-only tint of a white ditch image, separate art sets for each terrain, or full-cell water. The outline of banks/ditch (§8.0.4) is **identical for wet and dry**; only the bed contents change.
+
+#### Visual stack (back to front)
+
+1. **Original ground:** Waterworks currently replaces a cell's actual terrain with a wet/dry TerrainDef and stores the former `TerrainDef.defName` in `CanalMapComponent.originals`. For drawing, look up this record and explicitly re-render the original terrain's **own material/texture**, with consistent UV/tile alignment against neighbors. Transparency **alone cannot expose** the recorded ground. Do not overwrite the water network's terrain identity. A missing/invalid original record gets a visible-only neutral fallback, never a fabricated restore record.
+2. **Shared excavated relief:** transparent grayscale alpha overlays for the lip/shoulders, inner dark sloped banks and highlights. Keep original texture grain and primary color visible under the relief; outside the dug contour the mask is fully transparent. Initial implementation can use separate dark/light alpha passes with a verified built-in transparent shader; do not assume a white bitmap multiplied by brown is sufficient. MO's `DankPyon_Trench` informs the relief shape **without** copying its pixels.
+3. **Dry bed:** maintain original-ground family texture on the lowered, exposed bed, with stronger translucent shadow than the shoulders. No blanket brown stripe.
+4. **Wet bed:** same bank/bed geometry, but cover **only the bed area** with shallow-blue water and restrained highlights/movement if supported. No blue outside the banks and no whole-cell `Map/WaterDepth` surface.
+5. **Bridge/source:** keep Vanilla bridge visually above the canal or suppress covered-cell rendering; join the water bed to natural river/pond at an open end without a soil plug. No alteration to path costs, foundations or water-supply connectivity.
+
+#### Implementation and validation boundaries
+
+- The existing Waterworks `SectionLayer_AMJW_Canal` is the candidate Section-level render owner, **not** the approved final implementation. Reuse the already saved original terrain DefName; material variants can be resolved through RimWorld 1.6 `TerrainGrid.GetMaterial(TerrainDef, bool, ColorDef)` / original `TerrainDef` graphics. Those APIs support material selection, but **do not establish successful compositing**. Correct draw order, renderQueue, world-aligned UVs, masking, foundation occlusion and neutral Soil overdraw **must be proven** in one focused loaded-game test. Do not draw original material underneath an opaque full-cell canal tile and assume it will be visible.
+- Section rebuild must follow terrain-change invalidation, not per-tick/per-frame map rescans. Group quads by material and cache shared masks/materials; avoid cloning a Unity material for each canal cell. Keep no required MO dependency, no copied MO/Vanilla graphics, and no broad Harmony patch against every terrain.
+- **Saved-state limitation:** the current `Dictionary<int,string>` remembers original terrain **DefName**, not painted `ColorDef` or the exact original pollution/snow overlay. Normal ground material is the initial target; tinted/modded cases need explicit testing and, only if actually necessary, a backward-compatible extra save field. Do not claim perfect color reproduction for records that lack this information.
+- **Approval gate:** first draw a single top-down paired dry/wet art proposal with straight/elbow/T/cross and compare the *same* cut under Soil, Gravel and Rich Soil texture contexts. Obtain visual approval of slope shading, bed width and water appearance; only then author final transparent masks and change rendering source. After art approval do one isolated compositing proof and E2E comparison with ERROR=0. Keep the current prototype's hardcoded `HalfChannel/HalfBank` and universal Soil material classified as rejected/unverified visual choices, not accepted defaults.
+
+**Status:** architecture **selected**; final assets and live engine alpha/depth blending **not yet validated**. No source change is implied by adopting this design.
 
 ### 8.1 State transitions
 

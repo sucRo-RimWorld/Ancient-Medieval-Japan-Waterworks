@@ -6,6 +6,8 @@ The confirmed source of truth is `Docs/Design.md` §§7–8. This file specifies
 
 Use an isolated Quickstarts 50×50 map, locating a revealed, building-free patch at least 17×17 cells (the ordinary core fixture uses only 11×11). On the patch, clear removable test vegetation, normalize the base to Soil and use some Gravel for a background texture reference. Preserve original terrain/foundations for cleanup if the map persists.
 
+**Separate post-art-approval comparison:** besides this already accepted fixture layout, prepare identical short dry and wet waterways dug *into* three actual permitted substrate types: Soil, Gravel and Rich Soil (only where each is diggable under current loaded rules). Show adjacent untouched patches, then verify save/load retention and fill-in restoration. Do not merely place a Gravel background beside a Soil-origin trench and call that color adaptation. If a sample ground is not diggable, report the exclusion rather than loosening terrain gameplay rules. This new comparison does not change the existing fixture's coordinates, 6/6 core E2E, or 1+1 add-to-save gate.
+
 Coordinates below are relative to the center of the prepared patch. Positive x points east; positive z points north. Add water using the actual loaded TerrainDefs and dig using the production `CanalMapComponent`. The layout must be visibly contiguous, but not count a diagonal touch as a supply.
 
 | Element | Relative cells | Expected |

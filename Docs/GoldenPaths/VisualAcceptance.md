@@ -26,7 +26,9 @@ Check the following before art approval:
 - The inlet and a Vanilla bridge are depicted as design details, not as new hydrology/pathing rules.
 - Width, bank lighting, color palette and junction widening receive **visual sign-off** before replacing runtime prototypes; no false PASS is inferred from a generated concept or an automated geometry test.
 
-**Current status:** text contour specification recorded; proposed artwork still OPEN. Do not mark VIS-01…VIS-07 passed until real game frames of the implemented approved art are inspected.
+**Selected adaptation:** see §8.0.5. Original terrain material must be explicitly drawn from Waterworks' saved DefName; grayscale relief mask must be transparent over its actual texture. A colored monochrome replacement tile is not equivalent. Inspect matching Soil, Gravel and Rich Soil soil/stone granularity in addition to the shared contour.
+
+**Current status:** contour specification and adaptive material architecture chosen; art proposal and compositing acceptance OPEN. Do not mark VIS-01…VIS-08 passed until real game frames of the implemented approved art are inspected.
 
 ## Minimum reproducible visual scene
 
@@ -45,6 +47,7 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 | VIS-05 | bridge foundation preserves connectivity | Bridge planks visually cover water; water does not draw above bridge, shimmer through it or spill beyond adjacent tiles | OPEN |
 | VIS-06 | source removed / reconnected | Rebuilt wet↔dry state changes are visible without ghost water, stale mesh or retained wet shader effects | OPEN |
 | VIS-07 | Gravel/Soil restoration E2E passed | Filled terrain visually matches surrounding ground; no leftover rim/water artifact | OPEN |
+| VIS-08 | Original terrain DefName is available for representative diggable cells | Soil, Gravel and Rich Soil canal shoulders retain their respective surrounding texture/colors; wet/dry share silhouette; no universal brown square. Missing original records use a documented visual fallback; reloaded maps retain the mapping | OPEN |
 
 ## Execution and evidence
 
