@@ -19,9 +19,14 @@ for td in defs.values():
     assert td.findtext("pathCost") == "10"
     assert td.find("affordances").findtext("li") == "Bridgeable"
     assert [n.text for n in td.find("tags")] == ["AMJW_Canal"]
-assert defs["AMJW_DugCanalWet"].findtext("texturePath") == "Terrain/Surfaces/WaterShallowRamp"
-assert defs["AMJW_DugCanalWet"].findtext("waterDepthShader") == "Map/WaterDepth"
-assert defs["AMJW_DugCanalDry"].findtext("texturePath") == "Terrain/Surfaces/Soil"
+# Both gameplay TerrainDefs deliberately draw neutral ground; a dedicated
+# auto-registered section layer supplies the narrower water/soil bank surface.
+for td in defs.values():
+    assert td.findtext("texturePath") == "Terrain/Surfaces/Soil"
+    assert td.findtext("color") == "(1, 1, 1)"
+    assert td.findtext("edgeType") == "FadeRough"
+    assert td.find("waterDepthShader") is None
+assert "Terrain/Surfaces/WaterShallowRamp" in (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
 assert not any(elem.find("holdSnow") is not None for elem in defs.values())
 assert defs["AMJW_DugCanalWet"].findtext("holdSnowOrSand") == "false"
 source = "\n".join(p.read_text(encoding="utf-8") for p in (root / "Source").glob("*.cs"))

@@ -505,3 +505,11 @@ The author's `render-api(2).txt` confirmed virtual `MapDrawLayer.DrawLayer` and 
 Added `Source/SectionLayer_AMJW_Canal.cs` as native rendering-only layer, `CanalVisualMesh.Append` to add disjoint quads to persistent submeshes, and adjacent-section terrain-mesh invalidation on canal topology changes. The wet/dry TerrainDefs still carry gameplay state, but both draw neutral soil under the narrower bank and narrow surface; removed whole-tile `Map/WaterDepth` so it cannot obscure the canal's width. No additional texture assets, Harmony patch, or save-format change. Visual E2E now requires `Section.GetLayer(typeof(SectionLayer_AMJW_Canal))` and nonempty finalized mesh. `Docs/Design.md` §8.0.2 records limitations, including temporarily static water and bank colour differing from original ground.
 
 Next external gate: `Scripts/run-visual-e2e.ps1` must compile the new production SectionLayer and pass isolated Pickle 1/1 with ERROR=0, then compare connected/disconnected/restored screenshots for water width, bridge coverage, junction seams and supply-mouth rendering. If build fails, inspect the compiler error instead of stack-pushing commits. Existing 6/6 and existing-save 1+1 suites unchanged; their prior acceptance does not automatically cover new rendering changes.
+
+
+### VIS-WATERWORKS-014-STATIC — obsolete texture assertions corrected (2026-10-08)
+
+**Owner:** Waterworks validation
+**Status:** FIXED IN SOURCE — runtime build pending
+
+Preflight review immediately after the initial native SectionLayer prototype found that `Tests/static_audit.py` still asserted the old wet `WaterShallowRamp` TerrainDef and `Map/WaterDepth` shader, which necessarily contradict the new Soil-underlay/SectionLayer design. The static audit now requires both gameplay TerrainDefs to use neutral Soil, equal tint, FadeRough edges and no full-cell water-depth shader; it confirms that the wet texture is instead referenced in `Source/SectionLayer_AMJW_Canal.cs`. No changes to Waterworks graph, saved data or bridge rules. Actual Windows compile and scene appearance remain OPEN.
