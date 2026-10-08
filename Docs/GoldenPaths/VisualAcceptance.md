@@ -14,7 +14,7 @@ Before another renderer iteration, agree on the dry/wet connected visual target.
 
 The author's three hand-drawn horizontal dry/wet and vertical/cross sketches are the current contour references. `Docs/Design.md` §8.0.4 is the formal 16-mask shape specification; do not judge the first art sheet by the earlier hard-rectangle mesh alone.
 
-**First image-review sheet (no game startup):** show a common earth-cut bank form, paired DRY/WET examples of horizontal and vertical straight, elbow, T and cross, plus an endcap. Use the same camera scale, ground texture and geometry between state pairs. MO's ordinary earth ditch is prior-art styling, not a copied atlas. Indicate only the bed contents changing between states.
+**First art review (no game startup):** use the production-format connected candidates required by the shared AMJ map-tile workflow, and present paired DRY/WET horizontal/vertical straight, elbow, T, cross and endcap examples together for comparison. Use the same camera scale, ground texture and geometry between state pairs. MO's ordinary earth ditch is prior-art styling, not a copied atlas. Indicate only the bed contents changing between states.
 
 Check the following before art approval:
 
