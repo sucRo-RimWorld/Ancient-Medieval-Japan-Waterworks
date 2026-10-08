@@ -311,4 +311,14 @@ for mask in range(16):
     for bit, present in exits.items():
         assert present == bool(mask & bit), (mask, bit)
 
+# The isolated visual runner must obtain loaded-game draw-layer signatures
+# before a production SectionLayer integration is designed.
+render_probe = (root / "Tests/E2E/WaterworksRenderProbe.cs").read_text(encoding="utf-8")
+assert '<Compile Include="WaterworksRenderProbe.cs"/>' in visual_csproj
+assert "WaterworksRenderProbe.Write(output);" in visual_steps
+assert "render-api.txt" in render_probe and "render-api.txt" in visual_runner
+for target in ("typeof(SectionLayer)", "typeof(Section)", "typeof(MapDrawer)",
+               "typeof(SectionLayer_Terrain)", "typeof(TerrainGrid)"):
+    assert target in render_probe, target
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
