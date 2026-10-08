@@ -153,3 +153,10 @@ Project-level Japanization architecture confirms:
 **Durable source:** `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/MedievalOverhaulJapanizationIntegrationMatrix.md`, commit `5483cc42744ed2652bf7599272c00225668d9963`.
 
 **Next action:** none.
+
+### DOC-SHARED-RULES-OWNER-001 — Shared rule migration to Project (2026-10-08 JST)
+
+**Owner:** Project common rules / repository routing
+**Status:** DONE — current AGENTS and shared-rule references route to Project
+
+Canonical shared rules and Workshop template/tooling now live in Project `Docs/SharedRules.md` and its linked sources. Grains old Markdown paths are migration pointers only. Existing historical coordination entries retain their original commit/path provenance; resolve future work through the new Project index. Mod-specific implementation, tests and accepted content art remain with this repository. No runtime behavior, new preview generation or Steam publication is part of this migration.
