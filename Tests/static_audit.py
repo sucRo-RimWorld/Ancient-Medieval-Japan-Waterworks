@@ -6,7 +6,23 @@ import re
 
 root = Path(__file__).resolve().parents[1]
 xmls = list(root.glob("About/*.xml")) + list(root.glob("Defs/**/*.xml")) + list(root.glob("Patches/*.xml")) + list(root.glob("Languages/**/*.xml"))
-assert len(xmls) == 9, (len(xmls), [str(p) for p in xmls])
+expected_xmls = {
+    "About/About.xml",
+    "About/Manifest.xml",
+    "Defs/DesignationDefs/AMJW_Designations.xml",
+    "Defs/DrawStyleCategoryDefs/AMJW_CanalLine.xml",
+    "Defs/JobDefs/AMJW_Jobs.xml",
+    "Defs/TerrainDefs/AMJW_Canals.xml",
+    "Defs/WorkGiverDefs/AMJW_WorkGivers.xml",
+    "Languages/English/Keyed/AMJW.xml",
+    "Languages/Japanese/Keyed/AMJW.xml",
+    "Patches/AMJW_Orders.xml",
+}
+actual_xmls = {p.relative_to(root).as_posix() for p in xmls}
+assert actual_xmls == expected_xmls, {
+    "missing": sorted(expected_xmls - actual_xmls),
+    "unexpected": sorted(actual_xmls - expected_xmls),
+}
 for path in xmls:
     ET.parse(path)
 about = ET.parse(root / "About/About.xml").getroot()
