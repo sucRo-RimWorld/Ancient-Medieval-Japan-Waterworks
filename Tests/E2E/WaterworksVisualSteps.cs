@@ -110,7 +110,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
             });
             await WaitFile("restored.png", context);
             await GameThread.Run(delegate {
-                WaterworksRenderProbe.Write(output);
+                WaterworksRenderProbe.Write(output, center);
                 File.WriteAllText(Path.Combine(output, "manifest.txt"),
                     "seed=AMJ-Waterworks-E2E\nmapSize=50\n" +
                     "images=connected.png,disconnected.png,restored.png\n" +
