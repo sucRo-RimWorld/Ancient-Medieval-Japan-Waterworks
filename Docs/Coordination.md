@@ -423,3 +423,13 @@ Next: investigate minimal narrow channel rendering without changing network/terr
 **Status:** IN PROGRESS — architectural trial order fixed, renderer source NOT yet implemented
 
 The second synchronized screenshot set proves the current wet/dry TerrainDefs' appearance is full-cell and fails the required narrow excavated channel. Source audit confirms current TerrainDef fields only select a texture, edge blending, shader and precedence; no dedicated narrower geometry currently exists. General 1.6 terrain layering/bridge transparency examples suggest that relying on an alpha texture to reveal the original soil under a replaced terrain is unsafe without live proof. `Docs/Design.md` §8.0.1 now defines an ordered proof: (1) alpha/material feasibility in real terrain renderer, (2) if necessary a small cardinal-aware Waterworks-only rendering overlay, (3) Vanilla foundation occlusion, (4) minimal art only if unavoidable. Do not replace the connected-component state machine, modify saved terrain identity, add generic Harmony mesh patches, or claim rendering implementation complete. Next gate: controlled in-game material/mesh prototype screenshots of one straight canal and bridge, then all junction forms.
+
+
+### VIS-WATERWORKS-007 — cardinal narrow-channel geometry source (2026-10-08)
+
+**Owner:** Waterworks visual renderer
+**Status:** IN PROGRESS — geometry model committed; actual draw submission NOT implemented or compiled
+
+Added `Source/CanalVisualTopology.cs` containing a rendering-only 4-bit N/E/S/W connection mask and center/arm rectangles for all 16 cardinal configurations (current prototype half-channel=0.20 cell, half-bank=0.34 cell). Dry and wet TerrainDefs remain authoritative and unchanged. `Tests/static_audit.py` now checks the new geometry contract and all 16 mask edge exits; `Tests/E2E/WaterworksVisualSteps.cs` checks line, elbow and cross masks on the real generated test map. This is useful geometry data for a future canal-specific mesh/layer, **not a visible narrow-water renderer yet**. No renderer draw call, texture, player-save change or bridge occlusion claim has been made.
+
+Next: build the production DLL and visual E2E against actual 1.6 binaries, correct compile/API issues if any, and prototype a real terrain-lifecycle-aware section layer below Vanilla bridge foundations before accepting screenshots. Do not change pathing, source graph or saves. Existing 6/6 and 1+1 acceptance remain undisturbed.
