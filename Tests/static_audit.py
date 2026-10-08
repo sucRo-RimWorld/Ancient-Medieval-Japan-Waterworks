@@ -42,7 +42,7 @@ assert "protected override DesignationDef Designation => EarthworkDef;" in sourc
 # The regression checks below validate references, not executable game behavior.
 def class_exists(class_name):
     name = class_name.rsplit(".", 1)[-1]
-    return re.search(r"\\bclass\\s+" + re.escape(name) + r"\\b", source) is not None
+    return re.search(r"\bclass\s+" + re.escape(name) + r"\b", source) is not None
 
 for xml_path, field in (
     ("Defs/JobDefs/AMJW_Jobs.xml", "driverClass"),
@@ -100,4 +100,5 @@ for xml_path in (root / "Defs").rglob("*.xml"):
     all_defnames += [node.text for node in ET.parse(xml_path).iter("defName")]
 assert len(all_defnames) == len(set(all_defnames)), "duplicate local DefName"
 
+assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 print("[OK] XML and RimWorld 1.6 draw-style contract checked (runtime not tested)")
