@@ -26,7 +26,7 @@
     <pathCost>10</pathCost>
     <fertility>0</fertility>
     <affordances><li>Bridgeable</li></affordances>
-    <holdSnow>false</holdSnow>
+    <holdSnowOrSand>false</holdSnowOrSand>
     <takeSplashes>true</takeSplashes>
     <extinguishesFire>true</extinguishesFire>
     <traversedThought>SoakingWet</traversedThought>

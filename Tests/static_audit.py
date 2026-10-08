@@ -21,6 +21,8 @@ for td in defs.values():
 assert defs["AMJW_DugCanalWet"].findtext("texturePath") == "Terrain/Surfaces/WaterShallowRamp"
 assert defs["AMJW_DugCanalWet"].findtext("waterDepthShader") == "Map/WaterDepth"
 assert defs["AMJW_DugCanalDry"].findtext("texturePath") == "Terrain/Surfaces/Soil"
+assert not any(elem.find("holdSnow") is not None for elem in defs.values())
+assert defs["AMJW_DugCanalWet"].findtext("holdSnowOrSand") == "false"
 source = "\n".join(p.read_text(encoding="utf-8") for p in (root / "Source").glob("*.cs"))
 for marker in ("WaterMovingShallow", "WaterMovingChestDeep", "WaterShallow", "WaterDeep",
                "seen.Count >= 9", "GenAdj.CardinalDirections", "FoundationAt(c)",
