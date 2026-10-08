@@ -39,3 +39,14 @@ The previously passing 6/6 core suite is unaffected.
 `Scripts/validate-source.ps1` invokes PowerShell's own `System.Management.Automation.Language.Parser.ParseFile` for each script under `Scripts/`. This is a preflight check before building and running either E2E phase. The known `$phase:` interpolation failure has been corrected by delimiting the variable as `${phase}:`.
 
 If the parser finds any script error, the suite stops without touching the isolated test profiles. A corrected parser is not proof of passing runtime tests.
+
+
+## Diagnosing an ERROR after the summary passes
+
+Do **not** rerun the two-process test solely to read the existing failure. Inspect the saved isolated log, using PowerShell from the Waterworks repository root:
+
+```powershell
+Select-String -LiteralPath "TestResults/AddToSave/Reports/AfterInstall/Player.log" -Pattern '\[ERROR\]' -Context 0,12 | Format-List | Out-String -Width 240
+```
+
+The runner now automatically prints up to five ERROR lines plus 12 subsequent log lines before throwing, so future failures contain their own cause and adjacent stack trace. The Pickle 1/1 result and the ERROR=0 check are separate; both are required to pass. Do not dismiss a real runtime ERROR merely because a scenario's checks completed.

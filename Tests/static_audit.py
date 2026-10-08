@@ -236,6 +236,17 @@ assert 'Write-Host "[OK] $phase: 1/1 Pickle scenario, zero runtime ERROR."' not 
 powershell_validator = (root / "Scripts/validate-source.ps1").read_text(encoding="utf-8")
 assert '[System.Management.Automation.Language.Parser]::ParseFile' in powershell_validator
 assert "-Filter '*.ps1'" in powershell_validator
+# The runtime gate must expose actual ERROR lines and stack context, not
+# only the outer throw site, and must never accept an ERROR as a PASS.
+for marker in (
+    "Select-String -LiteralPath $log -Pattern",
+    "-Context 0,12",
+    'Write-Host ("[RUNTIME-ERROR] " + $entry.Line)',
+    'Write-Host ("[RUNTIME-CONTEXT] " + $line)',
+    'if ($errors -gt 0) {',
+):
+    assert marker in runner, marker
+
 
 
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")

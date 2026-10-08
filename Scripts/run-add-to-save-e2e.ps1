@@ -134,8 +134,22 @@ function Run-Phase([string]$feature, [string]$expectedScenario, [string]$phase) 
     $names = @($summary.scenarios | ForEach-Object { [string]$_.name })
     Require ($names -contains $expectedScenario) "Expected scenario missing: $expectedScenario"
     Require (Test-Path -LiteralPath $log) "Player.log missing for $phase."
-    $errors = @([regex]::Matches((Get-Content -LiteralPath $log -Raw), '(?im)^.*\[ERROR\].*$')).Count
-    Require ($errors -eq 0) "$phase produced $errors runtime ERROR lines: $log"
+    # A Pickle PASS is not sufficient; retain ERROR=0 as a hard gate.
+    # Print the actual Player.log messages and following stack-trace lines
+    # before throwing, so the user need not repeat a long two-phase test
+    # merely to identify the cause of one runtime ERROR.
+    $errorMatches = @(Select-String -LiteralPath $log -Pattern '\[ERROR\]' -Context 0,12)
+    $errors = $errorMatches.Count
+    if ($errors -gt 0) {
+        Write-Host ("[DIAGNOSTIC] {0} runtime ERROR entries in {1}:" -f $errors, $log)
+        foreach ($entry in ($errorMatches | Select-Object -First 5)) {
+            Write-Host ("[RUNTIME-ERROR] " + $entry.Line)
+            foreach ($line in $entry.Context.PostContext) {
+                Write-Host ("[RUNTIME-CONTEXT] " + $line)
+            }
+        }
+        throw ("{0} produced {1} runtime ERROR lines: {2}" -f $phase, $errors, $log)
+    }
     Write-Host "[OK] ${phase}: 1/1 Pickle scenario, zero runtime ERROR."
 }
 

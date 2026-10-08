@@ -319,3 +319,13 @@ The author attempted `Scripts/run-add-to-save-e2e.ps1` and PowerShell stopped at
 To avoid repeating this class of avoidable failure, `Scripts/validate-source.ps1` now runs the PowerShell AST parser over every `Scripts/*.ps1` before static validation, C# building, or game startup. `Tests/static_audit.py` requires the corrected string and the AST preflight.
 
 **Acceptance still pending:** the two-phase existing-save E2E must actually run successfully (Phase A 1/1, Phase B 1/1, no runtime ERROR). This syntax fix is not evidence of a passing E2E.
+
+
+### TEST-WATERWORKS-E2E-004-ERROR-001 — Phase B emits one runtime ERROR
+
+**Owner:** Waterworks existing-save acceptance
+**Status:** BLOCKED — specific ERROR content not yet supplied; Phase B acceptance remains OPEN
+
+After the PowerShell parser fix, the author reran the isolated existing-save test. The Phase B `AfterInstall` runner reached its runtime error gate and stopped: **one `[ERROR]` line** in `TestResults/AddToSave/Reports/AfterInstall/Player.log`. This proves the earlier parser blocker was bypassed but is **not** a passing two-phase test. The author message includes only the runner's summary, not the actual underlying Player.log error, so no root cause can yet be assigned. The previously verified standalone **6/6** core E2E is unaffected.
+
+The runner now prints each ERROR entry with 12 following context/stack-trace lines (up to five entries) before aborting, while continuing to enforce ERROR=0. The existing log is the primary next diagnostic source; a repeat run is **not** required just to recover the original error. The next step is to inspect the first real ERROR message and stack, determine whether it belongs to Waterworks production, the upgraded-save test fixture, Pickle/Quickstarts, or third-party services, and then change the actual owner code/test if needed. Do not weaken the error gate or claim compatibility before Phase A and Phase B are both clean.
