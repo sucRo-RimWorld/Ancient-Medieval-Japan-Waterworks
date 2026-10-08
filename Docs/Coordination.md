@@ -1,5 +1,25 @@
 # AMJ Waterworks Coordination
 
+### PRIORITY-FOREST-FOODS-20261008 — subsequent feature sequencing
+
+**Owner:** Waterworks release/priority coordination  
+**Status:** PROJECT EXECUTION ORDER RECORDED; v1 existing-save E2E STILL IN PROGRESS
+
+Author placed Japan-appropriate native fruit trees / edible forest foods in
+the Project **after Ironmaking, before the next Waterworks/Rice
+feature-development phase**. This does not demote historical Waterworks/Rice
+Reconstruction P0, change Waterworks v1's approved canal behavior or revoke
+its optional integration with Rice Cultivation. See Project
+`Docs/ImplementationPriorities.md` and `Docs/Roadmap.md` for execution order.
+
+**Finish the bounded current Waterworks v1 work**, especially the ongoing
+separate two-phase save-before-install -> Waterworks-enabled add-to-save E2E
+and its real runtime ERROR gate. Do not abandon already-built code, report
+that compatibility passed prematurely or broaden v1 in order to overtake the
+forest-food work. Subsequent feature expansion / Rice integration waits for
+its later roadmap slot. Existing detailed E2E notes remain authoritative.
+
+
 This file is the authoritative coordination surface for work on **AMJ Waterworks**.
 
 At the start of Waterworks work:
