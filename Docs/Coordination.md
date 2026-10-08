@@ -385,3 +385,13 @@ Read `Docs/GoldenPaths/VisualAcceptance.md` for the seven concrete visual accept
 **Status:** OPEN — reproducible layout/capture contract documented; test code and rendered frames not yet created
 
 `Docs/GoldenPaths/VisualFixture.md` defines a separate 17×17 scene (river mouth, wet trunk, T/cross, bend, isolated dry segment, two Vanilla bridges, Gravel reference) and capture/error/manifest gates. Keep the already green 6/6 core suite and 1+1 existing-save suite unchanged. Verify a real RimWorld 1.6 camera/screenshot/render API and compiler environment before implementing automated screenshots. No screenshot PASS or art acceptance is claimed.
+
+
+### VIS-WATERWORKS-003 — isolated Pickle screenshot implementation (2026-10-08)
+
+**Owner:** Waterworks visual-test implementation
+**Status:** IMPLEMENTED IN SOURCE — Windows/RimWorld build and rendered-frame acceptance OPEN
+
+Added `Tests/E2E/WaterworksVisualSteps.cs`, a separate `waterworks-visual.feature`, developer-only `VisualMod` metadata + harmless content marker, and `Scripts/run-visual-e2e.ps1`. The visual step creates a revealed 17x17 map scene with valid natural source, wet/dry canals, branches, two Vanilla bridge foundations and gravel reference. It requests three screen captures (connected/disconnected/restored), waits for real PNG files, validates header/dimensions, and writes a manifest to isolated `TestResults/Visual/SaveData/WaterworksVisual`. Runner demands the unique Pickle 1/1 PASS, runtime ERROR=0 and all screenshots present. `Tests/E2E/Steps.csproj` now references UnityEngine.ScreenCaptureModule and includes the visual step. Static audit checks that the visual runner is distinct from the existing core E2E. Normal ModsConfig and user saves remain untouched.
+
+**Verification status:** no Windows RimWorld 1.6 compiler/runtime/render execution from the editing environment. The new test must be built first with `Scripts/run-visual-e2e.ps1`; if the screenshot API cannot render in the hidden process, diagnose the render surface rather than accepting empty/fake PNGs. Visual appearance PASS remains OPEN until actual frames are inspected; the accepted 6/6 + 1+1 suites are unchanged. No new art committed.
