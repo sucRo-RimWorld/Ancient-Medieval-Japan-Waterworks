@@ -577,6 +577,10 @@ Vanilla Factions Expanded - Medieval 2 remains a broad medieval faction/technolo
 
 Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow core.
 
+### Initial loaded-map test gate
+
+The first automated RimWorld E2E stage is a four-scenario Pickle/Quickstarts suite for loaded production Defs, actual MapComponent/terrain connectivity, the 9-cell freshwater threshold, and bridge/foundation-preserving restoration. It manipulates the test map's terrain through the **real game API** rather than a mock graph. These scenarios deliberately do **not** claim to test real pawn job completion, cross-session persistence, or visual quality; those remain required independent gates. Pass requires 4/4 named scenarios and no runtime `[ERROR]` entries in an isolated log.
+
 ## 14. Prototype acceptance gate
 
 The first vertical prototype is successful when automated/runtime checks demonstrate:

@@ -244,10 +244,26 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 ### BUILD-WATERWORKS-001 — missing Diggable DefOf member (2026-10-08)
 
 **Owner:** Waterworks implementation
-**Status:** FIXED IN SOURCE — user-side rebuild required; compile gate still OPEN
+**Status:** DONE — author reran static audit and real C# build successfully (0 warnings, 0 errors)
 
 The author's `Scripts/validate-source.ps1` completed its existing static contract check but C# build failed with CS0117 at `Source/CanalMapComponent.cs`: `TerrainAffordanceDefOf.Diggable` is not defined in RimWorld 1.6.
 
 Confirmed in the decompiled 1.6 `RimWorld/TerrainAffordanceDefOf.cs`: the class has no `Diggable` member; the terrain XML still defines the `Diggable` affordance. Fix uses `TerrainDef.affordances.Exists(...defName == "Diggable")`, not a nonexistent DefOf symbol. Updated `Tests/static_audit.py` to reject the old reference and require the loaded-Def lookup. Clarified `NaturalTerrainBase`'s `natural=true` inheritance in the formal design.
 
-**Next action:** rerun `Scripts/validate-source.ps1` with the same RimWorldDir; treat further compiler errors as build blockers. Do not launch Pickle/E2E until the C# build succeeds.
+**Result:** the author reported the static audit and build passing in 2.29 seconds; next gate is actual isolated Pickle runtime.
+
+
+### TEST-WATERWORKS-E2E-001 — isolated Pickle/Quickstarts core verification
+
+**Owner:** Waterworks implementation
+**Status:** IN PROGRESS — E2E source and runner staged; neither E2E fixtures nor RimWorld runtime executed successfully yet
+
+Following the user's clean production build, a first developer-only Pickle/Quickstarts suite now covers:
+- production Def loading and Waterworks/Vanilla Bridge affordances;
+- cardinal canal connectivity including diagonal-only rejection, splitting and reconnection;
+- 8 versus 9 standing-freshwater cells and explicit ocean/marsh rejection;
+- actual Vanilla Bridge foundation preservation of wet/dry canal topology and Gravel restoration.
+
+`Scripts/run-e2e.ps1` builds test assemblies, stages `AncientMedievalJapanWaterworks.E2E` separately and creates isolated test savedata. It must not alter the player's normal ModsConfig. A pass requires all **4/4** named Pickle scenarios and `Player.log` with **zero [ERROR] lines**.
+
+**Next:** author runs `Scripts/run-e2e.ps1`; any E2E compilation/runtime errors must be fixed before status advances. Actual pawn jobs, persisted save/load and visual quality need later scenarios. Art remains deferred.

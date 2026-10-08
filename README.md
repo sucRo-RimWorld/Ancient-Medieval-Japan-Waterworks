@@ -11,3 +11,16 @@ dotnet build Source/AncientMedievalJapanWaterworks.csproj -p:RimWorldDir="D:/Ste
 ```
 
 Output goes to `Assemblies/`. Run `python Tests/static_audit.py` for XML/source contract checks; this does **not** replace a game compile, isolated runtime, save/load or visual test.
+
+
+## Isolated Pickle/Quickstarts E2E
+
+After a successful production build, run from the repository root:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-e2e.ps1 -RimWorldDir "D:\SteamLibrary\steamapps\common\RimWorld"
+```
+
+This builds the developer-only test assemblies, stages the `AncientMedievalJapanWaterworks.E2E` test Mod and uses `TestResults/E2E/SaveData` rather than touching the player's normal ModsConfig. Requires the existing Pickle (Workshop 3791648678) and Quickstarts (3793646067) for testing only.
+
+The first gate requires **4/4** exact Pickle scenarios and no isolated runtime `[ERROR]` entries. Reports: `TestResults/E2E/Reports`. Real pawn work, save/load and image quality are still later gates.
