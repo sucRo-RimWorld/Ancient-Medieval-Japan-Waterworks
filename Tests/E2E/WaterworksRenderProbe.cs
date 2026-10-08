@@ -18,7 +18,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
             BindingFlags.Public | BindingFlags.NonPublic |
             BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
-        public static void Write(string outputDirectory)
+        public static void Write(string outputDirectory, IntVec3 focus)
         {
             var result = new StringBuilder();
             result.AppendLine("AMJW visual rendering API probe");
@@ -30,11 +30,11 @@ namespace AncientMedievalJapan.Waterworks.E2E
             Dump(result, typeof(SectionLayer_Terrain));
             Dump(result, typeof(SectionLayer_Dynamic));
             Dump(result, typeof(TerrainGrid));
-            DumpCurrentLayers(result);
+            DumpCurrentLayers(result, focus);
             File.WriteAllText(Path.Combine(outputDirectory, "render-api.txt"), result.ToString());
         }
 
-        private static void DumpCurrentLayers(StringBuilder sb)
+        private static void DumpCurrentLayers(StringBuilder sb, IntVec3 focus)
         {
             sb.AppendLine();
             sb.AppendLine("RUNTIME SECTION LAYER ORDER (loaded map only)");
@@ -44,7 +44,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 sb.AppendLine("No current map or map drawer.");
                 return;
             }
-            IntVec3 focus = new IntVec3(map.Size.x / 2, 0, map.Size.z / 2);
+            sb.AppendLine("FOCUS " + focus);
             Section section = map.mapDrawer.SectionAt(focus);
             if (section == null)
             {
