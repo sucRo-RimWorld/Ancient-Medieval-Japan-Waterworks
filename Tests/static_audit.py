@@ -276,6 +276,8 @@ for token in ("waterworks-visual.feature", "TestResults/Visual",
     assert token in visual_runner, token
 assert "waterworks-core.feature" not in visual_runner
 assert "run-e2e.ps1" not in visual_runner
+assert visual_steps.count("await Task.Delay(1500);") == 3, "Each screenshot must wait for a rendered frame after state changes"
+assert "int bestDistance = int.MaxValue;" in visual_steps, "Visual fixture should prefer map center"
 ET.parse(root / "Tests/E2E/VisualMod/About/About.xml")
 ET.parse(root / "Tests/E2E/VisualMod/Defs/ThingCategoryDefs/AMJW_VisualMarker.xml")
 
