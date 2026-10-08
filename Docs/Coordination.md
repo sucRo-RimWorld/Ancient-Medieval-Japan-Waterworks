@@ -369,3 +369,11 @@ Next: run `Scripts/validate-source.ps1` and `Scripts/run-add-to-save-e2e.ps1` on
 The uploaded `Reports(4).zip` includes both cold-start Pickle summaries and Player.log files. Phase A `Vanilla saved game is created without Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. Phase B `A Vanilla-only saved map safely accepts newly installed Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. This closes the fixture-content blocker and the dedicated existing-save installation acceptance gate. The previously accepted separate 6/6 suite remains unchanged.
 
 Remaining: visual wet/dry terrain and bridge shader/occlusion inspection; full user-modpack compatibility is not established by isolated acceptance. No new art authorized by this result.
+
+
+### VIS-WATERWORKS-001 — water/ditch/bridge appearance acceptance (2026-10-08)
+
+**Owner:** Waterworks rendering/visual validation
+**Status:** OPEN — source and E2E audit complete; actual rendered frames not yet evaluated
+
+Read `Docs/GoldenPaths/VisualAcceptance.md` for the seven concrete visual acceptance checks and evidence policy. The current wet Def reuses Vanilla `WaterShallowRamp` + `Map/WaterDepth`, and dry Def reuses tinted Soil. Neither Def establishes the confirmed narrow-center-channel visual target, so do not presume it passes. Existing E2E verifies bridge topology rather than water-shader occlusion. Prefer a deterministic isolated rendered-map capture; do not use `-nographics`. Only ask for minimal human inspection if actual rendered capture cannot be automated safely. Do not create new canal art or expand gameplay before isolating the actual observed visual failure.
