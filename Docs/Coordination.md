@@ -41,39 +41,6 @@ This file is for handoff, state and blockers only. Confirmed design belongs in `
 
 ## Current coordination items
 
-### MIG-WATERWORKS-001 — establish standalone Waterworks repository
-
-**Requested by:** author (2026-10-07 JST)  
-**Owner:** Waterworks design / implementation  
-**Status:** DONE — standalone repository created and authoritative design migrated from Grains
-
-Result:
-- `AGENTS.md` now owns Waterworks repository workflow and permanent boundaries.
-- `Docs/Design.md` is the authoritative Waterworks design.
-- The prior temporary design in `Ancient-Medieval-Japan-Grains/Docs/WaterworksDesign.md` has been reduced to a migration pointer (`fe4f52759f459472107a31d9e220a076e7e06139`).
-- Grains `Docs/Design.md` now points to this repository as the authoritative Waterworks source (`0afa9be3b142ac8a7b77905ae5c63aa726ec57f7`).
-- Grains coordination handoff is closed (`418a505c1a01fcdc1443e72dbfbb5a19f9978ea5`).
-
-Initial transferred draft (historical; superseded by current `Docs/Design.md`):
-- the migration originally included a dedicated intake building, gate, culvert and source classes in v1;
-- the author later narrowed v1 to the direct natural-water canal core in commit `51f43ec6d660bd3c85927951dfe06ce569ac967f`;
-- current v1 no longer requires a separate intake building, gate, culvert, hot-spring classification, DBH adapter or public integration API.
-
-Historical source commits in Grains:
-- ownership split: `f594c340fad0ee067e7ce07778e68856822402fb`
-- Waterworks-only cleanup: `10b13764427dd2abdac916eab1deeba9d07bc6df`
-- v1 network baseline: `68ce78db90830fe065399f3385475e36ba0507c6`
-- scope/source semantics: `da34186c6bee44774fbe0a70ac1432af77376796`
-- construction semantics: `4e51249d8b65ea06bd499ab9d1c3320a11b39bdc`
-- progression/integration: `f89cbc2a7ccdbf9667d30d635e38392e85d9cb0f`
-- DBH overlap audit: `d612d5402f76af466cf86069e55c6c1d72fb342c`
-- terrain/v1 exclusions: `f36e37d8145b13d951e758bb453c17b3667d4a3c`
-- dedicated temporary design creation: `79b221786d5d9be66d74dfb0e501b977cba5018c`
-- implementation architecture: `770f6b8aeef80d2c1918ef0e853f105fa7fceded`
-- DBH water-only compatibility profile: `97e91725edbac96bfe63056afe9be3bee518376d`
-
-**Next action:** implement only the minimal direct-source vertical slice: dig canal -> orthogonal adjacency to valid river/pond terrain -> wet/dry connected-component state -> fill canal. Do not pre-commit to gates, culverts or adapters; add them later only if play or a real consumer demonstrates a need.
-
 ### PROTO-WATERWORKS-001 — minimal independent canal prototype
 
 **Owner:** Waterworks implementation  
@@ -100,23 +67,6 @@ Implementation identity fixed by design:
 - Def prefix `AMJW_`
 - no DLC or external-mod hard dependency; avoid Harmony unless proven necessary.
 
-
-
-### FUTURE-MOAT-001 — AI-safe dry moat / water moat extension
-
-**Owner:** future defensive-earthworks / fortification workstream  
-**Status:** ARCHIVED — responsibility moved outside Waterworks; retain only optional water-supply integration boundary
-
-Confirmed boundary:
-- Dry moats, water moats, bridges, traversal rules, raid AI and breach behavior are outside Waterworks ownership.
-- A future defensive-earthworks / fortification mod may optionally consume Waterworks supply state.
-- Waterworks owns only whether supplied water reaches that consumer; it does not own the defensive terrain or AI behavior.
-
-**Durable source:** `Docs/Design.md`, scope correction commit `e9e529e01c4f4a83fa612bec0bad58875ba858ad`.
-
-**Next action:** none in Waterworks. The unowned candidate is now tracked in `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/DefensiveEarthworksCandidate.md`; revisit there until an owning repository exists.
-
-
 ### DES-REINFORCED-COVER-001 — canal-specific reinforced cover
 
 **Requested by:** author (2026-10-07 JST)  
@@ -135,53 +85,6 @@ Confirmed direction:
 
 **Next action:** none before the minimal direct-source canal prototype is green. When heavy-structure crossings become necessary, audit current RimWorld 1.6 foundation/support affordances and prototype only this one canal-specific cover.
 
-
-### DES-V1-BASELINE-001 — minimal canal v1 design closure
-
-**Requested by:** author (2026-10-07 JST)  
-**Owner:** Waterworks  
-**Status:** DONE — design baseline closed; prototype implementation may begin
-
-Closed baseline:
-- explicit RimWorld 1.6 natural-water source rules, including ocean/wetland exclusion and 9-cell standing-water threshold;
-- Diggable-based excavation compatibility with explicit exclusions;
-- 500 dig / 300 fill Construction work and `pathCost=10`;
-- dry/wet canal TerrainDefs instead of a custom per-cell fluid/render simulation;
-- Vanilla bridge reuse for crossings/covers;
-- Architect -> Orders line-drag Dig/Fill interaction;
-- save/load rebuild and add-to-existing-save test target;
-- no DLC or external hard dependency; no Harmony unless implementation proves it necessary.
-
-**Durable source:** `Docs/Design.md`, commits `b473f0a32de1cdd980e9beda829936fa9d298545`, `cfd6469fe22ebcc2462881d9b7f26065834a2113`, `ae41992e9822abafd01804066b68a1dd79ad8225`.
-
-**Next action:** implement `PROTO-WATERWORKS-001` without adding deferred consumers or control systems.
-
-
-### COMPAT-MOJ-OWNERSHIP-001 — Japanization / Waterworks boundary
-
-**Owner:** Waterworks / Project Japanization architecture  
-**Status:** DONE — current Waterworks v1 unchanged
-
-Project-level Japanization architecture confirms:
-
-- MO Watermill remains independent of Waterworks;
-- Japanization does not make a wet Waterworks canal a Watermill power prerequisite merely because both involve water;
-- Waterworks continues to own no water-wheel/mechanical-power system;
-- no Japanization/Waterworks adapter is required for the current v1 core;
-- any future watermill/canal interaction must be justified by a real gameplay consumer after Waterworks core is stable.
-
-**Durable source:** `sucRo-RimWorld/Ancient-Medieval-Japan-Project:Docs/Research/MedievalOverhaulJapanizationIntegrationMatrix.md`, commit `5483cc42744ed2652bf7599272c00225668d9963`.
-
-**Next action:** none.
-
-### DOC-SHARED-RULES-OWNER-001 — Shared rule migration to Project (2026-10-08 JST)
-
-**Owner:** Project common rules / repository routing
-**Status:** DONE — current AGENTS and shared-rule references route to Project
-
-Canonical shared rules and Workshop template/tooling now live in Project `Docs/SharedRules.md` and its linked sources. Grains old Markdown paths are migration pointers only. Existing historical coordination entries retain their original commit/path provenance; resolve future work through the new Project index. Mod-specific implementation, tests and accepted content art remain with this repository. No runtime behavior, new preview generation or Steam publication is part of this migration.
-
-
 ### PROTO-WATERWORKS-002 — source checkpoint
 
 **Owner:** Waterworks
@@ -190,7 +93,6 @@ Canonical shared rules and Workshop template/tooling now live in Project `Docs/S
 The baseline source prototype contains metadata, dry/wet TerrainDefs with Vanilla water/soil paths, designators, Construction jobs, graph state, natural source checks, save/restore, a csproj, and a static audit script. No imagery has been generated/copied and no public release is authorized.
 
 Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pickle/RimTest Redux runtime tests; inspect bridge/foundation coexistence and shader behavior. Require zero Waterworks ERROR entries before closing.
-
 
 ### PROTO-WATERWORKS-API-001 — RimWorld 1.6 draw-style compatibility
 
@@ -202,7 +104,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - A static contract check guards against reintroducing the old property.
 - This is an **API-source audit**, not a successful compilation or in-game validation.
 
-
 ### TEST-WATERWORKS-STATIC-001 — repeatable source validation
 
 **Owner:** Waterworks implementation  
@@ -212,7 +113,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Added `Scripts/validate-source.ps1` for non-interactive static + Windows RimWorld DLL build.
 - Canonical repository procedure: `Docs/GoldenPaths/SourceValidation.md`.
 - Unmet gates: actual 1.6 C# build, non-interactive Pickle/RimTest Redux, runtime ERROR=0, save/load and actual wet-water shader/bridge appearance.
-
 
 ### PROTO-WATERWORKS-EVENT-001 — terrain-change invalidation, narrow visual intent
 
@@ -226,7 +126,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Image production is on hold; when revisited, render the excavated center channel substantially **narrower** than the one-cell terrain footprint. The previous wide concept images are not accepted production art.
 - Remaining acceptance: game build, Pickle/RimTest Redux, no runtime ERRORs, and water/bridge shader rendering.
 
-
 ### PROTO-WATERWORKS-VEGETATION-001 — wild-plant prerequisite
 
 **Owner:** Waterworks implementation
@@ -238,7 +137,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - A static audit protects the split between placement eligibility and actual excavation.
 - Test in RimWorld with wild grass/trees, protected plants, cultivated fields, and cases where cutting is forbidden.
 
-
 ### PROTO-WATERWORKS-JOB-001 — work-order validity throughout execution
 
 **Owner:** Waterworks implementation
@@ -249,7 +147,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Wild-plant cutting remains a prerequisite, whereas actual excavation requires the cleared cell.
 - Regression markers added to `Tests/static_audit.py`; verify with actual runtime that adding a floor/bridge during a pending or in-progress earthwork leaves the designation recoverable.
 
-
 ### PROTO-WATERWORKS-TERRAIN-001 — Vanilla Diggable compatibility
 
 **Owner:** Waterworks implementation
@@ -259,63 +156,6 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - The authoritative eligibility contract is `Diggable` plus explicit exclusions; synthetic constructions/roads/water remain rejected.
 - Added a static regression check to prevent this accidental all-soil rejection returning.
 - Next runtime acceptance includes soil, rich soil, gravel, sand, marshy soil, and AMJ Environment `AMJ_ThinSoil`.
-
-
-### BUILD-WATERWORKS-001 — missing Diggable DefOf member (2026-10-08)
-
-**Owner:** Waterworks implementation
-**Status:** DONE — author reran static audit and real C# build successfully (0 warnings, 0 errors)
-
-The author's `Scripts/validate-source.ps1` completed its existing static contract check but C# build failed with CS0117 at `Source/CanalMapComponent.cs`: `TerrainAffordanceDefOf.Diggable` is not defined in RimWorld 1.6.
-
-Confirmed in the decompiled 1.6 `RimWorld/TerrainAffordanceDefOf.cs`: the class has no `Diggable` member; the terrain XML still defines the `Diggable` affordance. Fix uses `TerrainDef.affordances.Exists(...defName == "Diggable")`, not a nonexistent DefOf symbol. Updated `Tests/static_audit.py` to reject the old reference and require the loaded-Def lookup. Clarified `NaturalTerrainBase`'s `natural=true` inheritance in the formal design.
-
-**Result:** the author reported the static audit and build passing in 2.29 seconds; next gate is actual isolated Pickle runtime.
-
-
-### TEST-WATERWORKS-E2E-001 — isolated Pickle/Quickstarts core verification
-
-**Owner:** Waterworks implementation
-**Status:** DONE — author confirmed no errors in initial 4/4 suite (2026-10-08 JST)
-
-Following the user's clean production build, a first developer-only Pickle/Quickstarts suite now covers:
-- production Def loading and Waterworks/Vanilla Bridge affordances;
-- cardinal canal connectivity including diagonal-only rejection, splitting and reconnection;
-- 8 versus 9 standing-freshwater cells and explicit ocean/marsh rejection;
-- actual Vanilla Bridge foundation preservation of wet/dry canal topology and Gravel restoration.
-
-`Scripts/run-e2e.ps1` builds test assemblies, stages `AncientMedievalJapanWaterworks.E2E` separately and creates isolated test savedata. It must not alter the player's normal ModsConfig. A pass requires all **4/4** named Pickle scenarios and `Player.log` with **zero [ERROR] lines**.
-
-**Observed:** the author reported no errors and only the expected pending-gates warning after the runner. The four loaded-map scenarios are accepted. Subsequent pawn-job coverage is tracked in `TEST-WATERWORKS-E2E-002`; persistence and visual checks remain pending. Art remains deferred.
-
-
-### TEST-WATERWORKS-E2E-002 — real pawn earthwork jobs
-
-**Owner:** Waterworks implementation
-**Status:** DONE — author confirmed expanded 5/5 suite passed (2026-10-08 JST)
-
-Following the author's passing 4/4 suite, the fifth scenario checks a capable real Construction pawn, actual map designations, production WorkGiver-generated Dig and Fill jobs, pawn JobTracker execution with engine ticks, wet canal state after excavation, restored Soil after filling, and removal of completed designations. It does not call the direct `CanalMapComponent.Dig/Fill` methods as the operation under test.
-
-The runner and static feature contract now require **5/5** exact scenarios and zero isolated `[ERROR]` entries. The test remains in the isolated Quickstarts/Pickle mod; the player's normal mod settings are not altered.
-
-**Observed:** user reported passing the expanded suite without errors. Production Construction-pawn Dig/Fill E2E is accepted. The next persistence gate is TEST-WATERWORKS-E2E-003; visual presentation remains OPEN.
-
-
-### TEST-WATERWORKS-E2E-003 — real .rws round trip and original-ground persistence
-
-**Owner:** Waterworks implementation  
-**Status:** DONE — author confirmed 6/6 suite passed (2026-10-08 JST)
-
-Following user-confirmed **5/5**, the new scenario creates a wet canal originally dug from Gravel and an isolated dry canal originally dug from Soil, uses Pickle's own built-in `When I save and reload` engine step to write and reload an actual `.rws`, then obtains a **new** `Find.CurrentMap.GetComponent<CanalMapComponent>()` and checks:
-- wet/dry terrain states rebuilt after reload;
-- original-terrain records are deserialized (`CanFill` accepted for each);
-- a source change after reload dries/rewets the connected canal through `TerrainChanged`;
-- filling the loaded canals restores the distinct original Gravel and Soil TerrainDefs.
-
-The original Quickstart map belongs only to isolated TestResults SaveData; Pickle's round-trip save is temporary and removed by Pickle. E2E requires **6/6** exactly named scenarios with zero isolated `[ERROR]` entries.
-
-**Observed:** the author reported the expanded 6/6 suite passed. Real .rws save/reload and original-terrain restoration are accepted. Visual presentation remains OPEN, and separately verifying installation into a save made without Waterworks is tracked by `TEST-WATERWORKS-E2E-004`. No new imagery is authorized.
-
 
 ### TEST-WATERWORKS-E2E-004 — load save created before Waterworks installation
 
@@ -328,7 +168,6 @@ The original Quickstart map belongs only to isolated TestResults SaveData; Pickl
 
 **Next gate:** run the new script locally, fix any test-only API/PowerShell/RimWorld integration errors, and mark DONE only after both phases pass. This does **not** establish compatibility with a full user modpack. Image creation is still deferred.
 
-
 ### TEST-WATERWORKS-E2E-004-PS-001 — PowerShell interpolation parser failure
 
 **Owner:** Waterworks implementation  
@@ -340,7 +179,6 @@ To avoid repeating this class of avoidable failure, `Scripts/validate-source.ps1
 
 **Acceptance still pending:** the two-phase existing-save E2E must actually run successfully (Phase A 1/1, Phase B 1/1, no runtime ERROR). This syntax fix is not evidence of a passing E2E.
 
-
 ### TEST-WATERWORKS-E2E-004-ERROR-001 — Phase B emits one runtime ERROR
 
 **Owner:** Waterworks existing-save acceptance
@@ -349,7 +187,6 @@ To avoid repeating this class of avoidable failure, `Scripts/validate-source.ps1
 After the PowerShell parser fix, the author reran the isolated existing-save test. The Phase B `AfterInstall` runner reached its runtime error gate and stopped: **one `[ERROR]` line** in `TestResults/AddToSave/Reports/AfterInstall/Player.log`. This proves the earlier parser blocker was bypassed but is **not** a passing two-phase test. The author message includes only the runner's summary, not the actual underlying Player.log error, so no root cause can yet be assigned. The previously verified standalone **6/6** core E2E is unaffected.
 
 The runner now prints each ERROR entry with 12 following context/stack-trace lines (up to five entries) before aborting, while continuing to enforce ERROR=0. The existing log is the primary next diagnostic source; a repeat run is **not** required just to recover the original error. The next step is to inspect the first real ERROR message and stack, determine whether it belongs to Waterworks production, the upgraded-save test fixture, Pickle/Quickstarts, or third-party services, and then change the actual owner code/test if needed. Do not weaken the error gate or claim compatibility before Phase A and Phase B are both clean.
-
 
 ### TEST-WATERWORKS-E2E-004-ERROR-002 — empty test Mod content (2026-10-08)
 
@@ -360,17 +197,6 @@ The author supplied the Phase B log: `Mod [DEV] Waterworks Existing Save Integra
 
 Next: run `Scripts/validate-source.ps1` and `Scripts/run-add-to-save-e2e.ps1` on the author's RimWorld installation. Require Phase A 1/1, Phase B 1/1 and zero runtime ERRORs; no acceptance or compatibility claim until then. If a further error occurs, inspect the saved Player.log rather than rerunning only to retrieve its message.
 
-
-### TEST-WATERWORKS-E2E-004-RESULT — existing-save installation acceptance (2026-10-08)
-
-**Owner:** Waterworks existing-save acceptance
-**Status:** DONE — author-supplied isolated reports inspected
-
-The uploaded `Reports(4).zip` includes both cold-start Pickle summaries and Player.log files. Phase A `Vanilla saved game is created without Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. Phase B `A Vanilla-only saved map safely accepts newly installed Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. This closes the fixture-content blocker and the dedicated existing-save installation acceptance gate. The previously accepted separate 6/6 suite remains unchanged.
-
-Remaining: visual wet/dry terrain and bridge shader/occlusion inspection; full user-modpack compatibility is not established by isolated acceptance. No new art authorized by this result.
-
-
 ### VIS-WATERWORKS-001 — water/ditch/bridge appearance acceptance (2026-10-08)
 
 **Owner:** Waterworks rendering/visual validation
@@ -378,14 +204,12 @@ Remaining: visual wet/dry terrain and bridge shader/occlusion inspection; full u
 
 Read `Docs/GoldenPaths/VisualAcceptance.md` for the seven concrete visual acceptance checks and evidence policy. The current wet Def reuses Vanilla `WaterShallowRamp` + `Map/WaterDepth`, and dry Def reuses tinted Soil. Neither Def establishes the confirmed narrow-center-channel visual target, so do not presume it passes. Existing E2E verifies bridge topology rather than water-shader occlusion. Prefer a deterministic isolated rendered-map capture; do not use `-nographics`. Only ask for minimal human inspection if actual rendered capture cannot be automated safely. Do not create new canal art or expand gameplay before isolating the actual observed visual failure.
 
-
 ### VIS-WATERWORKS-002 — deterministic render fixture specification
 
 **Owner:** Waterworks visual-test implementation
 **Status:** OPEN — reproducible layout/capture contract documented; test code and rendered frames not yet created
 
 `Docs/GoldenPaths/VisualFixture.md` defines a separate 17×17 scene (river mouth, wet trunk, T/cross, bend, isolated dry segment, two Vanilla bridges, Gravel reference) and capture/error/manifest gates. Keep the already green 6/6 core suite and 1+1 existing-save suite unchanged. Verify a real RimWorld 1.6 camera/screenshot/render API and compiler environment before implementing automated screenshots. No screenshot PASS or art acceptance is claimed.
-
 
 ### VIS-WATERWORKS-003 — isolated Pickle screenshot implementation (2026-10-08)
 
@@ -396,7 +220,6 @@ Added `Tests/E2E/WaterworksVisualSteps.cs`, a separate `waterworks-visual.featur
 
 **Verification status:** no Windows RimWorld 1.6 compiler/runtime/render execution from the editing environment. The new test must be built first with `Scripts/run-visual-e2e.ps1`; if the screenshot API cannot render in the hidden process, diagnose the render surface rather than accepting empty/fake PNGs. Visual appearance PASS remains OPEN until actual frames are inspected; the accepted 6/6 + 1+1 suites are unchanged. No new art committed.
 
-
 ### VIS-WATERWORKS-004 — screenshots reveal one-state capture lag and full-cell channels
 
 **Owner:** Waterworks visual-test implementation / rendering
@@ -405,7 +228,6 @@ Added `Tests/E2E/WaterworksVisualSteps.cs`, a separate `waterworks-visual.featur
 Author-supplied `connected.png`, `disconnected.png`, `restored.png` and `manifest.txt` show real rendered output at 2560×1440, seed `AMJ-Waterworks-E2E`, camera center `(9,0,37)`. In visual review the supposedly connected frame lacks the laid-out canal, the disconnected frame displays wet channels, and the restored frame displays dry channels. This strongly suggests terrain mesh/screenshot timing lag (not proven by the existing Pickle state assertions). The captured water and dry cells also fill the full tile rather than a narrow channel; current Vanilla reuse does not meet `VIS-02`. The patch is framed near the map corner with extensive black/fog background. Bridge shader occlusion remains inconclusive.
 
 `Tests/E2E/WaterworksVisualSteps.cs` now separates each terrain-state mutation from `CaptureScreenshot` with a 1500-ms settle interval, and selects the closest safe 17×17 patch to map center instead of the first match; `Tests/static_audit.py` guards both behaviors. These are **source fixes, not rerun evidence**. Next rerun only the isolated visual runner; inspect all three synchronized frames. If the capture still lags, replace the time wait with verified rendered-frame scheduling before altering production Waterworks code. Fix the full-cell appearance only after valid synchronized evidence. Do not mark visual gate DONE or commission art yet.
-
 
 ### VIS-WATERWORKS-005 — second 3-frame capture reviewed (2026-10-08)
 
@@ -416,14 +238,12 @@ Author supplied `connected(1).png`, `disconnected(1).png`, `restored(1).png` and
 
 Next: investigate minimal narrow channel rendering without changing network/terrain identities. Audit actual 1.6 terrain/material mesh and foundation ordering before selecting an overlay or textured solution; preserve bridge遮蔽 and river source boundary. Improve fixture by preparing a controlled central patch (without deleting non-test edifices) rather than merely preferring the nearest eligible map cell, and ideally capture a closer crop at fixed zoom. Keep all 7 subjective VIS gates open until new rendered proof. No new art or production rendering implementation accepted yet.
 
-
 ### VIS-WATERWORKS-006 — narrow rendering approach audit (2026-10-08)
 
 **Owner:** Waterworks visual implementation
 **Status:** IN PROGRESS — architectural trial order fixed, renderer source NOT yet implemented
 
 The second synchronized screenshot set proves the current wet/dry TerrainDefs' appearance is full-cell and fails the required narrow excavated channel. Source audit confirms current TerrainDef fields only select a texture, edge blending, shader and precedence; no dedicated narrower geometry currently exists. General 1.6 terrain layering/bridge transparency examples suggest that relying on an alpha texture to reveal the original soil under a replaced terrain is unsafe without live proof. `Docs/Design.md` §8.0.1 now defines an ordered proof: (1) alpha/material feasibility in real terrain renderer, (2) if necessary a small cardinal-aware Waterworks-only rendering overlay, (3) Vanilla foundation occlusion, (4) minimal art only if unavoidable. Do not replace the connected-component state machine, modify saved terrain identity, add generic Harmony mesh patches, or claim rendering implementation complete. Next gate: controlled in-game material/mesh prototype screenshots of one straight canal and bridge, then all junction forms.
-
 
 ### VIS-WATERWORKS-007 — cardinal narrow-channel geometry source (2026-10-08)
 
@@ -434,7 +254,6 @@ Added `Source/CanalVisualTopology.cs` containing a rendering-only 4-bit N/E/S/W 
 
 Next: build the production DLL and visual E2E against actual 1.6 binaries, correct compile/API issues if any, and prototype a real terrain-lifecycle-aware section layer below Vanilla bridge foundations before accepting screenshots. Do not change pathing, source graph or saves. Existing 6/6 and 1+1 acceptance remain undisturbed.
 
-
 ### VIS-WATERWORKS-008 — Unity mesh construction proof stage (2026-10-08)
 
 **Owner:** Waterworks visual implementation
@@ -444,14 +263,12 @@ Added `Source/CanalVisualMesh.cs`: pure, no-state-write Unity Mesh builder using
 
 **Next:** run `Scripts/run-visual-e2e.ps1` against the Windows RimWorld 1.6 DLLs; investigate any compile/runtime failure before additional source writes. Following a green test, prototype section-layer material/draw integration, then validate bridge occlusion and narrow banks in new screenshots. Do not mark VIS-02 or VIS-05 passed yet.
 
-
 ### VIS-WATERWORKS-009 — third screenshot set / mesh generation validation (2026-10-08)
 
 **Owner:** Waterworks visual implementation
 **Status:** IN PROGRESS — captured wet/dry transitions; mesh draw integration pending
 
 Author submitted `connected(2).png`, `disconnected(2).png`, `restored(2).png` and `manifest(2).txt` from another visual E2E execution. Wet, dry and wet rendering states are visible in the intended order. The width/soil-bank presentation is unchanged and remains full-cell; this is expected because `CanalVisualMesh.Build` is constructed and checked by Pickle, not submitted to the live renderer. The screenshots alone do not establish the mesh count assertion result or ERROR=0 (summary and Player.log were not provided). Continue with actual SectionLayer/lifecycle and bridge ordering integration, keeping game-state and saves unchanged. Do not claim narrow renderer passed.
-
 
 ### VIS-WATERWORKS-010 — loaded RimWorld render API evidence gate (2026-10-08)
 
@@ -462,7 +279,6 @@ Added isolated `Tests/E2E/WaterworksRenderProbe.cs` and integrated it into `Wate
 
 **Decision boundary:** do not commit a speculative SectionLayer integration until its actual RimWorld 1.6 constructor/hook/ordering APIs are established. User-side next step is one isolated visual test run and providing `render-api.txt` with any failed summary/log; the current visuals remain unchanged. After obtaining the report, implement a narrow-channel layer and validate the underlying terrain suppression and Vanilla bridge occlusion. Existing 6/6 and existing-save 1+1 tests remain unchanged.
 
-
 ### VIS-WATERWORKS-011 — 1.6 SectionLayer runtime signatures obtained (2026-10-08)
 
 **Owner:** Waterworks renderer
@@ -471,7 +287,6 @@ Added isolated `Tests/E2E/WaterworksRenderProbe.cs` and integrated it into `Wate
 Author provided `render-api.txt` from the loaded RimWorld 1.6. Observed: `Verse.SectionLayer(Section)` constructor; `Verse.Section.GetLayer(Type)`, `RegenerateSingleLayer(SectionLayer)`, `RegenerateDirtyLayers`, `DrawSection`; `Verse.MapDrawer.SectionAt(IntVec3)`, `MapMeshDirty(IntVec3, UInt64[, Boolean, Boolean])`, `RegenerateLayerNow(Type)`, `DrawMapMesh`; `SectionLayer_Terrain.Regenerate()` and `TerrainGrid.SetFoundation/SetTerrain/UnderTerrainAt`. These names establish surface signatures, **not** registration/sort order, callbacks to add third-party layers, or the correct suppression of full-cell water terrain under a narrower visual layer.
 
 Extended the test-only render probe to dump `MapDrawLayer` and `SectionLayer_Dynamic` declared members plus the actually instantiated `Section.layers` ordered type list at the visual fixture position, using reflection strictly for diagnostics. The existing test now emits these in `render-api.txt` and static audit checks the report wiring. No speculative global Harmony patch or production section layer injection has been made, and gameplay TerrainDefs/connectivity remain untouched. Next required external evidence is the single rerun of the isolated visual E2E; the updated `render-api.txt` should include `RUNTIME SECTION LAYER ORDER` with ordered indices. After reviewing that, implement a minimal rendering integration preserving Vanilla foundation occlusion and verify screenshots. This gate is not yet accepted.
-
 
 ### VIS-WATERWORKS-012 — actual Section list received; draw API shape probe extended (2026-10-08)
 
@@ -484,7 +299,6 @@ The test-only `WaterworksRenderProbe` now records whether draw/regenerate method
 
 Do not mistake the ordered reflection list for render order; VIS-02 and VIS-05 remain not accepted.
 
-
 ### VIS-WATERWORKS-013 — fix CS0122 on internal SectionLayer_Watergen (2026-10-08)
 
 **Owner:** Waterworks visual E2E renderer API diagnostics
@@ -493,7 +307,6 @@ Do not mistake the ordered reflection list for render order; VIS-02 and VIS-05 r
 The author attempted the extended rendering probe and `Tests/E2E/Steps.csproj` failed before RimWorld launch: `CS0122: SectionLayer_Watergen is inaccessible due to its protection level` in `WaterworksRenderProbe.cs`. This is a test-only compile error, **not** a production Waterworks error or evidence of a failed visual mesh. Updated the probe to look up internal `Verse.SectionLayer_Watergen` and `RimWorld.SectionLayer_BridgeProps` with `typeof(SectionLayer).Assembly.GetType(fullName, false)` and report unavailable names gracefully; no direct compile-time references to either concrete type remain. Updated `Tests/static_audit.py` to reject reintroduction of those inaccessible `typeof` calls and require the runtime-name probes. Code-only consistency checks were performed; no Windows game DLL/SDK is available in the editing environment to rerun the real build. The separate 6/6 and existing-save 1+1 acceptance records are unchanged.
 
 **Next:** run the isolated visual E2E again to test the previously blocked compile and receive `render-api.txt` with actual method virtual flags and bridge/water layer signatures. If another compile error occurs, fix that precise API issue instead of introducing speculative production draw-layer patches. Full-cell appearance remains until a renderer is attached.
-
 
 ### VIS-WATERWORKS-014 — native canal SectionLayer prototype (2026-10-08)
 
@@ -506,14 +319,12 @@ Added `Source/SectionLayer_AMJW_Canal.cs` as native rendering-only layer, `Canal
 
 Next external gate: `Scripts/run-visual-e2e.ps1` must compile the new production SectionLayer and pass isolated Pickle 1/1 with ERROR=0, then compare connected/disconnected/restored screenshots for water width, bridge coverage, junction seams and supply-mouth rendering. If build fails, inspect the compiler error instead of stack-pushing commits. Existing 6/6 and existing-save 1+1 suites unchanged; their prior acceptance does not automatically cover new rendering changes.
 
-
 ### VIS-WATERWORKS-014-STATIC — obsolete texture assertions corrected (2026-10-08)
 
 **Owner:** Waterworks validation
 **Status:** FIXED IN SOURCE — runtime build pending
 
 Preflight review immediately after the initial native SectionLayer prototype found that `Tests/static_audit.py` still asserted the old wet `WaterShallowRamp` TerrainDef and `Map/WaterDepth` shader, which necessarily contradict the new Soil-underlay/SectionLayer design. The static audit now requires both gameplay TerrainDefs to use neutral Soil, equal tint, FadeRough edges and no full-cell water-depth shader; it confirms that the wet texture is instead referenced in `Source/SectionLayer_AMJW_Canal.cs`. No changes to Waterworks graph, saved data or bridge rules. Actual Windows compile and scene appearance remain OPEN.
-
 
 ### VIS-WATERWORKS-015 — validator auto-detects local RimWorld install (2026-10-08)
 
@@ -529,7 +340,6 @@ Author ran `Scripts/validate-source.ps1` unparameterized from `.../RimWorld/Mods
 
 Project `Docs/WorkshopChangenotes.md` now applies here: `About/Manifest.xml`, `About/Changelog.txt` and `About.xml` agree on `0.1.0-dev`. A narrow new workflow checks the metadata and YADA retention without running unowned gameplay tests. These subscriber metadata files have no effect on gameplay, packageId or Mod dependency rules. No Steam publishing or new runtime verification occurred.
 
-
 ### VIS-WATERWORKS-016 — Medieval Overhaul 壕 art-first reference verified (2026-10-08)
 
 **Owner:** Waterworks visual design
@@ -538,7 +348,6 @@ Project `Docs/WorkshopChangenotes.md` now applies here: `About/Manifest.xml`, `A
 User suggested basing the canal depiction on MO's actual dry-earth `壕` instead of continuing unproductive implementation/screenshot iterations. Inspected supplied 1.6 Medieval Overhaul archive `3219596926.zip` and Japanese translation archive `2665554648.zip`. Active MO building `DankPyon_Trench` references `Things/Building/Linked/Trench_Atlas` (four-by-four 320×320 earth ditch texture), `Graphic_Single`, `linkType Basic`, `Custom5`, `FloorEmplacement`; reinforced `DankPyon_RTrench` is stone-lined and not a standard agrarian canal reference. The apparent `DankPyon_TrenchTerrain` is commented out. These are visual precedents, not reusable game-state mechanics or permission to redistribute MO artwork.
 
 Formal design now records the MO earth-ditch visual basis, dry and wet should share banks and differ at the bed; `Docs/GoldenPaths/VisualAcceptance.md` corrects stale pre-prototype TerrainDef assertions and adds an art-approval gate. Stop speculative renderQueue/width fixes and repeated user E2E requests until a demonstrable side-by-side visual target is accepted. No production texture or C# change occurred in this action; no direct copying of MO textures into the Mod.
-
 
 ### VIS-WATERWORKS-017 — author's sketches converted to 16-mask upper-view contour specification (2026-10-08)
 
@@ -549,7 +358,6 @@ Read 3 sketches supplied in the Waterworks design discussion: horizontal dry dit
 
 **Next:** prepare a single coherent side-by-side top-down *visual proposal*, dry/wet and straight/elbow/T/cross at common scale, for the author's evaluation. No E2E rerun or arbitrary code/material width changes before visual approval. Once an image is approved, match art/material/mesh/bridge approach to that reference; then perform one focused automated/runtime validation pass. No production code, Def, texture, save or gameplay change in this documentation pass.
 
-
 ### VIS-WATERWORKS-018 — choose substrate-adaptive grayscale trench material (2026-10-08)
 
 **Owner:** Waterworks visual design
@@ -558,7 +366,6 @@ Read 3 sketches supplied in the Waterworks design discussion: horizontal dry dit
 The author asked to choose the best method for the same hand-drawn ditch appearance on differently colored terrains. Formal `Docs/Design.md` §8.0.5 selects a reconstructed **original TerrainDef material/texture** as ground, a shared transparent monochrome alpha shadow/highlight mask for the excavated banks and dry bed, and an independently clipped wet-only water layer. Saving DefName already supports material lookup but does not render the original terrain underneath an opaque canal TerrainDef, nor preserve an old ColorDef tint. The renderer must explicitly redraw it and verify draw order/material depth. Neither single-color per-terrain tint nor separate atlases for every soil is default. Keep original wet/dry, source connectivity, bridge and fill semantics. Update §6.3 to say original terrain metadata has both fill-restoration and appearance uses without becoming a general terrain history.
 
 `Docs/GoldenPaths/VisualAcceptance.md` adds VIS-08 for matching actual Soil/Gravel/RichSoil ground appearance; `Docs/GoldenPaths/VisualFixture.md` adds a **separate future** color-adaptive visual comparison without altering existing accepted fixtures. The previously planned image sheet remains the next step before modifying rendering code; produce top-down wet/dry variants of the same banks and sample original ground texture contexts. No new image asset, C# file, XML Def or save schema in this change; runtime feasibility still unverified. Stop repeated game tests until art approved and a coherent focused compositing test is ready.
-
 
 ### VIS-WATERWORKS-019 — shared-mask PNG artwork v2, mechanically checked, visual approval OPEN (2026-10-08)
 
@@ -569,14 +376,12 @@ The author's explicit objection to three independently generated atlases was cor
 
 **Limitations:** despite passing numerical tests, the art still tends toward smooth regular contour bands and has **NOT** received author approval as convincing hand-dug earth. This is a *development candidate*, not production-ready game content. The current `Source/SectionLayer_AMJW_Canal.cs` still uses its old hard rectangles / vanilla materials: no new PNGs are wired to the renderer, no RimWorld DLL compilation or in-game tests have been run, and no local candidate binary art or generator code was committed to GitHub in this task. Avoid falsely claiming release readiness. Next stage is visual-material review/targeted improvements, then durable accepted master storage in `Art/Sources/` and integration under `Textures/`, followed by one focused loaded-game render test. User should not be made responsible for checking trivial mask correctness.
 
-
 ### RULE-AUDIT-20261008 — operating-rule consolidation
 
 **Owner:** Project common rules; this repository retains its local specification and gates.
 **Status:** SOURCE RESTRUCTURED; validation/publication evidence is recorded in Project `Docs/RuleAudit.md` and actual commit/CI results, not inferred here.
 
 AGENTS now routes through Project `Docs/SharedRules.md` stop conditions and task procedures. New development requires VE and non-VE source/evidence comparison plus a justified implementation decision. Static/runtime/specification/distribution/publication remain separate states. Historical records below/above retain their original scope; this entry does not reopen paused work, change gameplay/dependencies/art/versions, or supersede owner runtime/release blockers. Main-only Coordination means one authoritative integrated log, not deleting branch snapshots. No Steam/2game update is claimed.
-
 
 ### VIS-WATERWORKS-020 — cross-chat connected tile workflow retained in canonical sources (2026-10-08)
 
@@ -595,4 +400,3 @@ Added a repository-owned candidate pipeline so the connected-tile rule is no lon
 Local implementation check: the first candidate run correctly failed its mechanical gate because antialiasing left mismatched edge/containment pixels; the generator was corrected and the regression test then passed. This is evidence that the stop gate actually blocks bad output rather than merely documenting a preference.
 
 The current generated water/relief is debug material only and is not accepted art. No candidate PNG, `Art/Sources` master, production `Textures`, renderer source, gameplay code, save data, Workshop payload or Steam metadata is changed by this tooling commit. `VIS-WATERWORKS-019/020` remain the authority for prior unapproved art and the shared connected-tile procedure; `Docs/Design.md` §8 and `Docs/GoldenPaths/VisualAcceptance.md` remain the visual acceptance authority.
-
