@@ -433,3 +433,13 @@ The second synchronized screenshot set proves the current wet/dry TerrainDefs' a
 Added `Source/CanalVisualTopology.cs` containing a rendering-only 4-bit N/E/S/W connection mask and center/arm rectangles for all 16 cardinal configurations (current prototype half-channel=0.20 cell, half-bank=0.34 cell). Dry and wet TerrainDefs remain authoritative and unchanged. `Tests/static_audit.py` now checks the new geometry contract and all 16 mask edge exits; `Tests/E2E/WaterworksVisualSteps.cs` checks line, elbow and cross masks on the real generated test map. This is useful geometry data for a future canal-specific mesh/layer, **not a visible narrow-water renderer yet**. No renderer draw call, texture, player-save change or bridge occlusion claim has been made.
 
 Next: build the production DLL and visual E2E against actual 1.6 binaries, correct compile/API issues if any, and prototype a real terrain-lifecycle-aware section layer below Vanilla bridge foundations before accepting screenshots. Do not change pathing, source graph or saves. Existing 6/6 and 1+1 acceptance remain undisturbed.
+
+
+### VIS-WATERWORKS-008 — Unity mesh construction proof stage (2026-10-08)
+
+**Owner:** Waterworks visual implementation
+**Status:** SOURCE READY / RUNTIME UNVERIFIED — section-layer draw integration still OPEN
+
+Added `Source/CanalVisualMesh.cs`: pure, no-state-write Unity Mesh builder using a disjoint 3×3 center/arm subdivision for all 16 cardinal connection masks, world-aligned UVs, and configurable half-channel width. It does not draw over the map, alter TerrainDefs, add Harmony, or modify graph/persistence. Extended the isolated Pickle visual scenario to build all 16 meshes on the game thread and verify expected vertex/triangle counts, disposing temporary mesh objects afterward. Drawing these meshes *under the Vanilla bridge foundation* requires a separate RimWorld 1.6 SectionLayer integration audit and rendered-frame verification. Current full-cell appearance is unchanged.
+
+**Next:** run `Scripts/run-visual-e2e.ps1` against the Windows RimWorld 1.6 DLLs; investigate any compile/runtime failure before additional source writes. Following a green test, prototype section-layer material/draw integration, then validate bridge occlusion and narrow banks in new screenshots. Do not mark VIS-02 or VIS-05 passed yet.
