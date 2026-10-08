@@ -94,5 +94,6 @@ foreach ($name in @('connected.png','disconnected.png','restored.png')) {
  Require ($bytes.Length -gt 24 -and $bytes[0] -eq 137 -and $bytes[1] -eq 80 -and $bytes[2] -eq 78 -and $bytes[3] -eq 71) "Invalid PNG: $path"
 }
 Require (Test-Path (Join-Path $captures 'manifest.txt')) 'Visual manifest missing'
+Require (Test-Path (Join-Path $captures 'render-api.txt')) 'Renderer API report missing'
 Write-Host "[OK] Visual Pickle 1/1, runtime ERROR=0, three PNG files saved: $captures"
 Write-Warning 'PNG collection does not establish visual acceptance; images require review.'
