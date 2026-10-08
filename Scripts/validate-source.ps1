@@ -27,8 +27,21 @@ if (-not $python) { throw "Python 3 is required for the Waterworks static audit.
 & $python.Source (Join-Path $root "Tests/static_audit.py")
 if ($LASTEXITCODE -ne 0) { throw "Waterworks static audit failed (exit $LASTEXITCODE)." }
 
-if (-not $RimWorldDir) {
-    throw "Specify -RimWorldDir or set RIMWORLD_DIR. C# build did not run."
+# Explicit -RimWorldDir overrides the environment. Otherwise, infer the
+# game from the checkout's usual <RimWorld>/Mods/<mod> folder structure.
+if ([string]::IsNullOrWhiteSpace($RimWorldDir)) {
+    $modsFolder = Split-Path -Parent $root
+    if ((Split-Path -Leaf $modsFolder) -ieq "Mods") {
+        $candidate = Split-Path -Parent $modsFolder
+        $candidateAssembly = Join-Path $candidate "RimWorldWin64_Data/Managed/Assembly-CSharp.dll"
+        if (Test-Path -LiteralPath $candidateAssembly) {
+            $RimWorldDir = $candidate
+            Write-Output "[INFO] Auto-detected RimWorldDir: $RimWorldDir"
+        }
+    }
+}
+if ([string]::IsNullOrWhiteSpace($RimWorldDir)) {
+    throw "RimWorld installation not found beside this Mod checkout. Specify -RimWorldDir or set RIMWORLD_DIR. C# build did not run."
 }
 $assembly = Join-Path $RimWorldDir "RimWorldWin64_Data/Managed/Assembly-CSharp.dll"
 if (-not (Test-Path $assembly)) { throw "RimWorld Assembly-CSharp.dll not found: $assembly" }

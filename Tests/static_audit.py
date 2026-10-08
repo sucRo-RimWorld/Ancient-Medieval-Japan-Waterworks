@@ -246,6 +246,16 @@ assert 'Write-Host "[OK] $phase: 1/1 Pickle scenario, zero runtime ERROR."' not 
 # The local validator must use PowerShell's own parser for every script so
 # future parser regressions are caught before any RimWorld launch.
 powershell_validator = (root / "Scripts/validate-source.ps1").read_text(encoding="utf-8")
+# Unparameterized validation must build from a normal RimWorld/Mods checkout.
+for token in (
+    'Split-Path -Parent $root',
+    '(Split-Path -Leaf $modsFolder) -ieq "Mods"',
+    'Join-Path $candidate "RimWorldWin64_Data/Managed/Assembly-CSharp.dll"',
+    'if (Test-Path -LiteralPath $candidateAssembly)',
+    '$RimWorldDir = $candidate',
+    'Specify -RimWorldDir or set RIMWORLD_DIR',
+):
+    assert token in powershell_validator, token
 assert '[System.Management.Automation.Language.Parser]::ParseFile' in powershell_validator
 assert "-Filter '*.ps1'" in powershell_validator
 # The runtime gate must expose actual ERROR lines and stack context, not

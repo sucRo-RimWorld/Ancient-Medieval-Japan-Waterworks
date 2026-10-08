@@ -513,3 +513,11 @@ Next external gate: `Scripts/run-visual-e2e.ps1` must compile the new production
 **Status:** FIXED IN SOURCE — runtime build pending
 
 Preflight review immediately after the initial native SectionLayer prototype found that `Tests/static_audit.py` still asserted the old wet `WaterShallowRamp` TerrainDef and `Map/WaterDepth` shader, which necessarily contradict the new Soil-underlay/SectionLayer design. The static audit now requires both gameplay TerrainDefs to use neutral Soil, equal tint, FadeRough edges and no full-cell water-depth shader; it confirms that the wet texture is instead referenced in `Source/SectionLayer_AMJW_Canal.cs`. No changes to Waterworks graph, saved data or bridge rules. Actual Windows compile and scene appearance remain OPEN.
+
+
+### VIS-WATERWORKS-015 — validator auto-detects local RimWorld install (2026-10-08)
+
+**Owner:** Waterworks test tooling
+**Status:** SOURCE FIX COMMITTED — Windows build pending
+
+Author ran `Scripts/validate-source.ps1` unparameterized from `.../RimWorld/Mods/AncientMedievalJapanWaterWorks`. Static audit passed; no C# build ran because the script default only used `RIMWORLD_DIR`. Updated `Scripts/validate-source.ps1` to infer `<RimWorld>/Mods/<mod>` relative to the script location only when both explicit `-RimWorldDir` and environment variable are absent. Require the actual game `Assembly-CSharp.dll` to be present before accepting the inferred path. Preserve parameter/environment precedence and explicit failure for other layouts. Updated `Tests/static_audit.py` to guard the fallback contract. No gameplay, Def, save, or visuals were changed; Windows compilation remains unverified. `run-visual-e2e.ps1` already supplies the explicit parameter.
