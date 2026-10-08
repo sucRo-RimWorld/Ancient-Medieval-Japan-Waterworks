@@ -483,3 +483,13 @@ The author's `render-api(1).txt` shows a RimWorld 1.6 map with 23 SectionLayers.
 The test-only `WaterworksRenderProbe` now records whether draw/regenerate methods are virtual and inspects `LayerSubMesh`, `SectionLayer_Watergen`, `SectionLayer_BridgeProps` in addition to the already captured types. This is diagnostic-only and preserves the accepted gameplay pipeline; no speculative production section layer was committed. Static contract checks were extended. The next user-side artifact needed is the updated isolated `render-api.txt` or a compile error log. Then implement the smallest renderer appropriate to the proven hook, maintaining bridge occlusion and no graph/save changes.
 
 Do not mistake the ordered reflection list for render order; VIS-02 and VIS-05 remain not accepted.
+
+
+### VIS-WATERWORKS-013 — fix CS0122 on internal SectionLayer_Watergen (2026-10-08)
+
+**Owner:** Waterworks visual E2E renderer API diagnostics
+**Status:** SOURCE FIX COMMITTED — Windows E2E rerun pending
+
+The author attempted the extended rendering probe and `Tests/E2E/Steps.csproj` failed before RimWorld launch: `CS0122: SectionLayer_Watergen is inaccessible due to its protection level` in `WaterworksRenderProbe.cs`. This is a test-only compile error, **not** a production Waterworks error or evidence of a failed visual mesh. Updated the probe to look up internal `Verse.SectionLayer_Watergen` and `RimWorld.SectionLayer_BridgeProps` with `typeof(SectionLayer).Assembly.GetType(fullName, false)` and report unavailable names gracefully; no direct compile-time references to either concrete type remain. Updated `Tests/static_audit.py` to reject reintroduction of those inaccessible `typeof` calls and require the runtime-name probes. Code-only consistency checks were performed; no Windows game DLL/SDK is available in the editing environment to rerun the real build. The separate 6/6 and existing-save 1+1 acceptance records are unchanged.
+
+**Next:** run the isolated visual E2E again to test the previously blocked compile and receive `render-api.txt` with actual method virtual flags and bridge/water layer signatures. If another compile error occurs, fix that precise API issue instead of introducing speculative production draw-layer patches. Full-cell appearance remains until a renderer is attached.
