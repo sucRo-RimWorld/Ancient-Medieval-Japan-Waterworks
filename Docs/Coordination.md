@@ -359,3 +359,13 @@ The runner now prints each ERROR entry with 12 following context/stack-trace lin
 The author supplied the Phase B log: `Mod [DEV] Waterworks Existing Save Integration E2E did not load any content. Following load folders were used:`. The Phase B fixture held only About/Pickle data, and RimWorld 1.6 reported it as an empty mod. Added a test-only `ThingCategoryDef` marker under `Tests/E2E/AddToSaveMod/Defs`, staged it into `Defs/ThingCategoryDefs` by `Scripts/run-add-to-save-e2e.ps1`, and added static regression assertions. This marker is not a production Waterworks Def and has no intended save/gameplay behavior.
 
 Next: run `Scripts/validate-source.ps1` and `Scripts/run-add-to-save-e2e.ps1` on the author's RimWorld installation. Require Phase A 1/1, Phase B 1/1 and zero runtime ERRORs; no acceptance or compatibility claim until then. If a further error occurs, inspect the saved Player.log rather than rerunning only to retrieve its message.
+
+
+### TEST-WATERWORKS-E2E-004-RESULT — existing-save installation acceptance (2026-10-08)
+
+**Owner:** Waterworks existing-save acceptance
+**Status:** DONE — author-supplied isolated reports inspected
+
+The uploaded `Reports(4).zip` includes both cold-start Pickle summaries and Player.log files. Phase A `Vanilla saved game is created without Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. Phase B `A Vanilla-only saved map safely accepts newly installed Waterworks`: **1/1 passed**, 0 failed, 0 skipped, 0 `[ERROR]` entries. This closes the fixture-content blocker and the dedicated existing-save installation acceptance gate. The previously accepted separate 6/6 suite remains unchanged.
+
+Remaining: visual wet/dry terrain and bridge shader/occlusion inspection; full user-modpack compatibility is not established by isolated acceptance. No new art authorized by this result.
