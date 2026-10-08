@@ -320,6 +320,10 @@ assert "render-api.txt" in render_probe and "render-api.txt" in visual_runner
 assert "RUNTIME SECTION LAYER ORDER" in render_probe
 assert "SectionAt(focus)" in render_probe
 assert "typeof(MapDrawLayer)" in render_probe
+assert "typeof(LayerSubMesh)" in render_probe
+assert "typeof(SectionLayer_Watergen)" in render_probe
+assert "typeof(RimWorld.SectionLayer_BridgeProps)" in render_probe
+assert "virtual=" in render_probe
 for target in ("typeof(SectionLayer)", "typeof(Section)", "typeof(MapDrawer)",
                "typeof(SectionLayer_Terrain)", "typeof(TerrainGrid)"):
     assert target in render_probe, target
