@@ -377,3 +377,11 @@ Remaining: visual wet/dry terrain and bridge shader/occlusion inspection; full u
 **Status:** OPEN — source and E2E audit complete; actual rendered frames not yet evaluated
 
 Read `Docs/GoldenPaths/VisualAcceptance.md` for the seven concrete visual acceptance checks and evidence policy. The current wet Def reuses Vanilla `WaterShallowRamp` + `Map/WaterDepth`, and dry Def reuses tinted Soil. Neither Def establishes the confirmed narrow-center-channel visual target, so do not presume it passes. Existing E2E verifies bridge topology rather than water-shader occlusion. Prefer a deterministic isolated rendered-map capture; do not use `-nographics`. Only ask for minimal human inspection if actual rendered capture cannot be automated safely. Do not create new canal art or expand gameplay before isolating the actual observed visual failure.
+
+
+### VIS-WATERWORKS-002 — deterministic render fixture specification
+
+**Owner:** Waterworks visual-test implementation
+**Status:** OPEN — reproducible layout/capture contract documented; test code and rendered frames not yet created
+
+`Docs/GoldenPaths/VisualFixture.md` defines a separate 17×17 scene (river mouth, wet trunk, T/cross, bend, isolated dry segment, two Vanilla bridges, Gravel reference) and capture/error/manifest gates. Keep the already green 6/6 core suite and 1+1 existing-save suite unchanged. Verify a real RimWorld 1.6 camera/screenshot/render API and compiler environment before implementing automated screenshots. No screenshot PASS or art acceptance is claimed.
