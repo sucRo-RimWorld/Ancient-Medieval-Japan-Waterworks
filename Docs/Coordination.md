@@ -443,3 +443,11 @@ Next: build the production DLL and visual E2E against actual 1.6 binaries, corre
 Added `Source/CanalVisualMesh.cs`: pure, no-state-write Unity Mesh builder using a disjoint 3×3 center/arm subdivision for all 16 cardinal connection masks, world-aligned UVs, and configurable half-channel width. It does not draw over the map, alter TerrainDefs, add Harmony, or modify graph/persistence. Extended the isolated Pickle visual scenario to build all 16 meshes on the game thread and verify expected vertex/triangle counts, disposing temporary mesh objects afterward. Drawing these meshes *under the Vanilla bridge foundation* requires a separate RimWorld 1.6 SectionLayer integration audit and rendered-frame verification. Current full-cell appearance is unchanged.
 
 **Next:** run `Scripts/run-visual-e2e.ps1` against the Windows RimWorld 1.6 DLLs; investigate any compile/runtime failure before additional source writes. Following a green test, prototype section-layer material/draw integration, then validate bridge occlusion and narrow banks in new screenshots. Do not mark VIS-02 or VIS-05 passed yet.
+
+
+### VIS-WATERWORKS-009 — third screenshot set / mesh generation validation (2026-10-08)
+
+**Owner:** Waterworks visual implementation
+**Status:** IN PROGRESS — captured wet/dry transitions; mesh draw integration pending
+
+Author submitted `connected(2).png`, `disconnected(2).png`, `restored(2).png` and `manifest(2).txt` from another visual E2E execution. Wet, dry and wet rendering states are visible in the intended order. The width/soil-bank presentation is unchanged and remains full-cell; this is expected because `CanalVisualMesh.Build` is constructed and checked by Pickle, not submitted to the live renderer. The screenshots alone do not establish the mesh count assertion result or ERROR=0 (summary and Player.log were not provided). Continue with actual SectionLayer/lifecycle and bridge ordering integration, keeping game-state and saves unchanged. Do not claim narrow renderer passed.
