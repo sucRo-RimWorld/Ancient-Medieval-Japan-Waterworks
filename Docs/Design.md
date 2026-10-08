@@ -347,6 +347,21 @@ Use **two Waterworks TerrainDefs representing one excavated canal state machine*
 
 Both are recognized as canal cells by Waterworks and both preserve the same recorded original terrain for fill-in.
 
+### 8.0 Vanilla imagery first: art-free prototype
+
+Before commissioning or generating dedicated canal textures, prototype the dry/wet TerrainDefs using existing RimWorld rendering assets.
+
+- **Wet:** try Vanilla's shallow moving-water visual resources (for example `Terrain/Surfaces/WaterShallowRamp`, with the compatible `Map/WaterDepth` shader and moving-water parameters as supported by the loaded 1.6 Defs).
+- **Dry:** start with a suitable Vanilla soil/gravel texture and terrain tint/edge settings.
+- Share Vanilla's visuals by reference where permitted; do **not** copy bundled Vanilla textures into the mod merely to duplicate them.
+- Preserve Waterworks' own TerrainDefs, connectivity, original-terrain restoration and `Bridgeable` behavior. Do **not** inherit natural `River`/`Water` source semantics, pollution/fishing behaviors or other unrelated effects from the Vanilla river simply to reuse its appearance.
+- Evaluate an uninterrupted one-cell line, corner, T/cross junction, transition to the supplying natural river/pond and a canal covered by Vanilla bridges.
+- Explicitly check the water shader's rendering, edge blending, depth/animation assumptions and bridge/foundation occlusion in RimWorld 1.6. Reusing its visual resources is a **candidate**, not a tested guarantee.
+- If the wet water surface works but the canal lacks visible excavated edges, add only a minimal transparent soil-bank/rim overlay. Do not make this or new water art a prerequisite for the functional prototype.
+- If the unmodified Vanilla visuals are readable and visually acceptable, ship without dedicated production canal textures.
+
+This prioritizes reuse of the existing river artwork over creating new wet/dry illustrations.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
@@ -650,7 +665,7 @@ Do **not** add DBH integration, gates, reinforced covers, hot-spring semantics, 
 Still intentionally unfixed:
 
 - whether the 9-cell minimum standing-water threshold needs balance tuning after real maps are sampled;
-- exact textures / edge presentation for dry and wet canal TerrainDefs;
+- prototype outcome for Vanilla river/soil rendering reuse, including whether a minimal excavated-edge overlay is actually needed;
 - safe fallback when original terrain cannot be restored;
 - first consumer integration and its API shape;
 - exact material/work/support rules for the future reinforced canal cover;
