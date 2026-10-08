@@ -205,3 +205,15 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Broad terrain-change invalidation supports standing-water size changes away from an adjacent canal.
 - Image production is on hold; when revisited, render the excavated center channel substantially **narrower** than the one-cell terrain footprint. The previous wide concept images are not accepted production art.
 - Remaining acceptance: game build, Pickle/RimTest Redux, no runtime ERRORs, and water/bridge shader rendering.
+
+
+### PROTO-WATERWORKS-VEGETATION-001 — wild-plant prerequisite
+
+**Owner:** Waterworks implementation
+**Status:** DONE for source-level change; build/runtime pending
+
+- The dig designator allows natural soil with ordinary wild plants; it does not auto-remove sown crops.
+- Before digging, the existing Construction work giver uses Vanilla `CutPlant` for a removable wild plant and waits until the cell is clear. It respects forbidden/pawn unwilling-to-cut behavior.
+- The final terrain replacement still rejects occupied plant cells, avoiding silent crop/tree destruction.
+- A static audit protects the split between placement eligibility and actual excavation.
+- Test in RimWorld with wild grass/trees, protected plants, cultivated fields, and cases where cutting is forbidden.

@@ -484,9 +484,11 @@ Fill canal follows the same single-cell / straight-segment interaction over exis
 
 ### 10.4 Work prerequisites
 
-Ordinary removable plants that prevent the work should be handled through normal construction-style prerequisite clearing where practical.
+Wild plants on designated excavation cells are cleared using Vanilla's existing `CutPlant` job as a prerequisite, initiated by the Waterworks Construction work giver. Actual excavation still requires the cell to be free of plants before changing TerrainDef.
 
-Waterworks should not add a new plant-cutting job, hauling stage or material delivery requirement for basic excavation.
+**Player-sown plants are not automatically cut.** Their removal remains an explicit player decision, and the canal designation is rejected while they occupy the cell. Respect forbidden and ideology-related plant cutting restrictions for prerequisite jobs.
+
+Waterworks does not add a separate plant-cutting system, hauling stage or material delivery requirement for basic excavation.
 
 
 ### 10.5 Feedback for invalid placement

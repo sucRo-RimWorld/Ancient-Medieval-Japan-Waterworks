@@ -97,7 +97,7 @@ namespace AncientMedievalJapan.Waterworks
                    t == AMJW_Defs.AMJW_DugCanalWet;
         }
 
-        public AcceptanceReport CanDig(IntVec3 c)
+        public AcceptanceReport CanDig(IntVec3 c, bool allowWildPlants = false)
         {
             if (!c.InBounds(map) || c.Fogged(map)) return false;
             if (IsCanal(c)) return "AMJW_AlreadyCanal".Translate();
@@ -110,7 +110,12 @@ namespace AncientMedievalJapan.Waterworks
                 return "AMJW_Blocked".Translate();
             foreach (Thing thing in c.GetThingList(map))
             {
-                if (thing is Plant || thing.def.category == ThingCategory.Building)
+                // Wild plants are cleared by an ordinary CutPlant prerequisite
+                // job. Never silently remove a cultivated crop.
+                Plant plant = thing as Plant;
+                if (plant != null && (plant.sown || !allowWildPlants))
+                    return "AMJW_Blocked".Translate();
+                if (thing.def.category == ThingCategory.Building)
                     return "AMJW_Blocked".Translate();
             }
             if (!t.natural || t.IsFloor || t.IsIce || t.IsWater ||

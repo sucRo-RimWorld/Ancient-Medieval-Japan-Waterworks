@@ -114,5 +114,15 @@ for marker in (
     assert marker in component_source, marker
 assert "TicksGame %" not in component_source, "Periodic full-map polling is not permitted"
 
+# Natural ground can be designated through wild vegetation, but cultivated
+# crops are never silently cut and terrain replacement waits for clearing.
+assert "CanDig(IntVec3 c, bool allowWildPlants = false)" in component_source
+assert "plant.sown || !allowWildPlants" in component_source
+jobs_source = (root / "Source/CanalJobs.cs").read_text(encoding="utf-8")
+designators_source = (root / "Source/CanalDesignators.cs").read_text(encoding="utf-8")
+assert "JobMaker.MakeJob(JobDefOf.CutPlant, wildPlant)" in jobs_source
+assert "wildPlant.sown || wildPlant.IsForbidden(pawn)" in jobs_source
+assert "CanDig(c, allowWildPlants: true)" in designators_source
+
 assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 print("[OK] XML and RimWorld 1.6 draw-style contract checked (runtime not tested)")

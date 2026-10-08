@@ -15,6 +15,22 @@ namespace AncientMedievalJapan.Waterworks
     {
         protected override DesignationDef DesDef => AMJW_Defs.AMJW_DigCanal;
         protected override JobDef EarthworkJob => AMJW_Defs.AMJW_DigCanalJob;
+
+        public override Job JobOnCell(Pawn pawn, IntVec3 c, bool forced = false)
+        {
+            Plant wildPlant = c.GetPlant(pawn.Map);
+            if (wildPlant != null)
+            {
+                if (wildPlant.sown || wildPlant.IsForbidden(pawn) ||
+                    !pawn.CanReserve(wildPlant, 1, -1, null, forced) ||
+                    !PlantUtility.PawnWillingToCutPlant_Job(wildPlant, pawn))
+                    return null;
+                // Do not excavate until the plant is removed. RimWorld owns
+                // the plant-cutting job and its effects.
+                return JobMaker.MakeJob(JobDefOf.CutPlant, wildPlant);
+            }
+            return base.JobOnCell(pawn, c, forced);
+        }
     }
 
     public sealed class WorkGiver_FillCanal : WorkGiver_Canal
