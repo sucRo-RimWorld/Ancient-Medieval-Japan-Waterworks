@@ -471,3 +471,15 @@ Added isolated `Tests/E2E/WaterworksRenderProbe.cs` and integrated it into `Wate
 Author provided `render-api.txt` from the loaded RimWorld 1.6. Observed: `Verse.SectionLayer(Section)` constructor; `Verse.Section.GetLayer(Type)`, `RegenerateSingleLayer(SectionLayer)`, `RegenerateDirtyLayers`, `DrawSection`; `Verse.MapDrawer.SectionAt(IntVec3)`, `MapMeshDirty(IntVec3, UInt64[, Boolean, Boolean])`, `RegenerateLayerNow(Type)`, `DrawMapMesh`; `SectionLayer_Terrain.Regenerate()` and `TerrainGrid.SetFoundation/SetTerrain/UnderTerrainAt`. These names establish surface signatures, **not** registration/sort order, callbacks to add third-party layers, or the correct suppression of full-cell water terrain under a narrower visual layer.
 
 Extended the test-only render probe to dump `MapDrawLayer` and `SectionLayer_Dynamic` declared members plus the actually instantiated `Section.layers` ordered type list at the visual fixture position, using reflection strictly for diagnostics. The existing test now emits these in `render-api.txt` and static audit checks the report wiring. No speculative global Harmony patch or production section layer injection has been made, and gameplay TerrainDefs/connectivity remain untouched. Next required external evidence is the single rerun of the isolated visual E2E; the updated `render-api.txt` should include `RUNTIME SECTION LAYER ORDER` with ordered indices. After reviewing that, implement a minimal rendering integration preserving Vanilla foundation occlusion and verify screenshots. This gate is not yet accepted.
+
+
+### VIS-WATERWORKS-012 — actual Section list received; draw API shape probe extended (2026-10-08)
+
+**Owner:** Waterworks render integration
+**Status:** IN PROGRESS — game build and one focused render API diagnostic pending
+
+The author's `render-api(1).txt` shows a RimWorld 1.6 map with 23 SectionLayers. Notable instances are `Verse.SectionLayer_Terrain` (index 13), `Verse.SectionLayer_Watergen` (16), `RimWorld.SectionLayer_BridgeProps` (18), and `RimWorld.SectionLayer_TerrainEdges` (21). The list is the internal Section.layers collection, **not evidence of compositing order**. Loaded `MapDrawLayer` exposes `DrawLayer`, `GetSubMesh(Material)`, `FinalizeMesh(MeshParts)`, `CreateFreeSubMesh(Material, Map)`, and `Regenerate`. These public/private signatures do not establish which members are virtual and how to emit the narrow mesh without full-cell terrain showing underneath.
+
+The test-only `WaterworksRenderProbe` now records whether draw/regenerate methods are virtual and inspects `LayerSubMesh`, `SectionLayer_Watergen`, `SectionLayer_BridgeProps` in addition to the already captured types. This is diagnostic-only and preserves the accepted gameplay pipeline; no speculative production section layer was committed. Static contract checks were extended. The next user-side artifact needed is the updated isolated `render-api.txt` or a compile error log. Then implement the smallest renderer appropriate to the proven hook, maintaining bridge occlusion and no graph/save changes.
+
+Do not mistake the ordered reflection list for render order; VIS-02 and VIS-05 remain not accepted.
