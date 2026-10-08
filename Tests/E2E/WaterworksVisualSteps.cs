@@ -74,6 +74,14 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 context.Assert(CanalVisualTopology.Mask(map, C(-3,0)) == 10, "Horizontal trunk mask");
                 context.Assert(CanalVisualTopology.Rectangles(15, CanalVisualTopology.HalfChannel).Length == 5,
                     "Cross geometry expected core plus four arms");
+                for (int mask = 0; mask < 16; mask++)
+                {
+                    Mesh water = CanalVisualMesh.Build(mask, CanalVisualTopology.HalfChannel,
+                        new Vector3(center.x, 0f, center.z), 0.01f);
+                    context.Assert(water.vertexCount == 4 * (1 + CountArms(mask)), "Mesh vertex count " + mask);
+                    context.Assert(water.triangles.Length == 6 * (1 + CountArms(mask)), "Mesh triangle count " + mask);
+                    UnityEngine.Object.Destroy(water);
+                }
                 Find.CameraDriver.JumpToCurrentMapLoc(center);
                 output = Path.Combine(GenFilePaths.SaveDataFolderPath, "WaterworksVisual");
                 Directory.CreateDirectory(output);
@@ -108,6 +116,12 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     "resolution=" + Screen.width + "x" + Screen.height + "\n" +
                     "cameraCenter=" + center + "\n");
             });
+        }
+        private static int CountArms(int mask)
+        {
+            int count = 0;
+            while (mask != 0) { count += mask & 1; mask >>= 1; }
+            return count;
         }
         private static void Source(bool connected)
         {
