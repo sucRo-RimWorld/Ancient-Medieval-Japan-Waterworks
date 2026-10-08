@@ -205,6 +205,13 @@ assert not any(node.text == "sucro.ancientmedievaljapan.waterworks"
 assert any(node.text == "sucro.ancientmedievaljapan.waterworks"
            for node in enabled_about.iter("packageId"))
 assert bootstrap_feature.count("  Scenario:") == 1
+# A Pickle-only fixture causes RimWorld 1.6 to log "did not load any content".
+# The test-specific Def is inert gameplay-wise but must be staged by the runner.
+marker_path = root / "Tests/E2E/AddToSaveMod/Defs/ThingCategoryDefs/AMJW_E2E_Marker.xml"
+marker_tree = ET.parse(marker_path).getroot()
+assert marker_tree.find("ThingCategoryDef/defName").text == "AMJW_E2E_AddToSaveMarker"
+assert "'Defs/ThingCategoryDefs'" in (root / "Scripts/run-add-to-save-e2e.ps1").read_text(encoding="utf-8")
+assert "Tests/E2E/AddToSaveMod/Defs/ThingCategoryDefs/AMJW_E2E_Marker.xml" in (root / "Scripts/run-add-to-save-e2e.ps1").read_text(encoding="utf-8")
 assert added_feature.count("  Scenario:") == 1
 assert '@quickstart:WaterworksQuickstart' in bootstrap_feature
 assert 'When I save and reload as "waterworks-before-install"' in bootstrap_feature
