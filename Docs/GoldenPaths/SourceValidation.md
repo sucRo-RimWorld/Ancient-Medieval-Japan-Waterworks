@@ -15,14 +15,16 @@ This document records the repeatable **static/build** validation procedure for t
 
 5. Fix source/Def or compiler failures before trying a game runtime profile.
 
-## Required game/runtime acceptance (still pending)
+## Current validation state
 
-Use an isolated, non-interactive Pickle / RimTest Redux profile with runtime log and Waterworks ERROR=0 checks for: source validity (moving and 9-cell standing freshwater), ocean/marsh rejection, four-way graph splits/rejoins, dig/fill and saved original terrain, bridge/Foundation preservation, and save/load. Rendering tests must keep the normal rendering path in a hidden/off-screen environment; do not use `-nographics` for shader tests.
+On the current one-cell-width source, the author reported `Scripts/validate-source.ps1` PASS after the explicit XML-inventory repair, followed by `Scripts/run-e2e.ps1` **7/7 PASS with zero isolated runtime `[ERROR]` lines**. The runtime runner covers source validity, graph splits/rejoins, the one-cell-width rule, dig/fill and saved original terrain, bridge/Foundation preservation, and save/load.
+
+Rendering tests remain separate: keep the normal rendering path in a hidden/off-screen environment; do not use `-nographics` for shader tests.
 
 Then use the shortest necessary human visual check to judge wet/dry clarity, T/cross junctions and a Vanilla bridge covering the canal.
 
 ## Limitation and regression history
 
-This editing environment has no RimWorld 1.6 managed DLL and no .NET SDK / Mono compiler; **no successful C# build, game run, or screenshot validation is claimed here**.
+This editing environment itself has no RimWorld 1.6 managed DLL and no .NET SDK / Mono compiler. The successful static/build and 7/7 runtime results above are therefore **author-reported from the Windows RimWorld installation**, not independently rerun here. No screenshot/visual acceptance is claimed.
 
 RimWorld 1.6 removed the old designator `DraggableDimensions` pattern. The `AMJW_CanalLine` category must contain only the built-in `Line` draw style; `Tests/static_audit.py` checks that source contract.
