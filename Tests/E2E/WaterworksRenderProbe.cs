@@ -23,12 +23,50 @@ namespace AncientMedievalJapan.Waterworks.E2E
             var result = new StringBuilder();
             result.AppendLine("AMJW visual rendering API probe");
             result.AppendLine("These are signatures from the loaded game; not proof of layer ordering.");
+            Dump(result, typeof(MapDrawLayer));
             Dump(result, typeof(SectionLayer));
             Dump(result, typeof(Section));
             Dump(result, typeof(MapDrawer));
             Dump(result, typeof(SectionLayer_Terrain));
+            Dump(result, typeof(SectionLayer_Dynamic));
             Dump(result, typeof(TerrainGrid));
+            DumpCurrentLayers(result);
             File.WriteAllText(Path.Combine(outputDirectory, "render-api.txt"), result.ToString());
+        }
+
+        private static void DumpCurrentLayers(StringBuilder sb)
+        {
+            sb.AppendLine();
+            sb.AppendLine("RUNTIME SECTION LAYER ORDER (loaded map only)");
+            Map map = Find.CurrentMap;
+            if (map == null || map.mapDrawer == null)
+            {
+                sb.AppendLine("No current map or map drawer.");
+                return;
+            }
+            IntVec3 focus = new IntVec3(map.Size.x / 2, 0, map.Size.z / 2);
+            Section section = map.mapDrawer.SectionAt(focus);
+            if (section == null)
+            {
+                sb.AppendLine("SectionAt(map center) returned null.");
+                return;
+            }
+            FieldInfo field = typeof(Section).GetField("layers",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var layers = field == null ? null :
+                field.GetValue(section) as System.Collections.IEnumerable;
+            if (layers == null)
+            {
+                sb.AppendLine("Section layers unavailable.");
+                return;
+            }
+            int index = 0;
+            foreach (object layer in layers)
+            {
+                sb.AppendLine("INDEX " + index + " " +
+                    (layer == null ? "(null)" : layer.GetType().FullName));
+                index++;
+            }
         }
 
         private static void Dump(StringBuilder sb, Type type)
