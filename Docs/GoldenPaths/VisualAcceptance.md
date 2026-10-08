@@ -11,6 +11,23 @@ This is the concrete rendering acceptance procedure for the `Docs/Design.md` §7
 
 **Visual approval gate before another round of renderer changes:** inspect and agree on a dry/wet side-by-side proposed look and connected variants, based on the verified MO reference. Do not run repeated full rendered E2E trials to compensate for an undecided visual target.
 
+## Art review specification (prior to runtime acceptance)
+
+The author's three hand-drawn horizontal dry/wet and vertical/cross sketches are the current contour references. `Docs/Design.md` §8.0.4 is the formal 16-mask shape specification; do not judge the first art sheet by the earlier hard-rectangle mesh alone.
+
+**First image-review sheet (no game startup):** show a common earth-cut bank form, paired DRY/WET examples of horizontal and vertical straight, elbow, T and cross, plus an endcap. Use the same camera scale, ground texture and geometry between state pairs. MO's ordinary earth ditch is prior-art styling, not a copied atlas. Indicate only the bed contents changing between states.
+
+Check the following before art approval:
+
+- The channel is a depressed trench with *visible shoulder, bank slope and narrower bed*, not a solid blue line or full-cell water.
+- Straight and rotated forms join exactly at shared cardinal cell edges; disconnected edges are closed with earth.
+- An elbow follows one continuous softened L curve; a T and cross have one connected, modestly widened central basin with no internal earth islands or blind water arms.
+- Wet fills only the interior bed; dry exposes its dark soil bottom; the identical bank silhouette persists.
+- The inlet and a Vanilla bridge are depicted as design details, not as new hydrology/pathing rules.
+- Width, bank lighting, color palette and junction widening receive **visual sign-off** before replacing runtime prototypes; no false PASS is inferred from a generated concept or an automated geometry test.
+
+**Current status:** text contour specification recorded; proposed artwork still OPEN. Do not mark VIS-01…VIS-07 passed until real game frames of the implemented approved art are inspected.
+
 ## Minimum reproducible visual scene
 
 Use an isolated map with Waterworks and its supported Vanilla dependencies only. Do not edit the user's active ModsConfig or saves. Use the normal rendering path (never `-nographics`).

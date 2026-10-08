@@ -409,6 +409,37 @@ The author proposed examining Medieval Overhaul (MO) rather than continuing repe
 
 **Order of work:** first prepare a visible, side-by-side dry/wet image proposal in RimWorld's top-down perspective, including straight, corner, T and cross variants; obtain visual acceptance and only then fix artwork dimensions, bank shading and material choices. Next implement/test once against the approved reference. Do **not** repeatedly request full E2E captures to decide an appearance that is not yet specified. No new artwork or renderer changes are authorized by this research note alone.
 
+### 8.0.4 Cardinal connected canal artwork specification (2026-10-08; user sketches -> text design approved, pixel art pending)
+
+**Reference:** the author's three hand sketches (horizontal dry cut, horizontal wet cut, and top-down N/S straight plus cross) and MO's ordinary `DankPyon_Trench` earth-cut banks. These sketches communicate cross-section/connection shapes, **not exact pixel locations, final widths, or colors**. The drawn tile/grid guide strokes are not part of the final texture. The reinforced stone MO trench is not the default reference.
+
+**Common cross-section, unchanged between supplied and dry:**
+
+- From intact adjacent ground toward the channel center: normal ground -> an excavated earthen shoulder/lip -> a visible sloping bank or dark inner wall -> a lower, narrow ditch bed. The trench reads as *cut into the earth*, rather than a painted blue line or an entire water-filled square.
+- **Dry:** the lower bed is shaded, exposed soil; the banks, lip and overall excavated silhouette remain visible.
+- **Wet:** the same lower bed is occupied by shallow bluish water, kept *inside* the shaded earthen banks. The water is the ditch's contents, not the landform itself. Natural, subdued tonal variation is allowed; a new full-cell river tile, conspicuous artificial blue outline or changed bank geometry is not.
+- The outer shoulder/ground region and both banks retain a stable appearance when water supply switches; only the inside bed/water coverage changes. Wet and dry must remain recognizable at ordinary RimWorld zoom.
+- The two open ends of neighboring canal cells match at the shared tile border: bed/water width, bank slopes and lip placements meet without a blocking soil cap, black seam, or sudden widening. Visible tiling grid lines in the sketches are construction guides only.
+
+**Top-down connected variants (cardinal-only, per tile):**
+
+| Family | Cardinal neighbors | Plan-view excavated shape | Bank/bed continuity |
+| --- | --- | --- | --- |
+| Isolated / closed | None (mask 0) | Small self-contained excavated depression; no artificial channel exit | Closed earthen perimeter, with dry or wet bed selected by supply state |
+| End / termination | One: N, E, S or W (4 rotations) | Channel enters from the connected edge and ends in a natural, slightly rounded basin, rather than a blunt rectangular stripe | Mouth at the connected edge is open; opposite unconnected edge retains a closed bank |
+| Straight | N+S or E+W (2 rotations) | Narrow continuous central band, as in the author's vertical and horizontal sketches | Both ends remain open; soil slopes run parallel alongside the channel, not across it |
+| Corner / elbow | N+E, E+S, S+W or W+N (4 rotations) | A continuous, softened 90-degree L-turn | The *inner* bank retreats/curves around the bend; the *outer* bank encloses the turn; no dry triangle splits the bed |
+| T junction | Any three cardinal directions (4 rotations) | Three channel arms join into a single modestly widened central hollow | Inside shoulders withdraw at the meeting point; the unconnected fourth edge remains earth, not an accidental fourth exit |
+| Cross junction | N+E+S+W (1 configuration) | Four arms open into one continuous, gently widened central intersection, based on the author's cross sketch | No island, earth divider, blocked branch or gap at center; banks turn back around each of the four concave corners |
+
+**Total: 16 connection masks = 1 isolated + 4 ends + 2 straights + 4 elbows + 4 T's + 1 cross.** The same geometry forms/rotations are used for dry and wet: there are two visual *states*, not two incompatible layout atlases. A side-by-side sheet should show at least horizontal/vertical straight, one elbow, one T and one cross, each dry and wet. Endcaps and mirror/rotated variants must also be represented in the eventual production atlas or geometry.
+
+**Junction proportions:** the bed may broaden slightly at elbows/T/cross to read as a common excavated basin. Keep it noticeably narrower than the full cell. This broadening must come from the channel's *contour and bank retreat*, not from overlaying several solid rectangles that leave hard cross-shaped corners or stacked water quads. The artist must be able to control softly shaped outer and inner banks without creating independent disconnected arms.
+
+**Mouths, covers, ground:** open the appropriate channel end at a supplied natural freshwater edge without an earth plug. A bridge sits across an intact channel and should visually cover it; network connectivity continues beneath. Outside the excavation use the terrain's visual context rather than a mandatory full-square brown plate; filling must restore normal ground without ghost banks. Wet water should not appear across a closed end or over a bridge. The existing Waterworks-only topology, bridge and save rules remain authoritative.
+
+**Design status / staging:** contour behavior and wet/dry identity above are the agreed **text specification**. The sketches are not approved production textures. Exact bank-to-bed ratio, junction bulge, side-wall illumination, earth/water palette, material animation, atlas packing and mesh-vs-graphic choice are **OPEN** until the user inspects a first RimWorld-style visual concept. Existing `CanalVisualTopology.Rectangles` and `SectionLayer_AMJW_Canal` are earlier unaccepted *rectangular* prototypes; do not reinterpret their `HalfChannel=0.20f` / `HalfBank=0.34f` as final art values. No further arbitrary renderQueue/width patches or reruns of the complete visual E2E simply to choose aesthetics; approve the reference sheet first, then choose implementation and verify it.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
