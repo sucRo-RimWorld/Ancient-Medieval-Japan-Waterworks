@@ -3,7 +3,7 @@
 This document records the repeatable **static/build** validation procedure for the RimWorld 1.6 Waterworks prototype. It is **not** a runtime acceptance procedure.
 
 1. Check `AGENTS.md`, `main:Docs/Coordination.md`, `Docs/Design.md` and all touched source/Def paths before changes.
-2. Inspect repository Actions/CI triggers before writing to GitHub. This repository currently has no `.github/workflows` entries.
+2. Inspect repository Actions/CI triggers before writing to GitHub. The current `add-changenote.yml` workflow is path-filtered to release metadata and does not trigger for ordinary source/design/E2E edits.
 3. Run `python Tests/static_audit.py` from the repository root.
 4. On Windows with the actual RimWorld 1.6 files, run:
 

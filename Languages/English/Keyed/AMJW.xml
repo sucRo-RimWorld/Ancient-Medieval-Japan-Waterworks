@@ -7,6 +7,7 @@
   <AMJW_CannotDig>Cannot dig canal on this terrain.</AMJW_CannotDig>
   <AMJW_Blocked>Remove the existing floor, foundation, plant or building first.</AMJW_Blocked>
   <AMJW_RoadBlocked>Cannot remove a road by digging a canal.</AMJW_RoadBlocked>
+  <AMJW_TooWide>Canals must remain one cell wide.</AMJW_TooWide>
   <AMJW_AlreadyCanal>Already a dug canal.</AMJW_AlreadyCanal>
   <AMJW_NotCanal>No Waterworks canal to fill here.</AMJW_NotCanal>
   <AMJW_AlreadyDesignated>An earthwork is already designated here.</AMJW_AlreadyDesignated>

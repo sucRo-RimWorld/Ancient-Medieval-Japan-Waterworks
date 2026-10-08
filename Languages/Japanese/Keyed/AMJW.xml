@@ -7,6 +7,7 @@
   <AMJW_CannotDig>この地面には水路を掘れません。</AMJW_CannotDig>
   <AMJW_Blocked>床・橋・植物・建造物を先に撤去してください。</AMJW_Blocked>
   <AMJW_RoadBlocked>この操作では道路を撤去できません。</AMJW_RoadBlocked>
+  <AMJW_TooWide>水路は幅1セルにしてください。</AMJW_TooWide>
   <AMJW_AlreadyCanal>すでに水路があります。</AMJW_AlreadyCanal>
   <AMJW_NotCanal>ここに埋め戻せる水路はありません。</AMJW_NotCanal>
   <AMJW_AlreadyDesignated>すでに土工作業が指定されています。</AMJW_AlreadyDesignated>

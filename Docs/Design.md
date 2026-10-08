@@ -570,7 +570,9 @@ The dig designator should behave like a one-cell-wide construction line:
 - click-drag creates a cardinal straight segment;
 - corners are created by placing another segment;
 - do not create diagonal-only disconnected chains from a diagonal drag;
-- do not provide a rectangle/area tool that silently creates broad artificial ponds in v1.
+- do not provide a rectangle/area tool that silently creates broad artificial ponds in v1;
+- a new excavation must not complete a fully occupied **2×2 block** of Waterworks canal cells; this is the v1 operational definition of keeping the canal one cell wide;
+- pending **Dig canal** designations count for placement validation, while job execution rechecks the already-dug canal grid. L, T and cross junctions remain valid because none requires a filled 2×2 canal block.
 
 Fill canal follows the same single-cell / straight-segment interaction over existing canal cells.
 
@@ -601,6 +603,7 @@ The designator should explain the first relevant rejection reason rather than si
 - terrain cannot be dug;
 - existing floor/foundation must be removed first;
 - road terrain cannot be destroyed by this command;
+- the requested excavation would make the canal more than one cell wide;
 - edifice blocks excavation;
 - target is already a canal;
 - Fill canal requires an existing Waterworks canal;
@@ -697,6 +700,7 @@ The first vertical prototype is successful when automated/runtime checks demonst
 - marsh does not supply the canal;
 - Diggable eligible natural terrains accept excavation while Ice/water/road/artificial-floor cases are rejected;
 - AMJ Environment `AMJ_ThinSoil` qualifies through `Diggable` without a dedicated compatibility patch;
+- digging is rejected when it would complete a filled 2×2 canal block, while L/T/cross junctions remain allowed;
 - marshy-soil excavation/restoration works in supported cases;
 - dig/fill jobs use the intended Construction work amounts and no material cost;
 - Vanilla bridge placement is valid on dug-canal terrain;

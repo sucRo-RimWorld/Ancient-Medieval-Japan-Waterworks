@@ -90,7 +90,7 @@ $isolated = @"
     $isolated, (New-Object System.Text.UTF8Encoding($false)))
 Write-Host '[INFO] Normal ModsConfig.xml was not modified.'
 Write-Host "[INFO] Isolated SaveData: $save"
-Write-Host '[INFO] Six Pickle graph/bridge/pawn-work/save-load scenarios; render path remains enabled.'
+Write-Host '[INFO] Seven Pickle graph/width/bridge/pawn-work/save-load scenarios; render path remains enabled.'
 $psi = New-Object System.Diagnostics.ProcessStartInfo
 $psi.FileName = $exe
 $psi.WorkingDirectory = $RimWorldDir
@@ -120,11 +120,12 @@ finally { $process.Dispose() }
 $summaryPath = Join-Path $report 'summary.json'
 Check (Test-Path -LiteralPath $summaryPath) "Fresh Pickle summary missing: $summaryPath"
 $summary = Get-Content -LiteralPath $summaryPath -Raw | ConvertFrom-Json
-Check (([int]$summary.total -eq 6) -and ([int]$summary.passed -eq 6) -and
-    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 6/6 gate failed: $summaryPath"
+Check (([int]$summary.total -eq 7) -and ([int]$summary.passed -eq 7) -and
+    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 7/7 gate failed: $summaryPath"
 $required = @(
     'Waterworks production Defs load correctly',
     'Four-direction canal branches connect and disconnect',
+    'Canal width stays one cell',
     'Standing freshwater requires nine adjacent cells',
     'Vanilla bridge preserves canal flow and terrain restoration',
     'Construction pawn completes real dig and fill jobs',
@@ -135,6 +136,6 @@ foreach ($name in $required) { Check ($names -contains $name) "Missing scenario:
 Check (Test-Path -LiteralPath $log) 'Isolated Player.log missing.'
 $errorCount = @([regex]::Matches((Get-Content -LiteralPath $log -Raw), '(?im)^.*\[ERROR\].*$')).Count
 Check ($errorCount -eq 0) "$errorCount ERROR-level runtime entries: $log"
-Write-Host '[OK] Six Waterworks Pickle scenarios passed; no [ERROR] runtime lines.'
+Write-Host '[OK] Seven Waterworks Pickle scenarios passed; no [ERROR] runtime lines.'
 Write-Host "[INFO] Reports: $report"
 Write-Warning 'Visual rendering and addition to an existing save remain open.'

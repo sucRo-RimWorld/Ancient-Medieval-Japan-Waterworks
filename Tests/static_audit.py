@@ -96,7 +96,7 @@ assert '!t.affordances.Exists(affordance => affordance != null && affordance.def
 
 localization_keys = (
     "AMJW_DigLabel", "AMJW_DigDesc", "AMJW_FillLabel", "AMJW_FillDesc",
-    "AMJW_CannotDig", "AMJW_Blocked", "AMJW_RoadBlocked",
+    "AMJW_CannotDig", "AMJW_Blocked", "AMJW_RoadBlocked", "AMJW_TooWide",
     "AMJW_AlreadyCanal", "AMJW_NotCanal", "AMJW_AlreadyDesignated",
     "AMJW_CannotRestore",
 )
@@ -132,7 +132,12 @@ jobs_source = (root / "Source/CanalJobs.cs").read_text(encoding="utf-8")
 designators_source = (root / "Source/CanalDesignators.cs").read_text(encoding="utf-8")
 assert "JobMaker.MakeJob(JobDefOf.CutPlant, wildPlant)" in jobs_source
 assert "wildPlant.sown || wildPlant.IsForbidden(pawn)" in jobs_source
-assert "CanDig(c, allowWildPlants: true)" in designators_source
+assert "CanDesignateDig(c, allowWildPlants: true)" in designators_source
+assert "public AcceptanceReport CanDesignateDig" in component_source
+assert "WouldExceedOneCellWidth" in component_source
+assert "includePendingDig" in component_source
+assert "DesignationAt(c, AMJW_Defs.AMJW_DigCanal)" in component_source
+assert '"AMJW_TooWide".Translate()' in component_source
 assert "public override bool HasJobOnCell" in jobs_source
 assert "if (!HasJobOnCell(pawn, c, forced)) return null;" in jobs_source
 assert "this.FailOn(() => !CanAffect(" in jobs_source
@@ -145,11 +150,12 @@ assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 # Pickle feature/step synchronization check; does not execute RimWorld.
 feature = (root / "Tests/E2E/TestMod/Pickle/Features/waterworks-core.feature").read_text(encoding="utf-8")
 e2e_steps = (root / "Tests/E2E/WaterworksSteps.cs").read_text(encoding="utf-8")
-assert feature.count("  Scenario:") == 6
-assert feature.count("@quickstart:WaterworksQuickstart") == 5
+assert feature.count("  Scenario:") == 7
+assert feature.count("@quickstart:WaterworksQuickstart") == 6
 for step in (
     "Waterworks loaded Defs preserve the canal contract",
     "cardinal canal branches connect disconnect and reconnect",
+    "one cell width rejects broad canals but keeps junctions",
     "standing ponds use the nine cell freshwater threshold",
     "Vanilla bridge preserves water and gravel restoration",
     "a construction pawn actually digs and fills a canal",
@@ -162,6 +168,14 @@ for step in (
     )
 assert "TestResults/" in (root / ".rimignore").read_text(encoding="utf-8")
 assert (root / "Scripts/run-e2e.ps1").exists()
+core_runner = (root / "Scripts/run-e2e.ps1").read_text(encoding="utf-8")
+for marker in (
+    "([int]$summary.total -eq 7)",
+    "([int]$summary.passed -eq 7)",
+    "'Canal width stays one cell'",
+    "Seven Waterworks Pickle scenarios passed",
+):
+    assert marker in core_runner, marker
 assert '<Compile Include="WaterworksPawnJobs.cs"/>' in (
     root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
 pawn_source = (root / "Tests/E2E/WaterworksPawnJobs.cs").read_text(encoding="utf-8")

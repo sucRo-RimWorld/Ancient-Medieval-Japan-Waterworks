@@ -8,6 +8,10 @@ Feature: Waterworks independent canal core
     Then cardinal canal branches connect disconnect and reconnect
 
   @quickstart:WaterworksQuickstart @timeout:100
+  Scenario: Canal width stays one cell
+    Then one cell width rejects broad canals but keeps junctions
+
+  @quickstart:WaterworksQuickstart @timeout:100
   Scenario: Standing freshwater requires nine adjacent cells
     Then standing ponds use the nine cell freshwater threshold
 
