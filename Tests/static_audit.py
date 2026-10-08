@@ -83,6 +83,9 @@ for required in (
     assert required in source, required
 assert 't.defName == "Marsh"' in source
 assert 't.defName == "Mud"' in source
+assert "!t.natural" not in component_source if "component_source" in globals() else "!t.natural" not in source
+assert "TerrainAffordanceDefOf.Diggable" in source
+
 
 localization_keys = (
     "AMJW_DigLabel", "AMJW_DigDesc", "AMJW_FillLabel", "AMJW_FillDesc",

@@ -118,7 +118,9 @@ namespace AncientMedievalJapan.Waterworks
                 if (thing.def.category == ThingCategory.Building)
                     return "AMJW_Blocked".Translate();
             }
-            if (!t.natural || t.IsFloor || t.IsIce || t.IsWater ||
+            // Vanilla natural soil does not necessarily set TerrainDef.natural.
+            // Diggable is the explicit excavation affordance.
+            if (t.IsFloor || t.IsIce || t.IsWater ||
                 t.defName == "Marsh" || t.defName == "Mud" ||
                 t.affordances == null ||
                 !t.affordances.Contains(TerrainAffordanceDefOf.Diggable))

@@ -228,3 +228,14 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 - Vanilla `JobDriver_AffectFloor` consumes its designation after calling `DoEffect`; the canal job driver therefore installs a fail condition that checks eligibility while work is running, preventing a stalled/invalid cell from losing its work designation as a silent no-op.
 - Wild-plant cutting remains a prerequisite, whereas actual excavation requires the cleared cell.
 - Regression markers added to `Tests/static_audit.py`; verify with actual runtime that adding a floor/bridge during a pending or in-progress earthwork leaves the designation recoverable.
+
+
+### PROTO-WATERWORKS-TERRAIN-001 — Vanilla Diggable compatibility
+
+**Owner:** Waterworks implementation
+**Status:** DONE — source guard corrected; runtime validation still pending
+
+- Removed the implicit requirement that `TerrainDef.natural` be true: Vanilla standard natural soil XML does not require that field.
+- The authoritative eligibility contract is `Diggable` plus explicit exclusions; synthetic constructions/roads/water remain rejected.
+- Added a static regression check to prevent this accidental all-soil rejection returning.
+- Next runtime acceptance includes soil, rich soil, gravel, sand, marshy soil, and AMJ Environment `AMJ_ThinSoil`.

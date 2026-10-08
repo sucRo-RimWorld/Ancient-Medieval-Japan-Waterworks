@@ -215,6 +215,8 @@ For the first implementation, the terrain must satisfy all of the following:
 - no edifice occupies the cell;
 - it is not impassable natural rock / mountain tunneling.
 
+Vanilla soil definitions do not necessarily set the `TerrainDef.natural` Boolean. Therefore excavation **must not** require `terrain.natural == true`; use the actual `Diggable` affordance plus water/wetland, ice, road, constructed-floor, foundation and structure exclusions. This prevents ordinary soil from becoming incorrectly ineligible.
+
 This property-based rule intentionally supports compatible natural soils without per-mod patches. For example, AMJ Environment's `AMJ_ThinSoil` already exposes `Diggable` and therefore qualifies automatically unless another exclusion applies.
 
 Expected Vanilla examples include soil, rich soil, stony soil/gravel, sand, soft sand, lichen-covered soil and marshy soil. Mud and Marsh do not qualify as ordinary excavation surfaces for v1.
