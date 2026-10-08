@@ -1,4 +1,4 @@
-# Ancient & Medieval Japan - Waterworks
+# Ancient & Medieval Japan - Waterworks（中世日本 - 水路）
 
 RimWorld 1.6 art-free development prototype. **The author confirmed a zero-warning C# build and 6/6 passing Pickle E2E scenarios. The separate add-to-existing-save and visual gates remain open; do not publish.**
 
