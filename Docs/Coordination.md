@@ -307,3 +307,15 @@ The original Quickstart map belongs only to isolated TestResults SaveData; Pickl
 3. `Scripts/run-add-to-save-e2e.ps1` is a **separate** gate from the existing confirmed 6/6 suite. Each phase requires its exact 1/1 named scenario and isolated runtime ERROR count 0. Normal `ModsConfig.xml` and user saves are never modified.
 
 **Next gate:** run the new script locally, fix any test-only API/PowerShell/RimWorld integration errors, and mark DONE only after both phases pass. This does **not** establish compatibility with a full user modpack. Image creation is still deferred.
+
+
+### TEST-WATERWORKS-E2E-004-PS-001 — PowerShell interpolation parser failure
+
+**Owner:** Waterworks implementation  
+**Status:** FIXED IN SOURCE — rerun of the two-phase test pending
+
+The author attempted `Scripts/run-add-to-save-e2e.ps1` and PowerShell stopped at script parse-time (line 139) with `InvalidVariableReferenceWithDrive`: the string `"[OK] $phase: 1/1 ..."` was misparsed because the colon immediately followed the variable name. The script has been changed to `"[OK] ${phase}: 1/1 ..."`.
+
+To avoid repeating this class of avoidable failure, `Scripts/validate-source.ps1` now runs the PowerShell AST parser over every `Scripts/*.ps1` before static validation, C# building, or game startup. `Tests/static_audit.py` requires the corrected string and the AST preflight.
+
+**Acceptance still pending:** the two-phase existing-save E2E must actually run successfully (Phase A 1/1, Phase B 1/1, no runtime ERROR). This syntax fix is not evidence of a passing E2E.

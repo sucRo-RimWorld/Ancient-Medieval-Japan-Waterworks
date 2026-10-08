@@ -226,5 +226,16 @@ for marker in ('Write-IsolatedConfig $false', 'Write-IsolatedConfig $true',
                '([int]$summary.total -eq 1)', '([int]$summary.passed -eq 1)'):
     assert marker in runner, marker
 assert 'TestResults/E2E/SaveData' not in runner
+# A previous release contained an unbraced interpolated '$phase:' causing
+# ParserError before any of the E2E tests could start.
+assert 'Write-Host "[OK] ${phase}: 1/1 Pickle scenario, zero runtime ERROR."' in runner
+assert 'Write-Host "[OK] $phase: 1/1 Pickle scenario, zero runtime ERROR."' not in runner
+
+# The local validator must use PowerShell's own parser for every script so
+# future parser regressions are caught before any RimWorld launch.
+powershell_validator = (root / "Scripts/validate-source.ps1").read_text(encoding="utf-8")
+assert '[System.Management.Automation.Language.Parser]::ParseFile' in powershell_validator
+assert "-Filter '*.ps1'" in powershell_validator
+
 
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")

@@ -5,6 +5,23 @@ param(
 )
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
+# Parse every repository PowerShell script before building or starting RimWorld.
+# This catches invalid string interpolation such as "$phase:" at source level.
+$parseMessages = @()
+foreach ($scriptFile in (Get-ChildItem -LiteralPath (Join-Path $root 'Scripts') -File -Filter '*.ps1')) {
+    $tokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseFile(
+        $scriptFile.FullName, [ref]$tokens, [ref]$parseErrors
+    )
+    foreach ($parseError in $parseErrors) {
+        $parseMessages += "$($scriptFile.Name) line $($parseError.Extent.StartLineNumber): $($parseError.Message)"
+    }
+}
+if ($parseMessages.Count -ne 0) {
+    throw ("PowerShell parse preflight failed:`n" + ($parseMessages -join "`n"))
+}
+
 $python = Get-Command python -ErrorAction SilentlyContinue
 if (-not $python) { throw "Python 3 is required for the Waterworks static audit." }
 & $python.Source (Join-Path $root "Tests/static_audit.py")

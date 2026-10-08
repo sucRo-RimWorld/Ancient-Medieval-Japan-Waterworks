@@ -32,3 +32,10 @@ The previously passing 6/6 core suite is unaffected.
 - Water rendering, narrow-ditch textures/overlays, junction clarity and bridge appearance
 
 **No new images are produced by this work.**
+
+
+## PowerShell syntax validation
+
+`Scripts/validate-source.ps1` invokes PowerShell's own `System.Management.Automation.Language.Parser.ParseFile` for each script under `Scripts/`. This is a preflight check before building and running either E2E phase. The known `$phase:` interpolation failure has been corrected by delimiting the variable as `${phase}:`.
+
+If the parser finds any script error, the suite stops without touching the isolated test profiles. A corrected parser is not proof of passing runtime tests.

@@ -136,7 +136,7 @@ function Run-Phase([string]$feature, [string]$expectedScenario, [string]$phase) 
     Require (Test-Path -LiteralPath $log) "Player.log missing for $phase."
     $errors = @([regex]::Matches((Get-Content -LiteralPath $log -Raw), '(?im)^.*\[ERROR\].*$')).Count
     Require ($errors -eq 0) "$phase produced $errors runtime ERROR lines: $log"
-    Write-Host "[OK] $phase: 1/1 Pickle scenario, zero runtime ERROR."
+    Write-Host "[OK] ${phase}: 1/1 Pickle scenario, zero runtime ERROR."
 }
 
 Write-Host '[INFO] Phase A: make a Vanilla saved game WITHOUT Waterworks.'
