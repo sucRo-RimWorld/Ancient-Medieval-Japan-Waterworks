@@ -1,6 +1,6 @@
 # Ancient & Medieval Japan - Waterworks（中世日本 - 水路）
 
-RimWorld 1.6 art-free development prototype. **The author confirmed a zero-warning C# build and 6/6 passing Pickle E2E scenarios. The separate add-to-existing-save and visual gates remain open; do not publish.**
+RimWorld 1.6 art-free development prototype. **An earlier revision had an author-confirmed zero-warning C# build and 6/6 passing Pickle E2E scenarios. The current one-cell-width revision adds a seventh scenario and requires a fresh 7/7 run; add-to-existing-save and visual gates remain open. Do not publish.**
 
 Includes two canal TerrainDefs referencing existing Vanilla soil/river assets, Construction dig/fill designations and jobs, natural-water source checks, connectivity, original-terrain restoration, and Vanilla bridge/foundation coexistence.
 
@@ -23,7 +23,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-e2e.ps1 -RimWorl
 
 This builds the developer-only test assemblies, stages the `AncientMedievalJapanWaterworks.E2E` test Mod and uses `TestResults/E2E/SaveData` rather than touching the player's normal ModsConfig. Requires the existing Pickle (Workshop 3791648678) and Quickstarts (3793646067) for testing only.
 
-The expanded gate requires **6/6** exact Pickle scenarios and no isolated runtime `[ERROR]` entries. Reports: `TestResults/E2E/Reports`. All six scenarios are author-reported passing, including Pickle's real game save/reload and original-terrain restoration. Visual rendering and adding Waterworks to a pre-existing save remain separate gates.
+The current gate requires **7/7** exact Pickle scenarios and no isolated runtime `[ERROR]` entries. Reports: `TestResults/E2E/Reports`. The earlier 6/6 result remains historical evidence for its source revision; the added one-cell-width scenario must pass before the current revision inherits runtime acceptance. Visual rendering and adding Waterworks to a pre-existing save remain separate gates.
 
 
 ## Install Waterworks into a previously Vanilla-only save (two-process test)
