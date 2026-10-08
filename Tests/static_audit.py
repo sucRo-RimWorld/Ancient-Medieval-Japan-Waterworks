@@ -256,4 +256,27 @@ for marker in (
 
 
 
+# Visual evidence runner is separate from the accepted core 6/6 suite.
+visual_feature = (root / "Tests/E2E/TestMod/Pickle/Features/waterworks-visual.feature").read_text(encoding="utf-8")
+visual_steps = (root / "Tests/E2E/WaterworksVisualSteps.cs").read_text(encoding="utf-8")
+visual_runner = (root / "Scripts/run-visual-e2e.ps1").read_text(encoding="utf-8")
+visual_csproj = (root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
+assert visual_feature.count("  Scenario:") == 1
+assert "Then Waterworks renders the connected disconnected and restored canal scene" in visual_feature
+assert '[Then("Waterworks renders the connected disconnected and restored canal scene")]' in visual_steps
+assert '<Compile Include="WaterworksVisualSteps.cs"/>' in visual_csproj
+assert 'UnityEngine.ScreenCaptureModule.dll' in visual_csproj
+for token in ("ScreenCapture.CaptureScreenshot", "connected.png", "disconnected.png",
+              "restored.png", "TerrainDefOf.Bridge", "Find.CameraDriver.JumpToCurrentMapLoc",
+              "new FileInfo(path).Length > 24"):
+    assert token in visual_steps, token
+for token in ("-pickle-run=\\"waterworks-visual.feature\\"", "TestResults/Visual",
+              "Select-String -LiteralPath $log -Pattern", "Screenshot missing:",
+              "WaterworksVisual"):
+    assert token in visual_runner, token
+assert "waterworks-core.feature" not in visual_runner
+assert "run-e2e.ps1" not in visual_runner
+ET.parse(root / "Tests/E2E/VisualMod/About/About.xml")
+ET.parse(root / "Tests/E2E/VisualMod/Defs/ThingCategoryDefs/AMJW_VisualMarker.xml")
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
