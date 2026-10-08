@@ -129,7 +129,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
             });
         }
 
-        private sealed class Fixture : IDisposable
+        internal sealed class Fixture : IDisposable
         {
             private readonly PickleContext ctx;
             private readonly IntVec3 origin;

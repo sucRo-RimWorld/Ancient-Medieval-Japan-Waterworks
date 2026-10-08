@@ -14,3 +14,7 @@ Feature: Waterworks independent canal core
   @quickstart:WaterworksQuickstart @timeout:100
   Scenario: Vanilla bridge preserves canal flow and terrain restoration
     Then Vanilla bridge preserves water and gravel restoration
+
+  @quickstart:WaterworksQuickstart @timeout:180
+  Scenario: Construction pawn completes real dig and fill jobs
+    Then a construction pawn actually digs and fills a canal

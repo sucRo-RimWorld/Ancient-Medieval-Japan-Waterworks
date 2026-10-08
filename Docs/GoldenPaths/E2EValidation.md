@@ -8,8 +8,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-e2e.ps1 -RimWorl
 
 The runner compiles the production DLL, Quickstarts and Pickle test assemblies, stages a developer-only `AncientMedievalJapanWaterworks.E2E` Mod, and creates a separate `TestResults/E2E/SaveData` profile. The normal `ModsConfig.xml` remains unchanged.
 
-It launches the standard renderer with Pickle's fast/no-browser mode, a process watchdog, isolated Player.log and JSON summary. Exactly four named scenarios must pass and the runtime log must have **zero [ERROR] lines**.
+It launches the standard renderer with Pickle's fast/no-browser mode, a process watchdog, isolated Player.log and JSON summary. Exactly five named scenarios must pass and the runtime log must have **zero [ERROR] lines**.
 
-Initial runtime scope: loaded Defs, orthogonal source/branch graph, 9-cell standing-water threshold, ocean/marsh exclusion, Vanilla bridge foundation preservation and Fill/terrain restoration.
+Initial runtime scope: loaded Defs, orthogonal source/branch graph, 9-cell standing-water threshold, ocean/marsh exclusion, Vanilla bridge foundation preservation, Fill/terrain restoration, and production WorkGiver/JobDriver execution by a Construction pawn.
 
-Actual pawn Construction job execution, save/reload persistence and water imagery remain open; do not claim v1 acceptance based only on this initial gate. This run has not yet been performed.
+Cross-session save/reload persistence and water imagery remain open; do not claim v1 acceptance based only on this initial gate. The author reported the original 4/4 suite passed without errors; the expanded 5/5 suite is still unverified.

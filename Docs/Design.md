@@ -579,7 +579,7 @@ Re-audit current 1.6 alternatives before expanding Waterworks beyond this narrow
 
 ### Initial loaded-map test gate
 
-The first automated RimWorld E2E stage is a four-scenario Pickle/Quickstarts suite for loaded production Defs, actual MapComponent/terrain connectivity, the 9-cell freshwater threshold, and bridge/foundation-preserving restoration. It manipulates the test map's terrain through the **real game API** rather than a mock graph. These scenarios deliberately do **not** claim to test real pawn job completion, cross-session persistence, or visual quality; those remain required independent gates. Pass requires 4/4 named scenarios and no runtime `[ERROR]` entries in an isolated log.
+The first automated RimWorld E2E stage is a four-scenario Pickle/Quickstarts suite for loaded production Defs, actual MapComponent/terrain connectivity, the 9-cell freshwater threshold, and bridge/foundation-preserving restoration. It manipulates the test map's terrain through the **real game API** rather than a mock graph. The author reported the original 4/4 suite passed without errors. The expanded five-scenario test adds genuine Construction work: a pawn receives a Waterworks designation through the production WorkGiver, completes Dig and Fill jobs through its JobDriver, and verifies the changed terrain and cleared designation. The expanded gate requires 5/5 named scenarios and no runtime `[ERROR]` entries. Cross-session save/load and visual acceptance remain separate, unverified gates.
 
 ## 14. Prototype acceptance gate
 

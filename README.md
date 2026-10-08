@@ -23,4 +23,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-e2e.ps1 -RimWorl
 
 This builds the developer-only test assemblies, stages the `AncientMedievalJapanWaterworks.E2E` test Mod and uses `TestResults/E2E/SaveData` rather than touching the player's normal ModsConfig. Requires the existing Pickle (Workshop 3791648678) and Quickstarts (3793646067) for testing only.
 
-The first gate requires **4/4** exact Pickle scenarios and no isolated runtime `[ERROR]` entries. Reports: `TestResults/E2E/Reports`. Real pawn work, save/load and image quality are still later gates.
+The first gate requires **5/5** exact Pickle scenarios and no isolated runtime `[ERROR]` entries. Reports: `TestResults/E2E/Reports`. The fifth scenario tests actual pawn dig/fill jobs. Save/load and image quality remain independent gates.

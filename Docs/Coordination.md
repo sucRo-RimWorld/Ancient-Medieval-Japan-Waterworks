@@ -256,7 +256,7 @@ Confirmed in the decompiled 1.6 `RimWorld/TerrainAffordanceDefOf.cs`: the class 
 ### TEST-WATERWORKS-E2E-001 — isolated Pickle/Quickstarts core verification
 
 **Owner:** Waterworks implementation
-**Status:** IN PROGRESS — E2E source and runner staged; neither E2E fixtures nor RimWorld runtime executed successfully yet
+**Status:** DONE — author confirmed no errors in initial 4/4 suite (2026-10-08 JST)
 
 Following the user's clean production build, a first developer-only Pickle/Quickstarts suite now covers:
 - production Def loading and Waterworks/Vanilla Bridge affordances;
@@ -266,4 +266,16 @@ Following the user's clean production build, a first developer-only Pickle/Quick
 
 `Scripts/run-e2e.ps1` builds test assemblies, stages `AncientMedievalJapanWaterworks.E2E` separately and creates isolated test savedata. It must not alter the player's normal ModsConfig. A pass requires all **4/4** named Pickle scenarios and `Player.log` with **zero [ERROR] lines**.
 
-**Next:** author runs `Scripts/run-e2e.ps1`; any E2E compilation/runtime errors must be fixed before status advances. Actual pawn jobs, persisted save/load and visual quality need later scenarios. Art remains deferred.
+**Observed:** the author reported no errors and only the expected pending-gates warning after the runner. The four loaded-map scenarios are accepted. Subsequent pawn-job coverage is tracked in `TEST-WATERWORKS-E2E-002`; persistence and visual checks remain pending. Art remains deferred.
+
+
+### TEST-WATERWORKS-E2E-002 — real pawn earthwork jobs
+
+**Owner:** Waterworks implementation
+**Status:** IN PROGRESS — fifth Pickle scenario authored, local build/runtime not yet checked
+
+Following the author's passing 4/4 suite, the fifth scenario checks a capable real Construction pawn, actual map designations, production WorkGiver-generated Dig and Fill jobs, pawn JobTracker execution with engine ticks, wet canal state after excavation, restored Soil after filling, and removal of completed designations. It does not call the direct `CanalMapComponent.Dig/Fill` methods as the operation under test.
+
+The runner and static feature contract now require **5/5** exact scenarios and zero isolated `[ERROR]` entries. The test remains in the isolated Quickstarts/Pickle mod; the player's normal mod settings are not altered.
+
+**Next gate:** build E2E test DLLs and execute `Scripts/run-e2e.ps1`. Investigate any compilation/job failure before expanding the suite. Cross-session save/load and visual presentation remain OPEN.

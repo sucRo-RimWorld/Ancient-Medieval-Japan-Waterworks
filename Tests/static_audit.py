@@ -140,16 +140,32 @@ assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 # Pickle feature/step synchronization check; does not execute RimWorld.
 feature = (root / "Tests/E2E/TestMod/Pickle/Features/waterworks-core.feature").read_text(encoding="utf-8")
 e2e_steps = (root / "Tests/E2E/WaterworksSteps.cs").read_text(encoding="utf-8")
-assert feature.count("  Scenario:") == 4
-assert feature.count("@quickstart:WaterworksQuickstart") == 3
+assert feature.count("  Scenario:") == 5
+assert feature.count("@quickstart:WaterworksQuickstart") == 4
 for step in (
     "Waterworks loaded Defs preserve the canal contract",
     "cardinal canal branches connect disconnect and reconnect",
     "standing ponds use the nine cell freshwater threshold",
     "Vanilla bridge preserves water and gravel restoration",
+    "a construction pawn actually digs and fills a canal",
 ):
     assert "Then " + step in feature
-    assert '[Then("' + step + '")]' in e2e_steps
+    assert '[Then("' + step + '")]' in (
+        e2e_steps + (root / "Tests/E2E/WaterworksPawnJobs.cs").read_text(encoding="utf-8")
+    )
 assert "TestResults/" in (root / ".rimignore").read_text(encoding="utf-8")
 assert (root / "Scripts/run-e2e.ps1").exists()
+assert '<Compile Include="WaterworksPawnJobs.cs"/>' in (
+    root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
+pawn_source = (root / "Tests/E2E/WaterworksPawnJobs.cs").read_text(encoding="utf-8")
+for required in (
+    "WorkGiver_Scanner",
+    "giver.JobOnCell(worker, target, true)",
+    "worker.jobs.StartJob(job, JobCondition.InterruptForced)",
+    "Find.TickManager.DoSingleTick()",
+    "AMJW_DigCanalJob",
+    "AMJW_FillCanalJob",
+):
+    assert required in pawn_source, required
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
