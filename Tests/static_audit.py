@@ -315,8 +315,11 @@ for mask in range(16):
 # before a production SectionLayer integration is designed.
 render_probe = (root / "Tests/E2E/WaterworksRenderProbe.cs").read_text(encoding="utf-8")
 assert '<Compile Include="WaterworksRenderProbe.cs"/>' in visual_csproj
-assert "WaterworksRenderProbe.Write(output);" in visual_steps
+assert "WaterworksRenderProbe.Write(output, center);" in visual_steps
 assert "render-api.txt" in render_probe and "render-api.txt" in visual_runner
+assert "RUNTIME SECTION LAYER ORDER" in render_probe
+assert "SectionAt(focus)" in render_probe
+assert "typeof(MapDrawLayer)" in render_probe
 for target in ("typeof(SectionLayer)", "typeof(Section)", "typeof(MapDrawer)",
                "typeof(SectionLayer_Terrain)", "typeof(TerrainGrid)"):
     assert target in render_probe, target
