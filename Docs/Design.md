@@ -667,7 +667,14 @@ Initial support target:
 - **Adding Waterworks to an existing RimWorld 1.6 save:** should be supported once runtime-tested. Existing terrain is untouched until the player designates canal work.
 - **Removing Waterworks from a save that has ever used Waterworks terrain/state:** not supported by default.
 
-The six-scenario E2E round trip verifies retention of Waterworks-created state; it does **not** verify adding the mod to a save originally created without it. Before public release, test adding to an existing save explicitly. Do not advertise safe removal merely because all visible canals were filled; custom map/save state may still make removal unsafe.
+The six-scenario Pickle E2E suite (author-reported **6/6 passing**) verifies retention of Waterworks-created terrain and map component state. It is not evidence for installing Waterworks into a save originally created without it.
+
+The separate **add-to-existing-save test** uses two clean RimWorld 1.6 game processes and one isolated scratch save folder:
+- **Phase A, Waterworks disabled:** start a Vanilla Quickstart with only test infrastructure, confirm Waterworks Defs are absent, establish a flowing-water source and natural Soil/Gravel test cells, and save an actual `.rws`.
+- **Phase B, Waterworks enabled:** cold-start a distinct game process with the production package added to the mod list and the Phase A save still available. Load that save, check its pre-existing natural terrain was unchanged, dig supplied/unsupplied canal cells, save/reload and verify original ground restoration.
+- **Acceptance:** both isolated Pickle phases 1/1 with zero runtime ERROR entries. The test infrastructure must never rewrite the user's normal ModsConfig or touch normal saves. This validates the Vanilla install-after-save path, not arbitrary existing modpacks or safe mod removal.
+
+Before public release, test adding to an existing save explicitly. Do not advertise safe removal merely because all visible canals were filled; custom map/save state may still make removal unsafe.
 
 ## 19. First implementation slice
 

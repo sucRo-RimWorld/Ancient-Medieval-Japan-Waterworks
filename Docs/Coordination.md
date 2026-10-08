@@ -284,7 +284,7 @@ The runner and static feature contract now require **5/5** exact scenarios and z
 ### TEST-WATERWORKS-E2E-003 — real .rws round trip and original-ground persistence
 
 **Owner:** Waterworks implementation  
-**Status:** IN PROGRESS — sixth Pickle scenario authored, runtime build/execution pending
+**Status:** DONE — author confirmed 6/6 suite passed (2026-10-08 JST)
 
 Following user-confirmed **5/5**, the new scenario creates a wet canal originally dug from Gravel and an isolated dry canal originally dug from Soil, uses Pickle's own built-in `When I save and reload` engine step to write and reload an actual `.rws`, then obtains a **new** `Find.CurrentMap.GetComponent<CanalMapComponent>()` and checks:
 - wet/dry terrain states rebuilt after reload;
@@ -294,4 +294,16 @@ Following user-confirmed **5/5**, the new scenario creates a wet canal originall
 
 The original Quickstart map belongs only to isolated TestResults SaveData; Pickle's round-trip save is temporary and removed by Pickle. E2E requires **6/6** exactly named scenarios with zero isolated `[ERROR]` entries.
 
-**Next gate:** run the existing `Scripts/run-e2e.ps1` after pulling `main`; repair any compile/runtime issues before marking 6/6 passed. Visual appearance, narrow trench treatment and testing addition to an existing pre-Waterworks save are independently pending. Do not make new images yet.
+**Observed:** the author reported the expanded 6/6 suite passed. Real .rws save/reload and original-terrain restoration are accepted. Visual presentation remains OPEN, and separately verifying installation into a save made without Waterworks is tracked by `TEST-WATERWORKS-E2E-004`. No new imagery is authorized.
+
+
+### TEST-WATERWORKS-E2E-004 — load save created before Waterworks installation
+
+**Owner:** Waterworks implementation
+**Status:** IN PROGRESS — two-cold-start test suite staged; not built or runtime-tested yet
+
+1. Phase A boots Core/Harmony/Pickle/Quickstarts plus only the Vanilla bootstrap test Mod. It explicitly asserts that neither Waterworks TerrainDef exists, creates an isolated Vanilla Quickstart map, prepares Soil/Gravel beside natural flowing freshwater, and uses Pickle `When I save and reload as "waterworks-before-install"` to leave a genuine `.rws` under scratch `TestResults/AddToSave/SaveData/Saves`.
+2. Phase B cold-starts a fresh RimWorld process with Waterworks enabled using **the same savedata**; its `Given the save file "waterworks-before-install" is loaded` step loads that earlier save. It verifies ordinary Vanilla terrain was untouched by installation, excavates wet/dry canals, then uses Pickle's real save/reload again and verifies restoration to both Soil and Gravel.
+3. `Scripts/run-add-to-save-e2e.ps1` is a **separate** gate from the existing confirmed 6/6 suite. Each phase requires its exact 1/1 named scenario and isolated runtime ERROR count 0. Normal `ModsConfig.xml` and user saves are never modified.
+
+**Next gate:** run the new script locally, fix any test-only API/PowerShell/RimWorld integration errors, and mark DONE only after both phases pass. This does **not** establish compatibility with a full user modpack. Image creation is still deferred.

@@ -189,4 +189,42 @@ for expected in (
 assert '<Compile Include="WaterworksPersistenceSteps.cs"/>' in (
     root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
 
+# Existing-save installation is deliberately two separate game processes.
+# Bootstrap creates an actual .rws with the Waterworks package ID absent,
+# and the second run loads it with production Waterworks enabled.
+bootstrap_feature = (root / "Tests/E2E/BootstrapMod/Pickle/Features/waterworks-before-install.feature").read_text(encoding="utf-8")
+added_feature = (root / "Tests/E2E/AddToSaveMod/Pickle/Features/waterworks-add-to-save.feature").read_text(encoding="utf-8")
+bootstrap_source = (root / "Tests/E2E/WaterworksBootstrapSteps.cs").read_text(encoding="utf-8")
+add_source = (root / "Tests/E2E/WaterworksAddToSaveSteps.cs").read_text(encoding="utf-8")
+bootstrap_about = ET.parse(root / "Tests/E2E/BootstrapMod/About/About.xml").getroot()
+enabled_about = ET.parse(root / "Tests/E2E/AddToSaveMod/About/About.xml").getroot()
+assert bootstrap_about.findtext("packageId") == "sucro.ancientmedievaljapan.waterworks.bootstrap"
+assert enabled_about.findtext("packageId") == "sucro.ancientmedievaljapan.waterworks.addtosave"
+assert not any(node.text == "sucro.ancientmedievaljapan.waterworks"
+               for node in bootstrap_about.iter("packageId"))
+assert any(node.text == "sucro.ancientmedievaljapan.waterworks"
+           for node in enabled_about.iter("packageId"))
+assert bootstrap_feature.count("  Scenario:") == 1
+assert added_feature.count("  Scenario:") == 1
+assert '@quickstart:WaterworksQuickstart' in bootstrap_feature
+assert 'When I save and reload as "waterworks-before-install"' in bootstrap_feature
+assert 'Given the save file "waterworks-before-install" is loaded' in added_feature
+assert 'When I save and reload' in added_feature
+assert '[Then("the Vanilla save baseline is prepared without Waterworks")]' in bootstrap_source
+assert '[Then("Waterworks first loads without changing Vanilla ground and can dig canals")]' in add_source
+assert '[Then("Waterworks persists and restores old Vanilla soil and gravel")]' in add_source
+assert 'AncientMedievalJapan.Waterworks;' not in bootstrap_source
+assert 'DefDatabase<TerrainDef>.GetNamedSilentFail("AMJW_DugCanalDry") == null' in bootstrap_source
+assert '<Compile Include="WaterworksAddToSaveSteps.cs"/>' in (
+    root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
+assert '<Compile Include="WaterworksBootstrapSteps.cs"/>' in (
+    root / "Tests/E2E/BootstrapSteps.csproj").read_text(encoding="utf-8")
+runner = (root / "Scripts/run-add-to-save-e2e.ps1").read_text(encoding="utf-8")
+for marker in ('Write-IsolatedConfig $false', 'Write-IsolatedConfig $true',
+               "waterworks-before-install.feature", "waterworks-add-to-save.feature",
+               "Saves/waterworks-before-install.rws", "TestResults/AddToSave",
+               '([int]$summary.total -eq 1)', '([int]$summary.passed -eq 1)'):
+    assert marker in runner, marker
+assert 'TestResults/E2E/SaveData' not in runner
+
 print("[OK] XML, source and E2E contracts checked (runtime not tested)")
