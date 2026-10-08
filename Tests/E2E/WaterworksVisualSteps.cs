@@ -69,6 +69,11 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 map.terrainGrid.SetFoundation(C(-2,0), TerrainDefOf.Bridge);
                 map.terrainGrid.SetFoundation(C(0,2), TerrainDefOf.Bridge);
                 AssertState(context, true);
+                context.Assert(CanalVisualTopology.Mask(map, C(0,0)) == 15, "Cross junction mask");
+                context.Assert(CanalVisualTopology.Mask(map, C(4,3)) == 12, "North return elbow mask");
+                context.Assert(CanalVisualTopology.Mask(map, C(-3,0)) == 10, "Horizontal trunk mask");
+                context.Assert(CanalVisualTopology.Rectangles(15, CanalVisualTopology.HalfChannel).Length == 5,
+                    "Cross geometry expected core plus four arms");
                 Find.CameraDriver.JumpToCurrentMapLoc(center);
                 output = Path.Combine(GenFilePaths.SaveDataFolderPath, "WaterworksVisual");
                 Directory.CreateDirectory(output);
