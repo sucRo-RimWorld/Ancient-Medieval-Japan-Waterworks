@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- E2E-only: makes the Pickle feature carrier a nonempty RimWorld content mod. -->
+  <ThingCategoryDef>
+    <defName>AMJW_E2E_AddToSaveMarker</defName>
+    <label>Waterworks existing-save test marker</label>
+  </ThingCategoryDef>
+</Defs>
