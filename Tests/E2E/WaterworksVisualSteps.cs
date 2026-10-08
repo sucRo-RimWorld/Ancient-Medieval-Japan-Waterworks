@@ -29,8 +29,9 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 canal = map.GetComponent<CanalMapComponent>();
                 context.Require(canal != null, "Canal map component missing");
                 IntVec3 selected = IntVec3.Invalid;
-                for (int x = 9; x < map.Size.x - 9 && !selected.IsValid; x++)
-                    for (int z = 9; z < map.Size.z - 9 && !selected.IsValid; z++) {
+                int bestDistance = int.MaxValue;
+                for (int x = 9; x < map.Size.x - 9; x++)
+                    for (int z = 9; z < map.Size.z - 9; z++) {
                         IntVec3 origin = new IntVec3(x, 0, z);
                         bool safe = true;
                         for (int dx = -8; dx <= 8 && safe; dx++)
@@ -40,7 +41,10 @@ namespace AncientMedievalJapan.Waterworks.E2E
                                     map.terrainGrid.FoundationAt(p) != null ||
                                     map.terrainGrid.UnderTerrainAt(p) != null) { safe = false; break; }
                             }
-                        if (safe) selected = origin;
+                        if (safe) {
+                            int distance = Math.Abs(x - map.Size.x / 2) + Math.Abs(z - map.Size.z / 2);
+                            if (distance < bestDistance) { selected = origin; bestDistance = distance; }
+                        }
                     }
                 context.Require(selected.IsValid, "No revealed, foundation-free 17x17 scene patch");
                 center = selected;
@@ -68,18 +72,27 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 Find.CameraDriver.JumpToCurrentMapLoc(center);
                 output = Path.Combine(GenFilePaths.SaveDataFolderPath, "WaterworksVisual");
                 Directory.CreateDirectory(output);
+                });
+            await Task.Delay(1500); // Let terrain meshes and the camera render the connected state.
+            await GameThread.Run(delegate {
                 ScreenCapture.CaptureScreenshot(Path.Combine(output,"connected.png"));
             });
             await WaitFile("connected.png", context);
             await GameThread.Run(delegate {
                 Source(false);
                 AssertState(context, false);
+            });
+            await Task.Delay(1500);
+            await GameThread.Run(delegate {
                 ScreenCapture.CaptureScreenshot(Path.Combine(output,"disconnected.png"));
             });
             await WaitFile("disconnected.png", context);
             await GameThread.Run(delegate {
                 Source(true);
                 AssertState(context, true);
+            });
+            await Task.Delay(1500);
+            await GameThread.Run(delegate {
                 ScreenCapture.CaptureScreenshot(Path.Combine(output,"restored.png"));
             });
             await WaitFile("restored.png", context);
