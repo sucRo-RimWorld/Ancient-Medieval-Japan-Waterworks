@@ -451,3 +451,13 @@ Added `Source/CanalVisualMesh.cs`: pure, no-state-write Unity Mesh builder using
 **Status:** IN PROGRESS — captured wet/dry transitions; mesh draw integration pending
 
 Author submitted `connected(2).png`, `disconnected(2).png`, `restored(2).png` and `manifest(2).txt` from another visual E2E execution. Wet, dry and wet rendering states are visible in the intended order. The width/soil-bank presentation is unchanged and remains full-cell; this is expected because `CanalVisualMesh.Build` is constructed and checked by Pickle, not submitted to the live renderer. The screenshots alone do not establish the mesh count assertion result or ERROR=0 (summary and Player.log were not provided). Continue with actual SectionLayer/lifecycle and bridge ordering integration, keeping game-state and saves unchanged. Do not claim narrow renderer passed.
+
+
+### VIS-WATERWORKS-010 — loaded RimWorld render API evidence gate (2026-10-08)
+
+**Owner:** Waterworks renderer
+**Status:** TEST IMPLEMENTED — actual loaded-game API report pending
+
+Added isolated `Tests/E2E/WaterworksRenderProbe.cs` and integrated it into `WaterworksVisualSteps.cs`, `Steps.csproj`, and `Scripts/run-visual-e2e.ps1`. The visual E2E now writes `render-api.txt` alongside the three PNGs/manifest in `TestResults/Visual/SaveData/WaterworksVisual`, reporting loaded constructors, fields, properties, and methods on SectionLayer, Section, MapDrawer, SectionLayer_Terrain and TerrainGrid. This is a diagnostic-only reflection probe; no production Harmony patch or unverified draw method has been added. Static audit checks the report contract.
+
+**Decision boundary:** do not commit a speculative SectionLayer integration until its actual RimWorld 1.6 constructor/hook/ordering APIs are established. User-side next step is one isolated visual test run and providing `render-api.txt` with any failed summary/log; the current visuals remain unchanged. After obtaining the report, implement a narrow-channel layer and validate the underlying terrain suppression and Vanilla bridge occlusion. Existing 6/6 and existing-save 1+1 tests remain unchanged.
