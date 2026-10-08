@@ -29,6 +29,9 @@ namespace AncientMedievalJapan.Waterworks.E2E
             Dump(result, typeof(MapDrawer));
             Dump(result, typeof(SectionLayer_Terrain));
             Dump(result, typeof(SectionLayer_Dynamic));
+            Dump(result, typeof(LayerSubMesh));
+            Dump(result, typeof(SectionLayer_Watergen));
+            Dump(result, typeof(RimWorld.SectionLayer_BridgeProps));
             Dump(result, typeof(TerrainGrid));
             DumpCurrentLayers(result, focus);
             File.WriteAllText(Path.Combine(outputDirectory, "render-api.txt"), result.ToString());
@@ -72,7 +75,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
         private static void Dump(StringBuilder sb, Type type)
         {
             sb.AppendLine();
-            sb.AppendLine("TYPE " + type.FullName);
+            sb.AppendLine("TYPE " + type.FullName + " abstract=" + type.IsAbstract);
             sb.AppendLine("BASE " + (type.BaseType == null ? "(none)" : type.BaseType.FullName));
             foreach (ConstructorInfo c in type.GetConstructors(Flags).OrderBy(x => x.ToString()))
                 sb.AppendLine("CTOR " + c);
@@ -83,7 +86,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
             foreach (MethodInfo m in type.GetMethods(Flags).OrderBy(x => x.Name))
             {
                 if (m.IsSpecialName) continue;
-                sb.AppendLine("METHOD " + m);
+                sb.AppendLine("METHOD " + m + " virtual=" + m.IsVirtual + " final=" + m.IsFinal);
             }
         }
     }
