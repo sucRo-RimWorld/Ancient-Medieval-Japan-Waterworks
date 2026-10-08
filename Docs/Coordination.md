@@ -3,7 +3,7 @@
 ### PRIORITY-FOREST-FOODS-20261008 — subsequent feature sequencing
 
 **Owner:** Waterworks release/priority coordination  
-**Status:** PROJECT EXECUTION ORDER RECORDED; v1 existing-save E2E STILL IN PROGRESS
+**Status:** PROJECT EXECUTION ORDER RECORDED; bounded v1 core/runtime gates PASS, visual work remains
 
 Author placed Japan-appropriate native fruit trees / edible forest foods in
 the Project **after Ironmaking, before the next Waterworks/Rice
@@ -12,12 +12,13 @@ Reconstruction P0, change Waterworks v1's approved canal behavior or revoke
 its optional integration with Rice Cultivation. See Project
 `Docs/ImplementationPriorities.md` and `Docs/Roadmap.md` for execution order.
 
-**Finish the bounded current Waterworks v1 work**, especially the ongoing
-separate two-phase save-before-install -> Waterworks-enabled add-to-save E2E
-and its real runtime ERROR gate. Do not abandon already-built code, report
-that compatibility passed prematurely or broaden v1 in order to overtake the
-forest-food work. Subsequent feature expansion / Rice integration waits for
-its later roadmap slot. Existing detailed E2E notes remain authoritative.
+The bounded Waterworks v1 non-visual validation is now green: the earlier
+existing-save two-process gate passed 1/1 + 1/1 with zero runtime ERRORs
+(commit `a6411c2745b5cf94316dd412a12eb61f3009a2fa`), and after the
+one-cell-width rule the author reported `validate-source.ps1` PASS followed
+by the current core `run-e2e.ps1` **7/7 PASS with zero runtime ERRORs**.
+This does not establish visual acceptance or full user-modpack compatibility.
+Subsequent feature expansion / Rice integration still waits for its roadmap slot.
 
 
 This file is the authoritative coordination surface for work on **AMJ Waterworks**.
@@ -44,28 +45,11 @@ This file is for handoff, state and blockers only. Confirmed design belongs in `
 ### PROTO-WATERWORKS-001 — minimal independent canal prototype
 
 **Owner:** Waterworks implementation  
-**Status:** IN PROGRESS — uncompiled prototype source checkpoint; build/runtime pending
+**Status:** DONE for the non-visual v1 core — author-reported current static/build PASS and Pickle 7/7 + runtime ERROR 0
 
-Scope:
-1. use the fixed package/Def identity from `Docs/Design.md` and add the minimal RimWorld 1.6 About/load structure;
-3. implement dug-canal TerrainDef plus Dig/Fill canal semantics;
-4. implement the audited Vanilla 1.6 source rules: moving freshwater always valid; standing `WaterShallow`/`WaterDeep` requires a 9-cell connected body; ocean/marsh/wet soil/mud invalid;
-5. implement Diggable-based excavation eligibility with Ice/water/road/artificial-floor exclusions, including AMJ Environment `AMJ_ThinSoil` without a dedicated patch;
-6. use Construction work with initial values 500 dig / 300 fill and canal `pathCost=10`;
-7. implement per-map event-driven connectivity state;
-8. represent canal state with `AMJW_DugCanalDry` / `AMJW_DugCanalWet` TerrainDefs and switch only on invalidation/load correction;
-9. add Architect -> Orders line-drag Dig/Fill designators, Construction jobs and clear invalid-placement feedback;
-10. implement bounded standing-water validation that stops once 9 eligible cells are found;
-11. automate moving/standing source validity including 9-cell threshold, ocean rejection, orthogonal connectivity, diagonal rejection, marsh/marshy-soil non-source behavior, marshy-soil excavation/restoration, Vanilla-bridge crossing/continuous-cover placement and non-interruption, bridge-safe fill rejection, disconnect/reconnect, fill restoration, save/load and runtime ERROR=0 checks.
+The source/graph/job/save vertical slice defined in `Docs/Design.md` is implemented. After the one-cell-width rule and the static-audit XML-inventory repair, the author reported `Scripts/validate-source.ps1` PASS and then `Scripts/run-e2e.ps1` PASS on the current source. That runner requires exactly **7/7** named scenarios, including the one-cell-width regression, and zero isolated runtime `[ERROR]` lines. The dedicated existing-save gate had separately passed **1/1 + 1/1** with zero runtime ERRORs in commit `a6411c2745b5cf94316dd412a12eb61f3009a2fa`.
 
-Do **not** add gate, culvert, DBH adapter, Hot Springs adapter, stone lining or consumer gameplay until this vertical slice is green.
-Implementation identity fixed by design:
-- `Ancient & Medieval Japan - Waterworks`
-- packageId `sucro.ancientmedievaljapan.waterworks`
-- assembly `AncientMedievalJapanWaterworks`
-- namespace `AncientMedievalJapan.Waterworks`
-- Def prefix `AMJW_`
-- no DLC or external-mod hard dependency; avoid Harmony unless proven necessary.
+This closes the non-visual core acceptance scope only. Wet/dry appearance, bridge occlusion and final canal art remain under the VIS workstream; full user-modpack compatibility and publication are not established.
 
 ### DES-REINFORCED-COVER-001 — canal-specific reinforced cover
 
@@ -88,11 +72,9 @@ Confirmed direction:
 ### PROTO-WATERWORKS-002 — source checkpoint
 
 **Owner:** Waterworks
-**Status:** IN PROGRESS — source only, not compiled/runtime-tested
+**Status:** DONE for source/build/runtime checkpoint; visual acceptance remains separate
 
-The baseline source prototype contains metadata, dry/wet TerrainDefs with Vanilla water/soil paths, designators, Construction jobs, graph state, natural source checks, save/restore, a csproj, and a static audit script. No imagery has been generated/copied and no public release is authorized.
-
-Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pickle/RimTest Redux runtime tests; inspect bridge/foundation coexistence and shader behavior. Require zero Waterworks ERROR entries before closing.
+Current production source has author-reported static audit + RimWorld 1.6 C# build PASS and core Pickle **7/7** with runtime ERROR 0. This checkpoint does not approve the unaccepted renderer/art path or authorize publication.
 
 ### PROTO-WATERWORKS-API-001 — RimWorld 1.6 draw-style compatibility
 
@@ -107,12 +89,9 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 ### TEST-WATERWORKS-STATIC-001 — repeatable source validation
 
 **Owner:** Waterworks implementation  
-**Status:** DONE for static/build tooling; runtime verification remains OPEN
+**Status:** DONE — current source author-reported PASS
 
-- Enhanced `Tests/static_audit.py` with loaded class references, DefOf bindings, localization and the 1.6 draw-style regression check.
-- Added `Scripts/validate-source.ps1` for non-interactive static + Windows RimWorld DLL build.
-- Canonical repository procedure: `Docs/GoldenPaths/SourceValidation.md`.
-- Unmet gates: actual 1.6 C# build, non-interactive Pickle/RimTest Redux, runtime ERROR=0, save/load and actual wet-water shader/bridge appearance.
+`Scripts/validate-source.ps1` passed after the stale XML-count assertion was replaced by the explicit 10-path inventory in commit `0ed279d699acd559bcabe9f864d99014513129e8`. This establishes static audit + RimWorld 1.6 production C# build for that current source. Runtime is tracked separately; visual shader/bridge appearance remains outside this gate.
 
 ### PROTO-WATERWORKS-EVENT-001 — terrain-change invalidation, narrow visual intent
 
@@ -159,14 +138,10 @@ Next: compile against actual RimWorld 1.6 DLLs; run static audit and isolated Pi
 
 ### TEST-WATERWORKS-E2E-004 — load save created before Waterworks installation
 
-**Owner:** Waterworks implementation
-**Status:** IN PROGRESS — two-cold-start test suite staged; not built or runtime-tested yet
+**Owner:** Waterworks existing-save acceptance
+**Status:** DONE — isolated two-process gate passed
 
-1. Phase A boots Core/Harmony/Pickle/Quickstarts plus only the Vanilla bootstrap test Mod. It explicitly asserts that neither Waterworks TerrainDef exists, creates an isolated Vanilla Quickstart map, prepares Soil/Gravel beside natural flowing freshwater, and uses Pickle `When I save and reload as "waterworks-before-install"` to leave a genuine `.rws` under scratch `TestResults/AddToSave/SaveData/Saves`.
-2. Phase B cold-starts a fresh RimWorld process with Waterworks enabled using **the same savedata**; its `Given the save file "waterworks-before-install" is loaded` step loads that earlier save. It verifies ordinary Vanilla terrain was untouched by installation, excavates wet/dry canals, then uses Pickle's real save/reload again and verifies restoration to both Soil and Gravel.
-3. `Scripts/run-add-to-save-e2e.ps1` is a **separate** gate from the existing confirmed 6/6 suite. Each phase requires its exact 1/1 named scenario and isolated runtime ERROR count 0. Normal `ModsConfig.xml` and user saves are never modified.
-
-**Next gate:** run the new script locally, fix any test-only API/PowerShell/RimWorld integration errors, and mark DONE only after both phases pass. This does **not** establish compatibility with a full user modpack. Image creation is still deferred.
+The dedicated existing-save test passed in commit `a6411c2745b5cf94316dd412a12eb61f3009a2fa`: Phase A **1/1**, Phase B **1/1**, zero failed/skipped scenarios and zero runtime `[ERROR]` lines in both cold starts. It establishes the tested Vanilla-save -> newly installed Waterworks path for the isolated fixture, not general full-modpack compatibility. The later one-cell-width change did not change save schema; current core behavior is separately covered by the new 7/7 gate.
 
 ### TEST-WATERWORKS-E2E-004-PS-001 — PowerShell interpolation parser failure
 
