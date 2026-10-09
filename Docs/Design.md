@@ -150,8 +150,8 @@ For v1:
 - **Marshy soil / wet growable soil is not a water source.** It represents saturated ground rather than an open water body.
 - **Marsh is not a water source.** Although Vanilla gives it shallow-water/bridge behavior, it represents wetland terrain rather than the open freshwater source Waterworks requires.
 - Marshy soil may be excavated into a dug canal when it otherwise satisfies the ordinary excavation rules. Filling the canal should restore the recorded marshy-soil terrain when valid.
-- Marsh itself is not converted into a dug canal in the initial implementation. It is already a saturated wet terrain, and converting it would blur the distinction between an existing wetland and a deliberately excavated channel.
-- Mud and other wet-looking terrains are not promoted to water sources merely because they are wet or bridgeable. Source eligibility remains an explicit whitelist decision.
+- **Marsh and Mud may be excavated as canal terrain.** Natural pond margins often contain these terrains; blocking excavation would prevent a canal from reaching a valid river or pond. They are explicit Vanilla excavation exceptions, not general permission to dig open water. Backfilling restores the recorded original Marsh or Mud.
+- **Marsh and Mud do not themselves supply canals.** Other wet-looking terrains are not promoted to water sources merely because they are wet or bridgeable. Source eligibility stays an explicit whitelist; ordinary rivers and qualifying 9+ cell standing freshwater supply canals after the trench reaches them.
 
 This keeps the v1 rule legible:
 
@@ -207,19 +207,19 @@ Baseline rules:
 
 For the first implementation, the terrain must satisfy all of the following:
 
-- the underlying natural TerrainDef is `Diggable`;
-- it is not water/wetland terrain itself;
+- the underlying terrain has `Diggable`, **or** is exactly Vanilla `Mud` or `Marsh`;
+- it is not open river, pond or ocean water; `Mud` and `Marsh` are the only wetland excavation exceptions;
 - it is not `Ice`;
 - it is not an artificial floor/foundation;
 - it is not a road terrain that Waterworks would silently destroy;
 - no edifice occupies the cell;
 - it is not impassable natural rock / mountain tunneling.
 
-Vanilla 1.6's `NaturalTerrainBase` defines `natural=true`, which ordinary soil terrain inherits. However, Waterworks deliberately uses the **loaded `Diggable` affordance** rather than relying on the `natural` flag alone, while excluding water/wetland, ice, roads, floors, foundations and occupied structures. `Diggable` is an XML affordance but **not** a member of the RimWorld 1.6 `TerrainAffordanceDefOf` class. Inspect the loaded `TerrainDef.affordances` by `defName` (or a resolved Def reference), never `TerrainAffordanceDefOf.Diggable`.
+Vanilla 1.6's `NaturalTerrainBase` defines `natural=true`, which ordinary soil terrain inherits. However, Waterworks normally uses the **loaded `Diggable` affordance** rather than relying on the `natural` flag alone. It explicitly permits Vanilla `Mud` and `Marsh` even if they are flagged as water or lack `Diggable`, while still excluding real river/pond/ocean water, ice, roads, floors, foundations and occupied structures. `Diggable` is an XML affordance but **not** a member of the RimWorld 1.6 `TerrainAffordanceDefOf` class. Inspect the loaded `TerrainDef.affordances` by `defName` (or a resolved Def reference), never `TerrainAffordanceDefOf.Diggable`. Exempt only DefNames `Mud` and `Marsh` from the `Diggable` and `IsWater` excavation guards; do not weaken the whitelist of natural freshwater sources.
 
-This property-based rule intentionally supports compatible natural soils without per-mod patches. For example, AMJ Environment's `AMJ_ThinSoil` already exposes `Diggable` and therefore qualifies automatically unless another exclusion applies.
+This property-based rule intentionally supports compatible natural soils without per-mod patches; for example, AMJ Environment's `AMJ_ThinSoil` exposes `Diggable` and therefore qualifies unless another exclusion applies. The two named wetland exceptions are Vanilla-only; mod-added water and wetland terrains are not automatically accepted.
 
-Expected Vanilla examples include soil, rich soil, stony soil/gravel, sand, soft sand, lichen-covered soil and marshy soil. Mud and Marsh do not qualify as ordinary excavation surfaces for v1.
+Expected Vanilla examples include soil, rich soil, stony soil/gravel, sand, soft sand, lichen-covered soil, marshy soil, **Mud** and **Marsh**. A dug wetland becomes an ordinary Waterworks canal cell and uses existing graph, bridge and saved-ground rules.
 
 Ordinary removable vegetation may be cleared through normal prerequisite work if practical; Waterworks should not create a separate vegetation-removal system.
 
@@ -729,6 +729,8 @@ The first vertical prototype is successful when automated/runtime checks demonst
 - AMJ Environment `AMJ_ThinSoil` qualifies through `Diggable` without a dedicated compatibility patch;
 - digging is rejected when it would complete a filled 2×2 canal block, while L/T/cross junctions remain allowed;
 - marshy-soil excavation/restoration works in supported cases;
+- Vanilla `Mud` and `Marsh` allow Dig/Fill and restore their original terrains even across a real save/load;
+- `Mud` and `Marsh` remain invalid freshwater sources, while real river/pond/ocean terrain remains excluded from excavation;
 - dig/fill jobs use the intended Construction work amounts and no material cost;
 - Vanilla bridge placement is valid on dug-canal terrain;
 - bridge presence does not interrupt canal connectivity/supply;

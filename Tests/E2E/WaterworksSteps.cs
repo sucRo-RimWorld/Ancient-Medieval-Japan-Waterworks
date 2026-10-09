@@ -128,6 +128,58 @@ namespace AncientMedievalJapan.Waterworks.E2E
             });
         }
 
+        [Then("Mud and Marsh allow excavation but are not natural freshwater sources")]
+        public Task WetlandExcavation(PickleContext c)
+        {
+            return GameThread.Run(delegate
+            {
+                using (var f = new Fixture(c))
+                {
+                    IntVec3 mud = f.Cell(0, 0), marsh = f.Cell(1, 0);
+                    // Neither adjacent wetland may supply the channel by itself.
+                    f.Set(-1, 0, "Marsh");
+                    f.Set(0, 0, "Mud");
+                    f.Set(1, 0, "Marsh");
+                    f.Set(2, 0, "Mud");
+
+                    c.Assert(f.Canal.CanDesignateDig(mud, allowWildPlants: true).Accepted,
+                        "Mud must accept Dig canal designations");
+                    c.Assert(f.Canal.CanDesignateDig(marsh, allowWildPlants: true).Accepted,
+                        "Marsh must accept Dig canal designations");
+                    c.Require(f.Canal.Dig(mud), "Cannot excavate Mud");
+                    c.Require(f.Canal.Dig(marsh), "Cannot excavate Marsh");
+                    f.Dry(mud, "Marsh beside dug Mud is not a natural source");
+                    f.Dry(marsh, "Mud beside dug Marsh is not a natural source");
+
+                    f.Set(-1, 0, "WaterMovingShallow"); f.Tick();
+                    f.Wet(mud, "Real river supplies canal excavated from Mud");
+                    f.Wet(marsh, "Water can pass through the former Marsh tile");
+                    f.Set(-1, 0, "Marsh"); f.Tick();
+                    f.Dry(mud, "Replacing river with Marsh must disconnect supply");
+                    f.Dry(marsh, "Former Marsh canal dries with its network");
+
+                    c.Require(f.Canal.Fill(mud) && f.Canal.Fill(marsh),
+                        "Cannot fill former Mud/Marsh canal");
+                    c.Assert(f.Map.terrainGrid.TopTerrainAt(mud).defName == "Mud",
+                        "Fill must restore original Mud");
+                    c.Assert(f.Map.terrainGrid.TopTerrainAt(marsh).defName == "Marsh",
+                        "Fill must restore original Marsh");
+                    // Ordinary natural-water surfaces remain protected.
+                    foreach (string water in new[] {
+                        "WaterShallow", "WaterDeep", "WaterMovingShallow",
+                        "WaterMovingChestDeep", "WaterOceanShallow", "WaterOceanDeep"
+                    })
+                    {
+                        f.Set(0, 3, water);
+                        c.Assert(!f.Canal.CanDesignateDig(f.Cell(0, 3), true).Accepted,
+                            "Waterbody must reject Dig designation: " + water);
+                        c.Assert(!f.Canal.Dig(f.Cell(0, 3)),
+                            "Waterbody must reject actual Dig: " + water);
+                    }
+                }
+            });
+        }
+
         [Then("Vanilla bridge preserves water and gravel restoration")]
         public Task Bridge(PickleContext c)
         {

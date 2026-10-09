@@ -184,12 +184,18 @@ namespace AncientMedievalJapan.Waterworks
                 if (thing.def.category == ThingCategory.Building)
                     return "AMJW_Blocked".Translate();
             }
-            // Diggable exists in RimWorld XML, but is not a TerrainAffordanceDefOf field.
-            // Check the loaded affordance DefName without assuming that field exists.
-            if (t.IsFloor || t.IsIce || t.IsWater ||
-                t.defName == "Marsh" || t.defName == "Mud" ||
-                t.affordances == null ||
-                !t.affordances.Exists(affordance => affordance != null && affordance.defName == "Diggable"))
+            // A pond is often surrounded by Mud or Marsh. These two specific
+            // Vanilla wetlands can be excavated as a passage to actual freshwater,
+            // even when their terrain flags lack Diggable or count as water.
+            // Do not turn Mud/Marsh into water sources: supply uses a separate
+            // explicit natural-freshwater whitelist in this MapComponent.
+            bool diggableWetland = t.defName == "Mud" || t.defName == "Marsh";
+            // Diggable exists in XML, not as a TerrainAffordanceDefOf field.
+            bool diggableSoil = t.affordances != null &&
+                t.affordances.Exists(affordance =>
+                    affordance != null && affordance.defName == "Diggable");
+            if (t.IsFloor || t.IsIce ||
+                (!diggableWetland && (t.IsWater || !diggableSoil)))
                 return "AMJW_CannotDig".Translate();
             if (WouldExceedOneCellWidth(c, includePendingDig: false))
                 return "AMJW_TooWide".Translate();

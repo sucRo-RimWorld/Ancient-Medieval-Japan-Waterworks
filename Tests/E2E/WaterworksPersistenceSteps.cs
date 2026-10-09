@@ -18,6 +18,8 @@ namespace AncientMedievalJapan.Waterworks.E2E
     {
         private IntVec3 suppliedCell = IntVec3.Invalid;
         private IntVec3 dryCell = IntVec3.Invalid;
+        private IntVec3 mudCell = IntVec3.Invalid;
+        private IntVec3 marshCell = IntVec3.Invalid;
         private IntVec3 sourceCell = IntVec3.Invalid;
 
         [Given("Waterworks has supplied and dry canals with distinct original ground")]
@@ -34,14 +36,20 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 suppliedCell = fixture.Cell(0, 0);
                 dryCell = fixture.Cell(3, 0);
                 sourceCell = fixture.Cell(-1, 0);
+                mudCell = fixture.Cell(0, 3);
+                marshCell = fixture.Cell(3, 3);
 
                 map.terrainGrid.SetTerrain(suppliedCell, TerrainDefOf.Gravel);
                 map.terrainGrid.SetTerrain(dryCell, TerrainDefOf.Soil);
+                map.terrainGrid.SetTerrain(mudCell, DefDatabase<TerrainDef>.GetNamed("Mud"));
+                map.terrainGrid.SetTerrain(marshCell, DefDatabase<TerrainDef>.GetNamed("Marsh"));
                 map.terrainGrid.SetTerrain(sourceCell,
                     DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow"));
 
                 ctx.Require(component.Dig(suppliedCell), "Cannot excavate Gravel prior to save.");
                 ctx.Require(component.Dig(dryCell), "Cannot excavate Soil prior to save.");
+                ctx.Require(component.Dig(mudCell), "Cannot excavate Mud prior to save.");
+                ctx.Require(component.Dig(marshCell), "Cannot excavate Marsh prior to save.");
                 component.MapComponentTick();
 
                 ctx.Assert(map.terrainGrid.TopTerrainAt(suppliedCell) ==
@@ -49,8 +57,10 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 ctx.Assert(map.terrainGrid.TopTerrainAt(dryCell) ==
                     AMJW_Defs.AMJW_DugCanalDry, "Unconnected canal must be dry before saving.");
                 ctx.Assert(component.CanFill(suppliedCell).Accepted &&
-                    component.CanFill(dryCell).Accepted,
-                    "Both original terrain records must exist before saving.");
+                    component.CanFill(dryCell).Accepted &&
+                    component.CanFill(mudCell).Accepted &&
+                    component.CanFill(marshCell).Accepted,
+                    "All four original terrain records must exist before saving.");
             });
         }
 
@@ -67,7 +77,8 @@ namespace AncientMedievalJapan.Waterworks.E2E
             {
                 Map loadedMap = Find.CurrentMap;
                 ctx.Require(loadedMap != null, "No map after real save/reload.");
-                ctx.Require(suppliedCell.IsValid && dryCell.IsValid && sourceCell.IsValid,
+                ctx.Require(suppliedCell.IsValid && dryCell.IsValid && sourceCell.IsValid &&
+                    mudCell.IsValid && marshCell.IsValid,
                     "Persistence setup coordinates did not survive the scenario.");
                 CanalMapComponent loaded = loadedMap.GetComponent<CanalMapComponent>();
                 ctx.Require(loaded != null, "Waterworks component missing after reload.");
@@ -79,8 +90,15 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     AMJW_Defs.AMJW_DugCanalDry,
                     "Disconnected canal must remain dry after reload.");
                 ctx.Assert(loaded.CanFill(suppliedCell).Accepted &&
-                    loaded.CanFill(dryCell).Accepted,
-                    "Original-terrain records were not deserialized.");
+                    loaded.CanFill(dryCell).Accepted &&
+                    loaded.CanFill(mudCell).Accepted &&
+                    loaded.CanFill(marshCell).Accepted,
+                    "Original-terrain records including wetlands were not deserialized.");
+                ctx.Assert(loadedMap.terrainGrid.TopTerrainAt(mudCell) ==
+                    AMJW_Defs.AMJW_DugCanalDry &&
+                    loadedMap.terrainGrid.TopTerrainAt(marshCell) ==
+                    AMJW_Defs.AMJW_DugCanalDry,
+                    "Unconnected wetland canals must remain dry after reload.");
 
                 // Test the terrain-change event subscription after loading.
                 loadedMap.terrainGrid.SetTerrain(sourceCell, TerrainDefOf.Soil);
@@ -97,12 +115,18 @@ namespace AncientMedievalJapan.Waterworks.E2E
 
                 ctx.Require(loaded.Fill(suppliedCell), "Could not fill loaded supplied canal.");
                 ctx.Require(loaded.Fill(dryCell), "Could not fill loaded dry canal.");
+                ctx.Require(loaded.Fill(mudCell), "Could not fill loaded Mud canal.");
+                ctx.Require(loaded.Fill(marshCell), "Could not fill loaded Marsh canal.");
                 ctx.Assert(loadedMap.terrainGrid.TopTerrainAt(suppliedCell) ==
                     TerrainDefOf.Gravel,
                     "Loaded original Gravel not restored by Fill.");
                 ctx.Assert(loadedMap.terrainGrid.TopTerrainAt(dryCell) ==
                     TerrainDefOf.Soil,
                     "Loaded original Soil not restored by Fill.");
+                ctx.Assert(loadedMap.terrainGrid.TopTerrainAt(mudCell).defName == "Mud",
+                    "Loaded original Mud not restored by Fill.");
+                ctx.Assert(loadedMap.terrainGrid.TopTerrainAt(marshCell).defName == "Marsh",
+                    "Loaded original Marsh not restored by Fill.");
             });
         }
     }

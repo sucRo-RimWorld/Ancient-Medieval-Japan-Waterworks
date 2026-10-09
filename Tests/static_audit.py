@@ -102,12 +102,19 @@ for required in (
     "t.IsIce",
 ):
     assert required in source, required
-assert 't.defName == "Marsh"' in source
-assert 't.defName == "Mud"' in source
-assert "!t.natural" not in component_source if "component_source" in globals() else "!t.natural" not in source
-assert 'affordance.defName == "Diggable"' in component_source if "component_source" in globals() else 'affordance.defName == "Diggable"' in source
-assert "TerrainAffordanceDefOf.Diggable" not in source
-assert '!t.affordances.Exists(affordance => affordance != null && affordance.defName == "Diggable")' in source
+# Explicit wetland exceptions are for excavation only, NOT freshwater supply.
+component_source = (root / "Source/CanalMapComponent.cs").read_text(encoding="utf-8")
+assert 'bool diggableWetland = t.defName == "Mud" || t.defName == "Marsh";' in component_source
+assert "(!diggableWetland && (t.IsWater || !diggableSoil))" in component_source
+assert "t.IsFloor || t.IsIce" in component_source
+assert "t.IsRoad" in component_source
+assert 'affordance.defName == "Diggable"' in component_source
+assert "TerrainAffordanceDefOf.Diggable" not in component_source
+# Source class remains an explicit whitelist; Mud and Marsh do not supply
+# the network even if these cells are alongside a canal.
+assert '"WaterMovingShallow"' in component_source
+assert '"WaterShallow"' in component_source
+assert '"Mud"' in component_source and '"Marsh"' in component_source
 
 
 localization_keys = (
@@ -202,13 +209,14 @@ assert "Scripts/" in (root / ".rimignore").read_text(encoding="utf-8")
 # Pickle feature/step synchronization check; does not execute RimWorld.
 feature = (root / "Tests/E2E/TestMod/Pickle/Features/waterworks-core.feature").read_text(encoding="utf-8")
 e2e_steps = (root / "Tests/E2E/WaterworksSteps.cs").read_text(encoding="utf-8")
-assert feature.count("  Scenario:") == 7
-assert feature.count("@quickstart:WaterworksQuickstart") == 6
+assert feature.count("  Scenario:") == 8
+assert feature.count("@quickstart:WaterworksQuickstart") == 7
 for step in (
     "Waterworks loaded Defs preserve the canal contract",
     "cardinal canal branches connect disconnect and reconnect",
     "one cell width rejects broad canals but keeps junctions",
     "standing ponds use the nine cell freshwater threshold",
+    "Mud and Marsh allow excavation but are not natural freshwater sources",
     "Vanilla bridge preserves water and gravel restoration",
     "a construction pawn actually digs and fills a canal",
     "Waterworks rebuilds supply and restores both saved ground types",
@@ -222,10 +230,11 @@ assert "TestResults/" in (root / ".rimignore").read_text(encoding="utf-8")
 assert (root / "Scripts/run-e2e.ps1").exists()
 core_runner = (root / "Scripts/run-e2e.ps1").read_text(encoding="utf-8")
 for marker in (
-    "([int]$summary.total -eq 7)",
-    "([int]$summary.passed -eq 7)",
+    "([int]$summary.total -eq 8)",
+    "([int]$summary.passed -eq 8)",
     "'Canal width stays one cell'",
-    "Seven Waterworks Pickle scenarios passed",
+    "'Mud and Marsh allow excavation without becoming freshwater sources'",
+    "Eight Waterworks Pickle scenarios passed",
 ):
     assert marker in core_runner, marker
 assert '<Compile Include="WaterworksPawnJobs.cs"/>' in (
@@ -259,6 +268,17 @@ for expected in (
     assert expected in persist_source, expected
 assert '<Compile Include="WaterworksPersistenceSteps.cs"/>' in (
     root / "Tests/E2E/Steps.csproj").read_text(encoding="utf-8")
+
+# Wetland restoration is verified across an actual Pickle disk save/reload.
+persist_source = (root / "Tests/E2E/WaterworksPersistenceSteps.cs").read_text(encoding="utf-8")
+for marker in (
+    'component.Dig(mudCell)', 'component.Dig(marshCell)',
+    'loaded.CanFill(mudCell).Accepted', 'loaded.CanFill(marshCell).Accepted',
+    'loaded.Fill(mudCell)', 'loaded.Fill(marshCell)',
+    'TopTerrainAt(mudCell).defName == "Mud"',
+    'TopTerrainAt(marshCell).defName == "Marsh"',
+):
+    assert marker in persist_source, marker
 
 # Existing-save installation is deliberately two separate game processes.
 # Bootstrap creates an actual .rws with the Waterworks package ID absent,
