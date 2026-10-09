@@ -125,7 +125,7 @@ $summaryPath = Join-Path $report 'summary.json'
 Check (Test-Path -LiteralPath $summaryPath) "Fresh Pickle summary missing: $summaryPath"
 $summary = Get-Content -LiteralPath $summaryPath -Raw | ConvertFrom-Json
 Check (([int]$summary.total -eq 8) -and ([int]$summary.passed -eq 8) -and
-    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 7/7 gate failed: $summaryPath"
+    ([int]$summary.failed -eq 0) -and ([int]$summary.skipped -eq 0)) "Pickle 8/8 gate failed: $summaryPath"
 $required = @(
     'Waterworks production Defs load correctly',
     'Four-direction canal branches connect and disconnect',
