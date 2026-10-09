@@ -41,7 +41,7 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 | VIS-02 | cardinal adjacency accepted, diagonals rejected | A one-cell terrain corridor appears as a **noticeably narrower excavated channel**, with surrounding banks; no full-cell river ribbon | OPEN |
 | VIS-03 | T/cross connectivity accepted | Straight, bend, T and cross shapes show no missing center, seam, broken corners or discontinuous water animation | OPEN |
 | VIS-04 | valid freshwater neighbor supplies canal | River/pond mouth has no misleading dry gap or abrupt water-edge artifact | OPEN |
-| VIS-05 | Vanilla Bridge foundation preserves connectivity; BridgeProps are suppressed only for Canal+Bridge | The waterway uses the same plain board top for both E/W and N/S placements, with no dangling under-planks, exposed seams, ghost water or bridge rotation; ordinary non-canal bridges remain unchanged | OPEN |
+| VIS-05 | Vanilla Bridge foundation preserves connectivity; BridgeProps are suppressed only for Canal+Bridge | Same plain board top for E/W and N/S; no dangling under-planks or visible bridge/water artifacts in supplied/dry captures; normal non-canal bridge predicate remains unchanged in isolated Pickle test | PASS (2026-10-09; PR #7, Windows visual 1/1 / ERROR=0 by runner exit 0, author screenshots) |
 | VIS-06 | source removed / reconnected | Rebuilt wet↔dry state changes are visible without ghost water, stale mesh or retained wet shader effects | OPEN |
 | VIS-07 | Gravel/Soil restoration E2E passed | Filled terrain visually matches surrounding ground; no leftover rim/water artifact | OPEN |
 | VIS-08 | Original terrain DefName is available for representative diggable cells | Soil, Gravel and Rich Soil canal shoulders retain their respective surrounding texture/colors; wet/dry share silhouette; no universal brown square. Missing original records use a documented visual fallback; reloaded maps retain the mapping | OPEN |
@@ -58,3 +58,9 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 ## Boundaries
 
 No new water source, canal consumer, bridge family, slope simulation or gameplay feature belongs in this visual gate. `Docs/Design.md` remains authoritative for visual scale and rendering semantics. Passing this gate does not establish full external modpack compatibility.
+
+### VIS-05 scoped appearance acceptance — 2026-10-09
+
+The author supplied `connected.png` and `disconnected.png` from the PR #7 private-desktop test and judged the board-only result acceptable. The prior additional under-planks at the vertical bridge were no longer visible; the horizontal bridge used the same flat board top. The isolated visual runner exited 0 after its hard gates for Pickle 1/1, runtime ERROR=0 and all four required PNGs. Its E2E step tests the **patched, actual-game** BridgeProps predicate for both canal bridge directions and a non-canal Vanilla bridge control.
+
+This accepts only the canal bridge visual behavior (VIS-05), not the other still-OPEN VIS items, external modpacks, a release package, or Workshop publication. PR #7 merged to main as `0da1a656d76be46ae9a831d672d7ae333ee2ff44`.
