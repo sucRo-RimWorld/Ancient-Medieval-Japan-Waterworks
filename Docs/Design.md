@@ -20,6 +20,14 @@ Waterworks is distinct from Dubs Bad Hygiene (DBH):
 - Waterworks models direct natural intake and visible gravity-style open channels.
 - Waterworks does not use DBH PipeNet internally and does not require DBH.
 
+### 1.1 Current development disposition (2026-10-09)
+
+The author considers the **initial Waterworks implementation and the current canal/water/bridge imagery provisionally complete**. The Mod remains a **development build `0.1.0-dev`**, not a beta or stable 1.0 release. Gameplay scope is the existing narrow natural-water-connected canal network and its Dig/Fill/Vanilla-bridge presentation. No new standalone water consumer is required merely to declare this infrastructure scope implemented.
+
+The only **current acceptance phase** is ordinary author playtesting: find real-map placement, appearance, usability, save or compatibility issues and correct them as demonstrated. Visual approval is provisional for playtesting, not automatic PASS of every item in `Docs/GoldenPaths/VisualAcceptance.md`. Previous automated Pickle core, save and isolated visual evidence are retained; extended ordinary-play coverage is not claimed.
+
+Waterworks does **not** add DBH pumps/consumers, rice-paddy benefits, manual gates, heavy foundations or water-power features solely for this milestone. Integration may be designed when a real consumer requires it. Non-public Workshop testing and any later public release are separate decisions.
+
 ## 2. Ownership boundary
 
 Waterworks owns:
