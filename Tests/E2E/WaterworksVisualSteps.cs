@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using AncientMedievalJapan.Waterworks;
 using RimWorks.Pickle;
@@ -69,6 +70,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 map.terrainGrid.SetFoundation(C(-2,0), TerrainDefOf.Bridge);
                 map.terrainGrid.SetFoundation(C(0,2), TerrainDefOf.Bridge);
                 AssertState(context, true);
+                AssertBridgeAppearance(context);
                 context.Assert(CanalVisualTopology.Mask(map, C(0,0)) == 15, "Cross junction mask");
                 context.Assert(CanalVisualTopology.Mask(map, C(4,3)) == 12, "North return elbow mask");
                 context.Assert(CanalVisualTopology.Mask(map, C(-3,0)) == 10, "Horizontal trunk mask");
@@ -155,6 +157,54 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     "cameraCenter=" + center + "\n");
             });
         }
+        /// <summary>
+        /// Execute Vanilla's actual, Harmony-patched graphics predicate.
+        /// The ordinary bridge control must still draw its native underside.
+        /// These temporary control fixtures are removed before screenshots.
+        /// </summary>
+        private static void AssertBridgeAppearance(PickleContext context)
+        {
+            Type type = typeof(SectionLayer).Assembly.GetType(
+                "RimWorld.SectionLayer_BridgeProps", false);
+            context.Require(type != null, "Native bridge-props layer missing");
+            Section section = map.mapDrawer.SectionAt(C(0,2));
+            SectionLayer bridgeLayer = section.GetLayer(type);
+            context.Require(bridgeLayer != null, "Native bridge-props layer absent");
+            MethodInfo predicate = type.GetMethod("ShouldDrawPropsBelow",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            context.Require(predicate != null, "Native bridge-props predicate absent");
+
+            bool verticalCanalProps = (bool)predicate.Invoke(
+                bridgeLayer, new object[] { C(0,2), map.terrainGrid });
+            context.Assert(!verticalCanalProps,
+                "Vertical Waterworks bridge must show plain board without southern hanging props");
+
+            bool horizontalCanalProps = (bool)predicate.Invoke(
+                bridgeLayer, new object[] { C(-2,0), map.terrainGrid });
+            context.Assert(!horizontalCanalProps,
+                "Horizontal Waterworks bridge must show the same plain board");
+
+            // A Vanilla bridge over non-Waterworks water still needs its
+            // original props. Avoid permanent fixture/screenshot changes.
+            IntVec3 vanilla = C(-7,-6);
+            IntVec3 below = C(-7,-7);
+            map.terrainGrid.SetTerrain(below,
+                DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow"));
+            map.terrainGrid.SetFoundation(vanilla, TerrainDefOf.Bridge);
+            try
+            {
+                bool ordinaryProps = (bool)predicate.Invoke(
+                    bridgeLayer, new object[] { vanilla, map.terrainGrid });
+                context.Assert(ordinaryProps,
+                    "Ordinary Vanilla bridge props must remain untouched");
+            }
+            finally
+            {
+                map.terrainGrid.RemoveFoundation(vanilla);
+                map.terrainGrid.SetTerrain(below, TerrainDefOf.Soil);
+            }
+        }
+
         private static int CountArms(int mask)
         {
             int count = 0;
