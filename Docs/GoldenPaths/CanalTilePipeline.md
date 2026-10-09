@@ -1,5 +1,9 @@
 # Waterworks canal tile candidate pipeline
 
+**2026-10-09 update:** the author has selected a full 16-mask dry family. Its actual
+runtime integration and validation route is [CanalOverlayRendering.md](CanalOverlayRendering.md).
+The EW-only restriction below applies to the older debug candidate generator.
+
 This procedure is the default entry point for **connected Waterworks canal art candidates**. It converts the map-tile rule from a prose-only instruction into a deterministic generation/validation gate.
 
 It does **not** make a generated candidate production art. `Docs/Design.md` §8 and `Docs/GoldenPaths/VisualAcceptance.md` remain the visual authority. Author visual acceptance is still required before anything is promoted to `Art/Sources/` or `Textures/`.

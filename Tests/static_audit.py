@@ -386,7 +386,9 @@ terrain_defs = (root / "Defs/TerrainDefs/AMJW_Canals.xml").read_text(encoding="u
 assert "public sealed class SectionLayer_AMJW_Canal : SectionLayer" in canal_section
 assert "relevantChangeTypes = MapMeshFlagDefOf.Terrain" in canal_section
 assert "override void Regenerate()" in canal_section
-assert "CanalVisualMesh.Append(GetSubMesh(" in canal_section
+assert "CanalBedGeometry.Runs[mask]" in canal_section
+assert "ShaderDatabase.Transparent" in canal_section
+assert "canals.OriginalTerrainAt(cell)" in canal_section
 assert "grid.FoundationAt(cell) != null" in canal_section
 assert "FinalizeMesh(MeshParts.All)" in canal_section
 assert "public static void Append(LayerSubMesh submesh" in canal_mesh

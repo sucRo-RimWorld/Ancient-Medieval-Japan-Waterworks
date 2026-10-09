@@ -22,6 +22,14 @@ namespace AncientMedievalJapan.Waterworks
 
         public CanalMapComponent(Map map) : base(map) { }
 
+        // Rendering lookup only; never synthesize a restore record for old saves.
+        public TerrainDef OriginalTerrainAt(IntVec3 cell)
+        {
+            string name;
+            return originals.TryGetValue(map.cellIndices.CellToIndex(cell), out name)
+                ? DefDatabase<TerrainDef>.GetNamedSilentFail(name) : null;
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -260,6 +268,8 @@ namespace AncientMedievalJapan.Waterworks
         {
             return t.defName == "WaterShallow" || t.defName == "WaterDeep";
         }
+
+        public bool HasNaturalSourceAt(IntVec3 c) { return SourceAt(c); }
 
         private bool SourceAt(IntVec3 c)
         {

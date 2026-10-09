@@ -52,7 +52,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     for (int z = -8; z <= 8; z++) {
                         IntVec3 p = C(x,z);
                         foreach (Thing t in new List<Thing>(p.GetThingList(map)))
-                            if (t is Plant) t.Destroy(DestroyMode.Vanish);
+                            if (!(t is Pawn)) t.Destroy(DestroyMode.Vanish);
                         map.terrainGrid.SetTerrain(p, TerrainDefOf.Soil);
                     }
                 for (int x = 2; x <= 5; x++)
@@ -90,6 +90,10 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 context.Assert(renderLayer.subMeshes.Exists(s => s.finalized && s.verts.Count > 0),
                     "Narrow canal SectionLayer emitted no render geometry");
                 Find.CameraDriver.JumpToCurrentMapLoc(center);
+                Find.CameraDriver.SetRootSize(11f);
+                Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame +
+                    (12 - GenLocalDate.HourOfDay(map)) * 2500);
+                Find.TickManager.Pause();
                 output = Path.Combine(GenFilePaths.SaveDataFolderPath, "WaterworksVisual");
                 Directory.CreateDirectory(output);
                 });
@@ -117,10 +121,36 @@ namespace AncientMedievalJapan.Waterworks.E2E
             });
             await WaitFile("restored.png", context);
             await GameThread.Run(delegate {
+                // A separate actual-game gallery exercises every texture orientation
+                // and saved-ground lookup, without requiring a supplied isolated cell.
+                foreach (IntVec3 p in Channels) {
+                    if (map.terrainGrid.FoundationAt(p) != null) map.terrainGrid.RemoveFoundation(p);
+                    context.Require(canal.Fill(p), "Gallery reset failed at " + p);
+                }
+                Source(false);
+                string[] substrates = { "Soil", "Gravel", "SoilRich", "Soil" };
+                for (int x=-8; x<=8; x++) for (int z=-8; z<=8; z++)
+                    map.terrainGrid.SetTerrain(C(x,z), DefDatabase<TerrainDef>.GetNamed(
+                        substrates[Math.Min(3, Math.Max(0,(8-z)/4))]));
+                for (int mask=0; mask<16; mask++) {
+                    IntVec3 p=C(-6+(mask%4)*4,6-(mask/4)*4);
+                    context.Require(canal.Dig(p), "Gallery center " + mask);
+                    IntVec3[] dirs={IntVec3.North,IntVec3.East,IntVec3.South,IntVec3.West};
+                    for(int d=0;d<4;d++) if((mask&(1<<d))!=0)
+                        context.Require(canal.Dig(p+dirs[d]), "Gallery arm " + mask);
+                    context.Require(CanalVisualTopology.Mask(map,p)==mask, "Gallery mask " + mask);
+                    context.Require(canal.OriginalTerrainAt(p)!=null, "Gallery substrate " + mask);
+                }
+            });
+            await Task.Delay(1600);
+            await GameThread.Run(delegate { ScreenCapture.CaptureScreenshot(Path.Combine(output,"all16-dry.png")); });
+            await WaitFile("all16-dry.png", context);
+            await GameThread.Run(delegate {
                 WaterworksRenderProbe.Write(output, center);
                 File.WriteAllText(Path.Combine(output, "manifest.txt"),
                     "seed=AMJ-Waterworks-E2E\nmapSize=50\n" +
-                    "images=connected.png,disconnected.png,restored.png\n" +
+                    "images=connected.png,disconnected.png,restored.png,all16-dry.png\n" +
+                    "assembly=" + typeof(CanalMapComponent).Assembly.Location + "\n" +
                     "resolution=" + Screen.width + "x" + Screen.height + "\n" +
                     "cameraCenter=" + center + "\n");
             });

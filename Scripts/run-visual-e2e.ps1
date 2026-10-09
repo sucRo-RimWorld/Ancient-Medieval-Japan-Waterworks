@@ -9,7 +9,7 @@ $steamapps = (Resolve-Path (Join-Path $RimWorldDir '../..')).Path
 $pickleRoot = Join-Path $steamapps 'workshop/content/294100/3791648678'
 $quickRoot = Join-Path $steamapps 'workshop/content/294100/3793646067'
 $testMod = Join-Path $RimWorldDir 'Mods/AncientMedievalJapanWaterworks.VisualE2E'
-$results = Join-Path $root 'TestResults/Visual'
+$results = Join-Path $root ('TestResults/Visual/' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
 $save = Join-Path $results 'SaveData'
 $report = Join-Path $results 'Reports'
 $log = Join-Path $report 'Player.log'
@@ -26,16 +26,19 @@ Require ($LASTEXITCODE -eq 0) 'Quickstart build failed'
 & $dotnet build (Join-Path $root 'Tests/E2E/Steps.csproj') -c Release "-p:RimWorldDir=$RimWorldDir" "-p:PickleDll=$pickle"
 Require ($LASTEXITCODE -eq 0) 'Steps build failed'
 if (Test-Path $testMod) {
+  $resolvedTestMod = (Resolve-Path -LiteralPath $testMod).Path
+  Require ($resolvedTestMod -eq (Join-Path $RimWorldDir 'Mods/AncientMedievalJapanWaterworks.VisualE2E')) 'Unexpected test Mod path'
   $about = Join-Path $testMod 'About/About.xml'
   Require ((Test-Path $about) -and ((Get-Content $about -Raw) -match '<packageId>sucro.ancientmedievaljapan.waterworks.visuale2e</packageId>')) 'Refusing to remove unrelated mod'
   Remove-Item $testMod -Recurse -Force
 }
-if (Test-Path $results) { Remove-Item $results -Recurse -Force }
+Require (-not (Test-Path $results)) 'Fresh results directory required'
 foreach ($dir in @('About','Assemblies','Defs/ThingCategoryDefs','Pickle/Assemblies','Pickle/Features')) {
   $null = New-Item -ItemType Directory -Force -Path (Join-Path $testMod $dir)
 }
 $null = New-Item -ItemType Directory -Force -Path (Join-Path $save 'Config')
 $null = New-Item -ItemType Directory -Force -Path $report
+Set-Content -LiteralPath (Join-Path $root 'TestResults/latest-visual.txt') -Value $results
 Copy-Item (Join-Path $root 'Tests/E2E/VisualMod/About/About.xml') (Join-Path $testMod 'About/About.xml')
 Copy-Item (Join-Path $root 'Tests/E2E/VisualMod/Defs/ThingCategoryDefs/AMJW_VisualMarker.xml') (Join-Path $testMod 'Defs/ThingCategoryDefs')
 Copy-Item (Join-Path $root 'Tests/E2E/TestMod/Pickle/Features/waterworks-visual.feature') (Join-Path $testMod 'Pickle/Features')
@@ -65,7 +68,7 @@ $psi.WorkingDirectory=$RimWorldDir
 $psi.UseShellExecute=$false
 $psi.CreateNoWindow=$true
 $psi.WindowStyle=[System.Diagnostics.ProcessWindowStyle]::Hidden
-$psi.Arguments= @('-savedatafolder="' + $save + '"','-logFile "' + $log + '"','-pickle-run="waterworks-visual.feature"','-pickle-mode=fast','-pickle-report-dir="' + $report + '"','-pickle-no-browser','-pickle-run-timeout=8') -join ' '
+$psi.Arguments= @('-savedatafolder="' + $save + '"','-logFile "' + $log + '"','-pickle-run="waterworks-visual.feature"','-pickle-mode=fast','-pickle-report-dir="' + $report + '"','-pickle-no-browser','-pickle-run-timeout=8','-screen-fullscreen 0','-screen-width 1600','-screen-height 1200') -join ' '
 $process=New-Object System.Diagnostics.Process
 $process.StartInfo=$psi
 try {
@@ -87,7 +90,7 @@ if ($errors.Count -gt 0) {
  throw "[ERROR] Visual run produced $($errors.Count) runtime ERRORs"
 }
 $captures=Join-Path $save 'WaterworksVisual'
-foreach ($name in @('connected.png','disconnected.png','restored.png')) {
+foreach ($name in @('connected.png','disconnected.png','restored.png','all16-dry.png')) {
  $path=Join-Path $captures $name
  Require (Test-Path $path) "Screenshot missing: $path"
  $bytes=[System.IO.File]::ReadAllBytes($path)
@@ -95,5 +98,5 @@ foreach ($name in @('connected.png','disconnected.png','restored.png')) {
 }
 Require (Test-Path (Join-Path $captures 'manifest.txt')) 'Visual manifest missing'
 Require (Test-Path (Join-Path $captures 'render-api.txt')) 'Renderer API report missing'
-Write-Host "[OK] Visual Pickle 1/1, runtime ERROR=0, three PNG files saved: $captures"
+Write-Host "[OK] Visual Pickle 1/1, runtime ERROR=0, four PNG files saved: $captures"
 Write-Warning 'PNG collection does not establish visual acceptance; images require review.'
