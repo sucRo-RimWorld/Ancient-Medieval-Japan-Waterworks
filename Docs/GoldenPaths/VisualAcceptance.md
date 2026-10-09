@@ -41,7 +41,7 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 | VIS-02 | cardinal adjacency accepted, diagonals rejected | A one-cell terrain corridor appears as a **noticeably narrower excavated channel**, with surrounding banks; no full-cell river ribbon | OPEN |
 | VIS-03 | T/cross connectivity accepted | Straight, bend, T and cross shapes show no missing center, seam, broken corners or discontinuous water animation | OPEN |
 | VIS-04 | valid freshwater neighbor supplies canal | River/pond mouth has no misleading dry gap or abrupt water-edge artifact | OPEN |
-| VIS-05 | bridge foundation preserves connectivity | Bridge planks visually cover water; water does not draw above bridge, shimmer through it or spill beyond adjacent tiles | OPEN |
+| VIS-05 | Vanilla Bridge foundation preserves connectivity; BridgeProps are suppressed only for Canal+Bridge | The waterway uses the same plain board top for both E/W and N/S placements, with no dangling under-planks, exposed seams, ghost water or bridge rotation; ordinary non-canal bridges remain unchanged | OPEN |
 | VIS-06 | source removed / reconnected | Rebuilt wet↔dry state changes are visible without ghost water, stale mesh or retained wet shader effects | OPEN |
 | VIS-07 | Gravel/Soil restoration E2E passed | Filled terrain visually matches surrounding ground; no leftover rim/water artifact | OPEN |
 | VIS-08 | Original terrain DefName is available for representative diggable cells | Soil, Gravel and Rich Soil canal shoulders retain their respective surrounding texture/colors; wet/dry share silhouette; no universal brown square. Missing original records use a documented visual fallback; reloaded maps retain the mapping | OPEN |

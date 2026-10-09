@@ -140,6 +140,42 @@ for marker in (
     assert marker in component_source, marker
 assert "TicksGame %" not in component_source, "Periodic full-map polling is not permitted"
 
+# The normal Vanilla Bridge is still the only crossing; selectively remove
+# only its extra south-facing support plank from Waterworks canal cells.
+bridge = (root / "Source/CanalBridgeAppearance.cs").read_text(encoding="utf-8")
+for marker in (
+    "RimWorld.SectionLayer_BridgeProps",
+    "ShouldDrawPropsBelow",
+    "HarmonyMethod(",
+    "postfix:",
+    "terrGrid.FoundationAt(c) != TerrainDefOf.Bridge",
+    "terrGrid.TopTerrainAt(c)",
+    "ground == AMJW_Defs.AMJW_DugCanalDry",
+    "ground == AMJW_Defs.AMJW_DugCanalWet",
+    "__result = false",
+):
+    assert marker in bridge, marker
+assert "new Harmony(" in bridge and "StaticConstructorOnStartup" in bridge
+assert "SetFoundation" not in bridge and "SetTerrain" not in bridge
+assert "MapMeshDirty" not in bridge
+project = ET.parse(root / "Source/AncientMedievalJapanWaterworks.csproj").getroot()
+assert any(node.attrib.get("Include") == "Lib.Harmony.Ref" and
+           node.attrib.get("Version") == "2.3.3"
+           for node in project.iter("PackageReference"))
+assert [n.text for n in about.iter("packageId") if n.text == "brrainz.harmony"] == ["brrainz.harmony"]
+for runner in ("Scripts/run-visual-e2e.ps1", "Scripts/run-e2e.ps1", "Scripts/run-add-to-save-e2e.ps1"):
+    assert "brrainz.harmony" in (root / runner).read_text(encoding="utf-8")
+visual_steps = (root / "Tests/E2E/WaterworksVisualSteps.cs").read_text(encoding="utf-8")
+for marker in (
+    "AssertBridgeAppearance(context);",
+    'GetMethod("ShouldDrawPropsBelow"',
+    'context.Assert(!verticalCanalProps,',
+    'context.Assert(!horizontalCanalProps,',
+    'context.Assert(ordinaryProps,',
+    "RemoveFoundation(vanilla)",
+):
+    assert marker in visual_steps, marker
+
 # Natural ground can be designated through wild vegetation, but cultivated
 # crops are never silently cut and terrain replacement waits for clearing.
 assert "CanDig(IntVec3 c, bool allowWildPlants = false)" in component_source
