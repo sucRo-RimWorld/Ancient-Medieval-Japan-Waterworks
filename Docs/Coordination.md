@@ -397,3 +397,14 @@ Wet canals now use WaterMovingShallow's native TerrainWater material and waterDe
 Final private-desktop run TestResults/Visual/20261009-175524 passed 1/1 with runtime ERROR=0. The real-game test checks native surface/depth meshes during supply, disconnection and restoration, and records connected.png, disconnected.png, restored.png and all16-dry.png under SaveData/WaterworksVisual. Static checks verify complementary coverage with no dry shadow over water, unchanged PNGs and all 256 edge pairs. The earlier 7/7 core regression belongs to VIS-022; it was not rerun for this rendering-only correction. Normal user saves/configuration were preserved.
 
 Narrow-channel depth filtering can still differ visually from a broad source; exact RGB matching and animation behavior are not established by these still captures. No remote push, merge or publication occurred.
+
+### VIS-WATERWORKS-024 — plain board on Vanilla bridges over canals (2026-10-09)
+
+**Owner:** Waterworks bridge visual-only integration
+**Status:** IN PROGRESS — PR #7 OPEN, source prepared; Windows build, actual Pickle, screenshots and author appearance acceptance PENDING
+
+The author's loaded-game screenshots show a plain deck over the E/W canal but a visibly different additional hanging plank/support under the N/S canal bridge. The author specified retaining the ordinary **Bridge** build action, not adding any canal cover item, changing pathing/support, or creating/rotating assets: use the same plain board appearance at every connection shape and direction.
+
+PR [#7](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Waterworks/pull/7) implements a small scoped Harmony postfix against RimWorld 1.6's `SectionLayer_BridgeProps.ShouldDrawPropsBelow`: only a standard `TerrainDefOf.Bridge` foundation on AMJW wet/dry canal suppresses the additional hanging/southern props quad. The Vanilla bridge top graphic, all gameplay/graph/save mechanics and non-canal bridges are unchanged. Direct graphics-only mechanism is needed because the Vanilla props predicate provides no per-cell Def override. This introduces the standard Harmony Mod as a dependency and uses compile-only Lib.Harmony.Ref; no Harmony DLL is bundled. Formal truth: `Docs/Design.md` §8.0.7 and `Docs/GoldenPaths/CanalOverlayRendering.md`.
+
+PR-local E2E additions exercise Vanilla's patched predicate for horizontal and vertical canal bridges (expect no extra props) and a temporary non-canal bridge control (expect ordinary props). Metadata CI passed for PR head `da3644c4c5df4b95ed70cff4301ac6964c21799a`. **Do not merge PR #7 or claim a loaded-game pass yet**: Windows `Scripts/validate-source.ps1`, `Scripts/run-visual-isolated.ps1` Pickle 1/1, runtime ERROR=0 and comparison of connected/disconnected screenshots against the author's visual intent must be checked on that branch. Earlier 7/7 and visual 1/1 are evidence only for prior main. Steam publication remains on hold.
