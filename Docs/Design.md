@@ -482,6 +482,14 @@ water using complementary bed/bank geometry. Both surface and WaterDepth passes
 reuse the shallow-river materials; the depth pass targets Core's WaterDepth
 subcamera layer. No wet images are added, and dry appearance stays unchanged.
 
+### 8.0.7 Vanilla bridge board appearance on canals (2026-10-09)
+
+On a Waterworks canal (wet or dry), the **existing Vanilla Bridge foundation** remains the sole player-facing construction choice. Do not add a separate board cover, change its designation, rotate or replace its top texture, create a new TerrainDef, or modify connectivity, passability, material cost, support, or save data. One board appearance is used for straight, elbow, T, and cross shapes irrespective of direction.
+
+RimWorld 1.6's native `SectionLayer_BridgeProps` can generate a secondary hanging plank/support quad into the southern neighboring cell when a bridge is above a bridgeable canal. That extra underside, visible in the visual fixture's N/S bridge, makes it look different from the plain E/W bridge. Preserve the original `Bridge` top as the intended plain board and **suppress only this extra underside for `TerrainDefOf.Bridge` foundations directly over `AMJW_DugCanalDry` or `AMJW_DugCanalWet`**. Other Vanilla bridges and their underside graphics are unchanged.
+
+The private `ShouldDrawPropsBelow` check has no per-cell public graphical override; a narrow, version-checked Harmony postfix is used in `CanalBridgeAppearance`. Harmony becomes a required library Mod (no bundled Harmony DLL); no other third-party runtime dependency is added. If the engine method is absent, report an ERROR instead of changing all bridges. Preserve normal canal SectionLayer foundation suppression, and verify both directional bridge cells and an ordinary non-canal bridge in isolated render E2E. Final bridge appearance and no visible gap are subject to screenshot acceptance.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
