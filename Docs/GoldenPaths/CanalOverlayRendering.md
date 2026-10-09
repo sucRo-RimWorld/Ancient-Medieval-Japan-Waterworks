@@ -49,3 +49,9 @@ The subsequent native-water correction adds explicit live assertions for both
 water surface and WaterDepth submeshes appearing/disappearing with supply, and
 static coverage tests proving bed and wet-bank rectangles are disjoint and
 cover the complete cell. See current Coordination for its exact capture run.
+
+## Vanilla Bridge over a Waterworks canal
+
+The original bridge itself supplies the desired flat board surface. No copied game texture, new cover Def or rotated asset is needed. In RimWorld 1.6, `SectionLayer_BridgeProps.ShouldDrawPropsBelow` can add extra hanging plank imagery south of a bridge whose underlying canal is bridgeable. A specific Harmony postfix skips **only** that extra graphical part when the foundation is `TerrainDefOf.Bridge` and the cell's actual top terrain is one of the two Waterworks canals. The native bridge/foundation mechanics and other bridges are unchanged. This cosmetic patch requires the Harmony Mod (compile-only `Lib.Harmony.Ref`, not distributed as a DLL).
+
+Check the N/S and E/W bridges side-by-side in `connected.png` and `disconnected.png`, and ensure no extra lower plank remains on the canal immediately south of the vertical bridge. The isolated Pickle scenario also calls the actual patched Vanilla predicate on a bridge over canal and on a temporary non-canal bridge over water; it must return false and true, respectively. An E2E PASS is not author visual sign-off.
