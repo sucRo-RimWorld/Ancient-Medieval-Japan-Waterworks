@@ -1,82 +1,114 @@
+using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
 using Verse;
-
 namespace AncientMedievalJapan.Waterworks
 {
-    /// <summary>
-    /// 1.6 section-mesh prototype. Section discovers concrete SectionLayer
-    /// subclasses automatically. The gameplay terrain stays authoritative;
-    /// only the narrow bank and wet/dry channel are drawn here.
-    /// </summary>
     public sealed class SectionLayer_AMJW_Canal : SectionLayer
     {
-        private static Material bankMaterial;
-        private static Material wetMaterial;
-        private static Material dryMaterial;
-
+        private static readonly Material[] relief = new Material[16];
+        private static readonly Dictionary<TerrainDef, Material> grounds = new Dictionary<TerrainDef, Material>();
+        private static Material water;
+        private static Material waterDepth;
         public override bool Visible { get { return DebugViewSettings.drawTerrain; } }
-
         public SectionLayer_AMJW_Canal(Section section) : base(section)
+        { relevantChangeTypes = MapMeshFlagDefOf.Terrain; }
+        private static string Suffix(int m)
         {
-            relevantChangeTypes = MapMeshFlagDefOf.Terrain;
+            if (m == 0) return "Isolated";
+            return ((m & 1) != 0 ? "N" : "") + ((m & 2) != 0 ? "E" : "") +
+                ((m & 4) != 0 ? "S" : "") + ((m & 8) != 0 ? "W" : "");
         }
-
+        private static Material Relief(int mask)
+        {
+            if (relief[mask] == null)
+                relief[mask] = MaterialPool.MatFrom("Terrain/AMJW/Canal/AMJW_Canal_Dry_" +
+                    mask.ToString("00") + "_" + Suffix(mask), ShaderDatabase.Transparent);
+            return relief[mask];
+        }
+        private static Material Ground(TerrainDef def)
+        {
+            Material mat;
+            if (!grounds.TryGetValue(def, out mat))
+            {
+                mat = new Material(def.graphic.MatSingle);
+                mat.shader = ShaderDatabase.TerrainHard;
+                // Canal TerrainDefs use 2388/2389. Draw the restored substrate
+                // after their opaque base, before the water and relief passes.
+                mat.renderQueue = 2400;
+                grounds.Add(def, mat);
+            }
+            return mat;
+        }
         public override void Regenerate()
         {
             ClearSubMeshes(MeshParts.All);
             TerrainGrid grid = Map.terrainGrid;
-            // MaterialPool is main-thread only. Resolve lazily while regenerating.
-            if (bankMaterial == null)
-                bankMaterial = MaterialPool.MatFrom("Terrain/Surfaces/Soil",
-                    ShaderDatabase.TerrainHard, new Color(0.78f, 0.69f, 0.57f));
-            if (wetMaterial == null)
-                wetMaterial = MaterialPool.MatFrom("Terrain/Surfaces/WaterShallowRamp",
-                    ShaderDatabase.TerrainHard, new Color(0.81f, 0.91f, 1f));
-            if (dryMaterial == null)
-                dryMaterial = MaterialPool.MatFrom("Terrain/Surfaces/Soil",
-                    ShaderDatabase.TerrainHard, new Color(0.53f, 0.44f, 0.35f));
-            float bankAltitude = AltitudeLayer.TerrainScatter.AltitudeFor();
-            float channelAltitude = bankAltitude + 0.001f;
-
+            CanalMapComponent canals = Map.GetComponent<CanalMapComponent>();
+            if (water == null)
+            {
+                // Use the same WaterShallowRamp, shader and depth pass as Core rivers.
+                TerrainDef river = DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow");
+                water = new Material(river.graphic.MatSingle);
+                water.renderQueue = 2401;
+                waterDepth = river.waterDepthMaterial;
+            }
+            float altitude = AltitudeLayer.TerrainScatter.AltitudeFor();
             foreach (IntVec3 cell in section.CellRect)
             {
                 TerrainDef terrain = grid.TopTerrainAt(cell);
                 bool wet = terrain == AMJW_Defs.AMJW_DugCanalWet;
-                if (!wet && terrain != AMJW_Defs.AMJW_DugCanalDry)
-                    continue;
-                // The Vanilla bridge/foundation remains responsible for covering
-                // a canal. Never draw a canal over its foundation or props.
-                if (grid.FoundationAt(cell) != null)
-                    continue;
-
+                if (!wet && terrain != AMJW_Defs.AMJW_DugCanalDry) continue;
+                if (grid.FoundationAt(cell) != null) continue;
                 int mask = CanalVisualTopology.Mask(Map, cell);
                 if (wet)
-                    mask = ConnectNaturalWaterAtMouth(mask, cell);
-                Vector3 middle = new Vector3(cell.x + 0.5f, 0f, cell.z + 0.5f);
-                CanalVisualMesh.Append(GetSubMesh(bankMaterial), mask,
-                    CanalVisualTopology.HalfBank, middle, bankAltitude);
-                CanalVisualMesh.Append(GetSubMesh(wet ? wetMaterial : dryMaterial), mask,
-                    CanalVisualTopology.HalfChannel, middle, channelAltitude);
+                    foreach (IntVec3 direction in GenAdj.CardinalDirections)
+                    {
+                        if (!canals.HasNaturalSourceAt(cell + direction)) continue;
+                        if (direction == IntVec3.North) mask |= 1;
+                        if (direction == IntVec3.East) mask |= 2;
+                        if (direction == IntVec3.South) mask |= 4;
+                        if (direction == IntVec3.West) mask |= 8;
+                    }
+                TerrainDef original = canals.OriginalTerrainAt(cell) ?? TerrainDefOf.Soil;
+                Quad(GetSubMesh(Ground(original)), cell, 0, 0, 1, 1, altitude, false);
+                if (wet)
+                {
+                    LayerSubMesh depth = GetSubMesh(waterDepth);
+                    depth.renderLayer = SubcameraDefOf.WaterDepth.LayerId;
+                    int[] runs = CanalBedGeometry.Runs[mask];
+                    for (int i = 0; i < runs.Length; i += 4)
+                    {
+                        Quad(GetSubMesh(water), cell, runs[i]/128f, 1-runs[i+3]/128f,
+                            runs[i+1]/128f, 1-runs[i+2]/128f, altitude+.002f, false);
+                        Quad(depth, cell, runs[i]/128f, 1-runs[i+3]/128f,
+                            runs[i+1]/128f, 1-runs[i+2]/128f, altitude+.002f, false);
+                    }
+                    // Preserve the accepted image, but do not paint dry-floor shadow
+                    // over water. The bank mesh is the exact complement of the bed.
+                    int[] banks = CanalBedGeometry.Banks[mask];
+                    for (int i = 0; i < banks.Length; i += 4)
+                        Quad(GetSubMesh(Relief(mask)), cell, banks[i]/128f, 1-banks[i+3]/128f,
+                            banks[i+1]/128f, 1-banks[i+2]/128f, altitude+.004f, true);
+                }
+                else Quad(GetSubMesh(Relief(mask)), cell, 0, 0, 1, 1, altitude+.004f, true);
             }
             FinalizeMesh(MeshParts.All);
         }
-
-        private int ConnectNaturalWaterAtMouth(int mask, IntVec3 cell)
+        private static void Quad(LayerSubMesh mesh, IntVec3 cell, float x0, float z0,
+            float x1, float z1, float y, bool localUv)
         {
-            if (IsMovingFreshWater(cell + IntVec3.North)) mask |= CanalVisualTopology.North;
-            if (IsMovingFreshWater(cell + IntVec3.East)) mask |= CanalVisualTopology.East;
-            if (IsMovingFreshWater(cell + IntVec3.South)) mask |= CanalVisualTopology.South;
-            if (IsMovingFreshWater(cell + IntVec3.West)) mask |= CanalVisualTopology.West;
-            return mask;
-        }
-
-        private bool IsMovingFreshWater(IntVec3 cell)
-        {
-            if (!cell.InBounds(Map))
-                return false;
-            string name = Map.terrainGrid.TopTerrainAt(cell).defName;
-            return name == "WaterMovingShallow" || name == "WaterMovingChestDeep";
+            int i = mesh.verts.Count;
+            float[] xs = { x0, x0, x1, x1 }, zs = { z0, z1, z1, z0 };
+            for (int n = 0; n < 4; n++)
+            {
+                mesh.verts.Add(new Vector3(cell.x+xs[n],y,cell.z+zs[n]));
+                mesh.uvs.Add(localUv ? new Vector3(xs[n],zs[n],0) :
+                    new Vector3(cell.x+xs[n],cell.z+zs[n],0));
+                mesh.colors.Add(new Color32(255,255,255,255));
+            }
+            mesh.tris.Add(i); mesh.tris.Add(i+1); mesh.tris.Add(i+2);
+            mesh.tris.Add(i); mesh.tris.Add(i+2); mesh.tris.Add(i+3);
         }
     }
 }

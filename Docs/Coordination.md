@@ -375,3 +375,25 @@ Added a repository-owned candidate pipeline so the connected-tile rule is no lon
 Local implementation check: the first candidate run correctly failed its mechanical gate because antialiasing left mismatched edge/containment pixels; the generator was corrected and the regression test then passed. This is evidence that the stop gate actually blocks bad output rather than merely documenting a preference.
 
 The current generated water/relief is debug material only and is not accepted art. No candidate PNG, `Art/Sources` master, production `Textures`, renderer source, gameplay code, save data, Workshop payload or Steam metadata is changed by this tooling commit. `VIS-WATERWORKS-019/020` remain the authority for prior unapproved art and the shared connected-tile procedure; `Docs/Design.md` §8 and `Docs/GoldenPaths/VisualAcceptance.md` remain the visual acceptance authority.
+
+### VIS-WATERWORKS-022 — accepted 16-mask relief integrated and captured (2026-10-09)
+
+**Owner:** Waterworks rendering
+**Status:** LOCAL IMPLEMENTATION / RENDERED TEST PASS; author in-game visual review and publication remain separate.
+
+Author selected the original 16-mask dry set (not the narrowed experiment), and requested existing Core water beneath common relief with no wet PNGs. Exact masters/derivatives now live under Art/Sources and Textures/Terrain/AMJW/Canal. Design section 8.0.6 and Docs/GoldenPaths/CanalOverlayRendering.md are the current source of truth. Earlier VIS-001..021 iteration records are superseded by those sources and retained in Git history; the old EW debug generator is not the selected runtime asset path.
+
+SectionLayer redraws stored original terrain, clips Core WaterShallowRamp to generated bed geometry, then overlays the accepted transparent relief. A detected opaque-base draw-order failure was repaired before final captures. The final private-desktop visual run TestResults/Visual/20261009-102859 passed 1/1 with runtime ERROR=0, producing connected/disconnected/restored and all16-dry captures on real terrain. Core regression passed 7/7 with runtime ERROR=0 including construction, 2x2 exclusion and save/reload. Asset checks passed exact hashes, PNG integrity and 256 compatible border comparisons. Tests use separate profiles; no normal save/config edits.
+
+The initial capture above used a simplified water material; VIS-023 supersedes its wet rendering. Historical per-cell tint/pollution reproduction and Workshop publication are not claimed. Current work is on codex/canal-overlay-render; no remote push/merge is implied by this local record.
+
+### VIS-WATERWORKS-023 — native water surface without dry floor shadow (2026-10-09)
+
+**Owner:** Waterworks rendering
+**Status:** LOCAL IMPLEMENTATION / RENDERED TEST PASS.
+
+Wet canals now use WaterMovingShallow's native TerrainWater material and waterDepthMaterial on the WaterDepth subcamera layer. The accepted relief is restricted to the complement of the bed while wet, so its dark dry floor cannot tint the water. Dry canals retain the complete accepted image; all 16 PNG hashes remain unchanged and no wet images were added. Generated rectangles merge identical spans without changing covered pixels; the largest geometry has 28 quads, below the vertex limit even across a full 17x17 section.
+
+Final private-desktop run TestResults/Visual/20261009-175524 passed 1/1 with runtime ERROR=0. The real-game test checks native surface/depth meshes during supply, disconnection and restoration, and records connected.png, disconnected.png, restored.png and all16-dry.png under SaveData/WaterworksVisual. Static checks verify complementary coverage with no dry shadow over water, unchanged PNGs and all 256 edge pairs. The earlier 7/7 core regression belongs to VIS-022; it was not rerun for this rendering-only correction. Normal user saves/configuration were preserved.
+
+Narrow-channel depth filtering can still differ visually from a broad source; exact RGB matching and animation behavior are not established by these still captures. No remote push, merge or publication occurred.

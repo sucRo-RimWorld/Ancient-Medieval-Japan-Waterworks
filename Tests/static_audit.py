@@ -42,7 +42,7 @@ for td in defs.values():
     assert td.findtext("color") == "(1, 1, 1)"
     assert td.findtext("edgeType") == "FadeRough"
     assert td.find("waterDepthShader") is None
-assert "Terrain/Surfaces/WaterShallowRamp" in (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
+assert "river.graphic.MatSingle" in (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
 assert not any(elem.find("holdSnow") is not None for elem in defs.values())
 assert defs["AMJW_DugCanalWet"].findtext("holdSnowOrSand") == "false"
 source = "\n".join(p.read_text(encoding="utf-8") for p in (root / "Source").glob("*.cs"))
@@ -386,7 +386,9 @@ terrain_defs = (root / "Defs/TerrainDefs/AMJW_Canals.xml").read_text(encoding="u
 assert "public sealed class SectionLayer_AMJW_Canal : SectionLayer" in canal_section
 assert "relevantChangeTypes = MapMeshFlagDefOf.Terrain" in canal_section
 assert "override void Regenerate()" in canal_section
-assert "CanalVisualMesh.Append(GetSubMesh(" in canal_section
+assert "CanalBedGeometry.Runs[mask]" in canal_section
+assert "ShaderDatabase.Transparent" in canal_section
+assert "canals.OriginalTerrainAt(cell)" in canal_section
 assert "grid.FoundationAt(cell) != null" in canal_section
 assert "FinalizeMesh(MeshParts.All)" in canal_section
 assert "public static void Append(LayerSubMesh submesh" in canal_mesh

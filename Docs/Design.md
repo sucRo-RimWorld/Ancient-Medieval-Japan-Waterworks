@@ -463,6 +463,25 @@ The author proposed examining Medieval Overhaul (MO) rather than continuing repe
 
 **Status:** architecture **selected**; final assets and live engine alpha/depth blending **not yet validated**. No source change is implied by adopting this design.
 
+### 8.0.6 Accepted dry-overlay integration (2026-10-09)
+
+The author selected the original 16-mask 128px dry overlay set, approximately 40%
+cell-width shoulders and a 5px screen-down bed offset. The later 60%-width
+experiment is rejected. Preserve these exact files rather than regenerate them.
+The author also chose existing Core water textures beneath the shared relief,
+with no independent wet sprites. Bed geometry comes from the same contour that
+produced the accepted dry art. Original saved TerrainDef material is explicitly
+drawn first; foundations suppress the canal overlay. See
+[CanalOverlayRendering](GoldenPaths/CanalOverlayRendering.md) for implementation,
+source preservation, isolated rendered tests and remaining limitations. This
+supersedes the old unaccepted rectangle-only rendering prototype and EW-only
+candidate restriction for the selected asset family, without changing gameplay.
+
+The follow-up native-water correction excludes dry-floor shadow over supplied
+water using complementary bed/bank geometry. Both surface and WaterDepth passes
+reuse the shallow-river materials; the depth pass targets Core's WaterDepth
+subcamera layer. No wet images are added, and dry appearance stays unchanged.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.

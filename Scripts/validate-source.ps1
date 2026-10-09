@@ -26,6 +26,8 @@ $python = Get-Command python -ErrorAction SilentlyContinue
 if (-not $python) { throw "Python 3 is required for the Waterworks static audit." }
 & $python.Source (Join-Path $root "Tests/static_audit.py")
 if ($LASTEXITCODE -ne 0) { throw "Waterworks static audit failed (exit $LASTEXITCODE)." }
+& $python.Source (Join-Path $root "Tests/test_canal_assets.py")
+if ($LASTEXITCODE -ne 0) { throw "Waterworks canal asset audit failed." }
 
 # Explicit -RimWorldDir overrides the environment. Otherwise, infer the
 # game from the checkout's usual <RimWorld>/Mods/<mod> folder structure.

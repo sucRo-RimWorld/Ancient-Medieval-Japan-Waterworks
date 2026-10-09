@@ -1,0 +1,124 @@
+{
+  "status": "PASS",
+  "tile_count": 16,
+  "size": [
+    128,
+    128
+  ],
+  "format": "RGBA PNG",
+  "bitmask": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "bed_offset_screen_pixels": [
+    0,
+    5.0
+  ],
+  "exact_opposite_edge_checks": 256,
+  "connected_beds": 16,
+  "unique_images": 16,
+  "source_unchanged": true,
+  "runtime_integrated": false,
+  "art_status": "review",
+  "preview_background": "illustrative flat colour, not actual game ground",
+  "files": [
+    {
+      "mask": 0,
+      "connections": "Isolated",
+      "file": "PNG/AMJW_Canal_Dry_00_Isolated.png",
+      "sha256": "b9f0e4c5618491014781c4bbdb9ab7c8da8b7bb44afa04a9abcf2561af6521ce"
+    },
+    {
+      "mask": 1,
+      "connections": "N",
+      "file": "PNG/AMJW_Canal_Dry_01_N.png",
+      "sha256": "d99c01d992f6f7dbd2aafffcde1fde6cb4870fdbb3c5965117bb14e99b34acb6"
+    },
+    {
+      "mask": 2,
+      "connections": "E",
+      "file": "PNG/AMJW_Canal_Dry_02_E.png",
+      "sha256": "9d1307c7fd00a738e83ebf27584e516cabe3ff6a09f086bb0520345cc52a336a"
+    },
+    {
+      "mask": 3,
+      "connections": "NE",
+      "file": "PNG/AMJW_Canal_Dry_03_NE.png",
+      "sha256": "f5a1c50d3da00ebaa6c56bd7b839d174becaecacedca8a1723fb39856e74e713"
+    },
+    {
+      "mask": 4,
+      "connections": "S",
+      "file": "PNG/AMJW_Canal_Dry_04_S.png",
+      "sha256": "703d477abb39f5a261c70c17b221712f4aa445a9994a9101a3fdd03c907b317d"
+    },
+    {
+      "mask": 5,
+      "connections": "NS",
+      "file": "PNG/AMJW_Canal_Dry_05_NS.png",
+      "sha256": "f63dfaebff7c42fa977c7c0bbd93fe20b3a567764731ade20473e56b462d7a28"
+    },
+    {
+      "mask": 6,
+      "connections": "ES",
+      "file": "PNG/AMJW_Canal_Dry_06_ES.png",
+      "sha256": "b1b32f9008a7d1d43f0e42071b873d4f3a33f85d21f271174f238813ccd94c7e"
+    },
+    {
+      "mask": 7,
+      "connections": "NES",
+      "file": "PNG/AMJW_Canal_Dry_07_NES.png",
+      "sha256": "0a178de27a022ab27d8a5d06f7fbd5e22e48e3381ca68e86235b9ef8a109c15c"
+    },
+    {
+      "mask": 8,
+      "connections": "W",
+      "file": "PNG/AMJW_Canal_Dry_08_W.png",
+      "sha256": "3cc610701687c6b2d04f422c5fec6f8aa8f6b6954d312489466b0f107aa72303"
+    },
+    {
+      "mask": 9,
+      "connections": "NW",
+      "file": "PNG/AMJW_Canal_Dry_09_NW.png",
+      "sha256": "d48bb0ffc95370b8d5b81985118f65ce5a05b938049f17416100797aa6290a09"
+    },
+    {
+      "mask": 10,
+      "connections": "EW",
+      "file": "PNG/AMJW_Canal_Dry_10_EW.png",
+      "sha256": "aa51ac06aedd71193f7e3f339b607d5720dc203b4f7f7f99815a56b0378b14f5"
+    },
+    {
+      "mask": 11,
+      "connections": "NEW",
+      "file": "PNG/AMJW_Canal_Dry_11_NEW.png",
+      "sha256": "d3e7424f640430d7adc17e49b93637e606738647cf03746a79bf50560cd11a26"
+    },
+    {
+      "mask": 12,
+      "connections": "SW",
+      "file": "PNG/AMJW_Canal_Dry_12_SW.png",
+      "sha256": "d21fe4335a42768ca2875f6f2b212a5b3f1ce4a7acb7bab214ce4ff7e6d77efa"
+    },
+    {
+      "mask": 13,
+      "connections": "NSW",
+      "file": "PNG/AMJW_Canal_Dry_13_NSW.png",
+      "sha256": "0a03d4e9f49a727239e5db97b81c8c0cc57766e858856185e98a3e1b89588278"
+    },
+    {
+      "mask": 14,
+      "connections": "ESW",
+      "file": "PNG/AMJW_Canal_Dry_14_ESW.png",
+      "sha256": "f1c3716e6d76dd72950d4d7c35a60db9feee70fef49925a8c1e71c32b1192138"
+    },
+    {
+      "mask": 15,
+      "connections": "NESW",
+      "file": "PNG/AMJW_Canal_Dry_15_NESW.png",
+      "sha256": "166fa97db5660620778bed8e4a4ca185ab54556bc33727f505f66953ad5c000c"
+    }
+  ]
+}

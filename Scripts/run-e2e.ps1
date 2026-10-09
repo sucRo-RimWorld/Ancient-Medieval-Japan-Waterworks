@@ -35,13 +35,17 @@ Check ($LASTEXITCODE -eq 0) 'E2E Pickle steps build failed.'
 
 # Only delete the known E2E mod; refuse to erase a different existing folder.
 if (Test-Path -LiteralPath $testMod) {
+    Check ((Resolve-Path -LiteralPath $testMod).Path -eq (Join-Path $RimWorldDir 'Mods/AncientMedievalJapanWaterworks.E2E')) 'Unexpected test Mod path.'
     $about = Join-Path $testMod 'About/About.xml'
     Check ((Test-Path $about) -and
         ((Get-Content -LiteralPath $about -Raw) -match '<packageId>sucro.ancientmedievaljapan.waterworks.e2e</packageId>')) 'Refusing to replace an unrelated Mods folder.'
     Remove-Item -LiteralPath $testMod -Recurse -Force
 }
 foreach ($p in @($save, $report)) {
-    if (Test-Path -LiteralPath $p) { Remove-Item -LiteralPath $p -Recurse -Force }
+    if (Test-Path -LiteralPath $p) {
+        Check ((Resolve-Path -LiteralPath $p).Path.StartsWith($results + [IO.Path]::DirectorySeparatorChar)) 'Unexpected test result path.'
+        Move-Item -LiteralPath $p -Destination ($p + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    }
 }
 foreach ($p in @(
     (Join-Path $testMod 'About'),
