@@ -176,6 +176,18 @@ namespace AncientMedievalJapan.Waterworks.E2E
             c.Assert(map.terrainGrid.TopTerrainAt(C(-4,-5)).defName == "AMJW_DugCanalDry", "Isolated dry section");
             c.Assert(map.terrainGrid.FoundationAt(C(-2,0)) == TerrainDefOf.Bridge, "Trunk bridge");
             c.Assert(map.terrainGrid.FoundationAt(C(0,2)) == TerrainDefOf.Bridge, "Branch bridge");
+            Section section = map.mapDrawer.SectionAt(C(0,0));
+            SectionLayer layer = section.GetLayer(typeof(SectionLayer_AMJW_Canal));
+            section.RegenerateSingleLayer(layer);
+            TerrainDef river = DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow");
+            bool hasDepth = layer.subMeshes.Exists(s => s.finalized && !s.disabled &&
+                s.verts.Count > 0 && s.renderLayer == SubcameraDefOf.WaterDepth.LayerId &&
+                s.material == river.waterDepthMaterial);
+            bool hasSurface = layer.subMeshes.Exists(s => s.finalized && !s.disabled &&
+                s.verts.Count > 0 && s.material.shader == river.graphic.MatSingle.shader &&
+                s.material.mainTexture == river.graphic.MatSingle.mainTexture);
+            c.Assert(hasDepth == supplied, "Canal native river depth follows supply");
+            c.Assert(hasSurface == supplied, "Canal native river surface follows supply");
         }
         private static async Task WaitFile(string file, PickleContext c)
         {

@@ -9,6 +9,7 @@ namespace AncientMedievalJapan.Waterworks
         private static readonly Material[] relief = new Material[16];
         private static readonly Dictionary<TerrainDef, Material> grounds = new Dictionary<TerrainDef, Material>();
         private static Material water;
+        private static Material waterDepth;
         public override bool Visible { get { return DebugViewSettings.drawTerrain; } }
         public SectionLayer_AMJW_Canal(Section section) : base(section)
         { relevantChangeTypes = MapMeshFlagDefOf.Terrain; }
@@ -46,9 +47,11 @@ namespace AncientMedievalJapan.Waterworks
             CanalMapComponent canals = Map.GetComponent<CanalMapComponent>();
             if (water == null)
             {
-                water = new Material(MaterialPool.MatFrom("Terrain/Surfaces/WaterShallowRamp",
-                    ShaderDatabase.TerrainHard, DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow").color));
+                // Use the same WaterShallowRamp, shader and depth pass as Core rivers.
+                TerrainDef river = DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow");
+                water = new Material(river.graphic.MatSingle);
                 water.renderQueue = 2401;
+                waterDepth = river.waterDepthMaterial;
             }
             float altitude = AltitudeLayer.TerrainScatter.AltitudeFor();
             foreach (IntVec3 cell in section.CellRect)
@@ -71,12 +74,24 @@ namespace AncientMedievalJapan.Waterworks
                 Quad(GetSubMesh(Ground(original)), cell, 0, 0, 1, 1, altitude, false);
                 if (wet)
                 {
+                    LayerSubMesh depth = GetSubMesh(waterDepth);
+                    depth.renderLayer = SubcameraDefOf.WaterDepth.LayerId;
                     int[] runs = CanalBedGeometry.Runs[mask];
                     for (int i = 0; i < runs.Length; i += 4)
+                    {
                         Quad(GetSubMesh(water), cell, runs[i]/128f, 1-runs[i+3]/128f,
                             runs[i+1]/128f, 1-runs[i+2]/128f, altitude+.002f, false);
+                        Quad(depth, cell, runs[i]/128f, 1-runs[i+3]/128f,
+                            runs[i+1]/128f, 1-runs[i+2]/128f, altitude+.002f, false);
+                    }
+                    // Preserve the accepted image, but do not paint dry-floor shadow
+                    // over water. The bank mesh is the exact complement of the bed.
+                    int[] banks = CanalBedGeometry.Banks[mask];
+                    for (int i = 0; i < banks.Length; i += 4)
+                        Quad(GetSubMesh(Relief(mask)), cell, banks[i]/128f, 1-banks[i+3]/128f,
+                            banks[i+1]/128f, 1-banks[i+2]/128f, altitude+.004f, true);
                 }
-                Quad(GetSubMesh(Relief(mask)), cell, 0, 0, 1, 1, altitude+.004f, true);
+                else Quad(GetSubMesh(Relief(mask)), cell, 0, 0, 1, 1, altitude+.004f, true);
             }
             FinalizeMesh(MeshParts.All);
         }

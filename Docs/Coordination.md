@@ -221,4 +221,15 @@ Author selected the original 16-mask dry set (not the narrowed experiment), and 
 
 SectionLayer redraws stored original terrain, clips Core WaterShallowRamp to generated bed geometry, then overlays the accepted transparent relief. A detected opaque-base draw-order failure was repaired before final captures. The final private-desktop visual run TestResults/Visual/20261009-102859 passed 1/1 with runtime ERROR=0, producing connected/disconnected/restored and all16-dry captures on real terrain. Core regression passed 7/7 with runtime ERROR=0 including construction, 2x2 exclusion and save/reload. Asset checks passed exact hashes, PNG integrity and 256 compatible border comparisons. Tests use separate profiles; no normal save/config edits.
 
-No full animated river-depth shader, historical per-cell tint/pollution reproduction or Workshop publication is claimed. Current work is on codex/canal-overlay-render; no remote push/merge is implied by this local record.
+The initial capture above used a simplified water material; VIS-023 supersedes its wet rendering. Historical per-cell tint/pollution reproduction and Workshop publication are not claimed. Current work is on codex/canal-overlay-render; no remote push/merge is implied by this local record.
+
+### VIS-WATERWORKS-023 — native water surface without dry floor shadow (2026-10-09)
+
+**Owner:** Waterworks rendering
+**Status:** LOCAL IMPLEMENTATION / RENDERED TEST PASS.
+
+Wet canals now use WaterMovingShallow's native TerrainWater material and waterDepthMaterial on the WaterDepth subcamera layer. The accepted relief is restricted to the complement of the bed while wet, so its dark dry floor cannot tint the water. Dry canals retain the complete accepted image; all 16 PNG hashes remain unchanged and no wet images were added. Generated rectangles merge identical spans without changing covered pixels; the largest geometry has 28 quads, below the vertex limit even across a full 17x17 section.
+
+Final private-desktop run TestResults/Visual/20261009-175524 passed 1/1 with runtime ERROR=0. The real-game test checks native surface/depth meshes during supply, disconnection and restoration, and records connected.png, disconnected.png, restored.png and all16-dry.png under SaveData/WaterworksVisual. Static checks verify complementary coverage with no dry shadow over water, unchanged PNGs and all 256 edge pairs. The earlier 7/7 core regression belongs to VIS-022; it was not rerun for this rendering-only correction. Normal user saves/configuration were preserved.
+
+Narrow-channel depth filtering can still differ visually from a broad source; exact RGB matching and animation behavior are not established by these still captures. No remote push, merge or publication occurred.

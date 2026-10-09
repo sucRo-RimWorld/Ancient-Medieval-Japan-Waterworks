@@ -42,7 +42,7 @@ for td in defs.values():
     assert td.findtext("color") == "(1, 1, 1)"
     assert td.findtext("edgeType") == "FadeRough"
     assert td.find("waterDepthShader") is None
-assert "Terrain/Surfaces/WaterShallowRamp" in (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
+assert "river.graphic.MatSingle" in (root / "Source/SectionLayer_AMJW_Canal.cs").read_text(encoding="utf-8")
 assert not any(elem.find("holdSnow") is not None for elem in defs.values())
 assert defs["AMJW_DugCanalWet"].findtext("holdSnowOrSand") == "false"
 source = "\n".join(p.read_text(encoding="utf-8") for p in (root / "Source").glob("*.cs"))

@@ -10,15 +10,21 @@ all 16 hashes, PNG integrity and 256 compatible edge comparisons. The old EW deb
 pipeline is historical tooling, not the selected production texture exporter.
 
 `SectionLayer_AMJW_Canal` explicitly draws saved original terrain, followed by
-Core's WaterShallowRamp clipped to generated bed rectangles, followed by the shared
-transparent relief. No wet PNG is generated. Queues 2400/2401 place substrate and
+Core's native shallow-river material clipped to generated bed rectangles, followed
+by relief on the exact complement of the wet bed. Dry cells retain the complete
+accepted image; wet cells omit its dry-floor shadow. No wet PNG is generated.
+Queues 2400/2401 place substrate and
 water after the canal TerrainDefs' 2388/2389 base. Relief uses Map/Transparent.
 Covered cells skip the overlay so Vanilla foundations/bridges remain above canals.
 Terrain-change invalidation, canal state, saved metadata and gameplay are preserved.
 
-The water material uses TerrainHard with the existing Core texture; it is not the
-full river depth/flow shader and no animated-flow claim is made. Original TerrainDef
-appearance is restored, not historical per-cell tint/pollution. Missing records use
+The water surface clones `WaterMovingShallow.graphic.MatSingle`, preserving Core's
+water shader and WaterShallowRamp. Its matching `waterDepthMaterial` renders the
+same clipped bed on `SubcameraDefOf.WaterDepth.LayerId`, just as Core Watergen
+does for natural water. No artificial darkening or new wet textures are used.
+Width-dependent depth filtering can still make a narrow canal look different
+from a broad water source; this is not a guarantee of identical screen RGB.
+Original TerrainDef appearance is restored, not historical per-cell tint/pollution. Missing records use
 Soil only for drawing, never for fabricated save restoration.
 
 Run `Scripts/validate-source.ps1`, then `Scripts/run-visual-isolated.ps1` on Windows.
@@ -35,6 +41,11 @@ runtime ERROR=0. Water is visible only while supplied, bridges cover it, and the
 gallery shows all 16 center masks. These are local loaded-game checks, not
 Workshop publication or automatic author aesthetic acceptance.
 
-The same built production source also passed the seven core scenarios in
+The preceding implementation also passed the seven core scenarios in
 `TestResults/E2E/Reports/summary.json`, runtime ERROR=0, including the no-2x2
 width rule, standing-water threshold, actual construction jobs and disk save/reload.
+
+The subsequent native-water correction adds explicit live assertions for both
+water surface and WaterDepth submeshes appearing/disappearing with supply, and
+static coverage tests proving bed and wet-bank rectangles are disjoint and
+cover the complete cell. See current Coordination for its exact capture run.

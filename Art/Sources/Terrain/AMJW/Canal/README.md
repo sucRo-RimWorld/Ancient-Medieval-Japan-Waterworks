@@ -15,5 +15,7 @@ its contour functions; Python, NumPy and Pillow are required. This adapter does 
 modify the accepted images. The generated pixel runs exactly reconstruct the bed.
 
 No water sprite is shipped. The renderer clips the existing Core
-`Terrain/Surfaces/WaterShallowRamp` to the bed mesh and overlays the same dry relief.
+`Terrain/Surfaces/WaterShallowRamp` with Core's water/depth shaders to the bed mesh.
+Wet cells draw the same accepted relief only outside that bed, removing the dry
+floor shadow without changing any accepted image bytes. Dry cells draw it whole.
 Keep this development source directory out of Workshop payloads.

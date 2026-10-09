@@ -477,6 +477,11 @@ source preservation, isolated rendered tests and remaining limitations. This
 supersedes the old unaccepted rectangle-only rendering prototype and EW-only
 candidate restriction for the selected asset family, without changing gameplay.
 
+The follow-up native-water correction excludes dry-floor shadow over supplied
+water using complementary bed/bank geometry. Both surface and WaterDepth passes
+reuse the shallow-river materials; the depth pass targets Core's WaterDepth
+subcamera layer. No wet images are added, and dry appearance stays unchanged.
+
 ### 8.1 State transitions
 
 - Digging completes as a canal cell, then the network recalculates.
