@@ -16,6 +16,10 @@ Feature: Waterworks independent canal core
     Then standing ponds use the nine cell freshwater threshold
 
   @quickstart:WaterworksQuickstart @timeout:100
+  Scenario: Mud and Marsh allow excavation without becoming freshwater sources
+    Then Mud and Marsh allow excavation but are not natural freshwater sources
+
+  @quickstart:WaterworksQuickstart @timeout:100
   Scenario: Vanilla bridge preserves canal flow and terrain restoration
     Then Vanilla bridge preserves water and gravel restoration
 
