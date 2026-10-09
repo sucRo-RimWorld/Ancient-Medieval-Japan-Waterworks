@@ -131,6 +131,7 @@ $required = @(
     'Four-direction canal branches connect and disconnect',
     'Canal width stays one cell',
     'Standing freshwater requires nine adjacent cells',
+    'Mud and Marsh allow excavation without becoming freshwater sources',
     'Vanilla bridge preserves canal flow and terrain restoration',
     'Construction pawn completes real dig and fill jobs',
     'Save and reload restores canal supply and original ground'
