@@ -37,22 +37,28 @@ Prepare a straight supplied canal from a natural river, a 90-degree bend, a T-ju
 
 | ID | Automated state prerequisite | Visual acceptance | Outcome |
 | --- | --- | --- | --- |
-| VIS-01 | wet/dry Defs load; supplied terrain switched | Wet and dry are unambiguous in normal map view, without debug overlays | OPEN |
-| VIS-02 | cardinal adjacency accepted, diagonals rejected | A one-cell terrain corridor appears as a **noticeably narrower excavated channel**, with surrounding banks; no full-cell river ribbon | OPEN |
-| VIS-03 | T/cross connectivity accepted | Straight, bend, T and cross shapes show no missing center, seam, broken corners or discontinuous water animation | OPEN |
-| VIS-04 | valid freshwater neighbor supplies canal | River/pond mouth has no misleading dry gap or abrupt water-edge artifact | OPEN |
+| VIS-01 | wet/dry Defs load; supplied terrain switched | Wet and dry are unambiguous in normal map view, without debug overlays | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+| VIS-02 | cardinal adjacency accepted, diagonals rejected | A one-cell terrain corridor appears as a **noticeably narrower excavated channel**, with surrounding banks; no full-cell river ribbon | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+| VIS-03 | T/cross connectivity accepted | Straight, bend, T and cross shapes show no missing center, seam, broken corners or discontinuous water animation | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+| VIS-04 | valid freshwater neighbor supplies canal | River/pond mouth has no misleading dry gap or abrupt water-edge artifact | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
 | VIS-05 | Vanilla Bridge foundation preserves connectivity; BridgeProps are suppressed only for Canal+Bridge | Same plain board top for E/W and N/S; no dangling under-planks or visible bridge/water artifacts in supplied/dry captures; normal non-canal bridge predicate remains unchanged in isolated Pickle test | PASS (2026-10-09; PR #7, Windows visual 1/1 / ERROR=0 by runner exit 0, author screenshots) |
-| VIS-06 | source removed / reconnected | Rebuilt wet↔dry state changes are visible without ghost water, stale mesh or retained wet shader effects | OPEN |
-| VIS-07 | Gravel/Soil restoration E2E passed | Filled terrain visually matches surrounding ground; no leftover rim/water artifact | OPEN |
-| VIS-08 | Original terrain DefName is available for representative diggable cells | Soil, Gravel and Rich Soil canal shoulders retain their respective surrounding texture/colors; wet/dry share silhouette; no universal brown square. Missing original records use a documented visual fallback; reloaded maps retain the mapping | OPEN |
+| VIS-06 | source removed / reconnected | Rebuilt wet↔dry state changes are visible without ghost water, stale mesh or retained wet shader effects | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+| VIS-07 | Gravel/Soil restoration E2E passed | Filled terrain visually matches surrounding ground; no leftover rim/water artifact | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+| VIS-08 | Original terrain DefName is available for representative diggable cells | Soil, Gravel and Rich Soil canal shoulders retain their respective surrounding texture/colors; wet/dry share silhouette; no universal brown square. Missing original records use a documented visual fallback; reloaded maps retain the mapping | PROVISIONAL (author accepts current images for real-play checking; item-specific PASS not established) |
+
+## Current author art decision — 2026-10-09
+
+The author stated that **the current Waterworks images are acceptable for now** and that all development work other than normal in-game playtesting is provisionally complete. Treat the accepted 16-mask trench banks, native water surface and Vanilla-bridge appearance as the **current playtest baseline**. Do not initiate further image generation or aesthetic replacement merely because earlier draft candidates failed.
+
+Matrix outcomes other than the already evidenced **VIS-05 PASS** are now **PROVISIONAL**, not independent technical PASS claims: this is an overall author acceptance to proceed with normal play, not a row-by-row screenshot/animation audit. No new screenshots, long-play evidence or external-mod compatibility results were supplied with this decision. If practical play reveals a flaw, inspect that exact item before making a targeted fix. Ordinary playtesting is the sole currently active acceptance phase; Steam publication and external integrations remain outside this visual approval.
 
 ## Execution and evidence
 
-1. Reuse the existing 6/6 graph/pawn/save-load E2E and 1+1 existing-save E2E as logic gates; do not rerun them solely to substitute for visual inspection.
+1. Reuse the existing 8/8 graph/pawn/save-load E2E and 1+1 existing-save E2E as logic gates; do not rerun them solely to substitute for visual inspection.
 2. Prefer a deterministic Pickle/Quickstarts fixture that prepares the above scene and captures **actual rendered frames** into isolated `TestResults` (when a verified capture API is available). Keep render enabled and require zero `[ERROR]` messages. A terrain-Def assertion or screenshot of an off-screen/unrendered map is not visual evidence.
 3. Until an actual capture path is verified, a single in-game scene and screenshot set is sufficient for the subjective parts; do not demand repeated manual campaigns. Record the version/commit, Mod list, map zoom and whether water animation was observed.
 4. For each VIS item mark PASS / FAIL with image evidence. Do not label all rendering PASS just because E2E passes.
-5. VIS-02 has already failed for full-cell materials and remained illegible in the initial thin-mesh capture. Compare a clear dry/wet reference concept based on MO's excavated earth ditch (§8.0.3), approve its geometry/art first, and only then resume focused implementation. Do not re-run the same visual gate with arbitrary width/color guesses.
+5. Historical note: VIS-02 failed for discarded full-cell and early thin-mesh candidates. Those failures are superseded by the current author-accepted 16-mask relief and water renderer; do not re-run speculative width/color iterations without a new concrete playtest finding.
 6. If VIS-05 fails, inspect RimWorld's foundation/terrain render ordering and shader flags before altering network mechanics or inventing a custom bridge.
 
 ## Boundaries
