@@ -12,5 +12,7 @@
       <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
     </li>
   </modDependencies>
-  <description>Small independent canal infrastructure prototype using natural fresh-water sources and existing Vanilla water visuals. Development build; not yet runtime tested.</description>
+  <description>Small independent canal infrastructure prototype using natural fresh-water sources and existing Vanilla water visuals. Development build; not yet runtime tested.
+
+自然の淡水源とバニラ既存の水の表示を利用する、独立した小規模な用水路設備の試作Mod。開発版であり、実行時テストはまだ完了していない。</description>
 </ModMetaData>
