@@ -7,7 +7,7 @@ on:
       - 'About/Manifest.xml'
       - 'About/Changelog.txt'
       - '.rimignore'
-      - 'Tests/validate_add_changenote.py'
+      - 'Tests/Release/validate_add_changenote.py'
       - '.github/workflows/add-changenote.yml'
   pull_request:
     paths:
@@ -15,7 +15,7 @@ on:
       - 'About/Manifest.xml'
       - 'About/Changelog.txt'
       - '.rimignore'
-      - 'Tests/validate_add_changenote.py'
+      - 'Tests/Release/validate_add_changenote.py'
       - '.github/workflows/add-changenote.yml'
 concurrency:
   group: add-changenote-${{ github.ref }}
@@ -28,4 +28,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python Tests/validate_add_changenote.py
+      - run: python Tests/Release/validate_add_changenote.py
