@@ -117,6 +117,33 @@ namespace AncientMedievalJapan.Waterworks
                    t == AMJW_Defs.AMJW_DugCanalWet;
         }
 
+        /// <summary>
+        /// Read-only compatibility query for independently supplied, naturally
+        /// connected Waterworks terrain canals. Do not infer supply from a wet
+        /// graphic or the presence of an adjacent foreign building.
+        /// </summary>
+        public bool IsSuppliedCanalAt(IntVec3 cell)
+        {
+            if (!cell.InBounds(map)) return false;
+            if (needsRecalculation) Recalculate();
+            return map.terrainGrid.TopTerrainAt(cell) == AMJW_Defs.AMJW_DugCanalWet;
+        }
+
+        /// <summary>
+        /// Cardinal-only contact point for optional water consumers such as
+        /// DBH for Medieval's building-based irrigation canal. No PipeNet state
+        /// is modified by this query.
+        /// </summary>
+        public bool TouchesSuppliedCanal(IntVec3 cell)
+        {
+            if (!cell.InBounds(map)) return false;
+            foreach (IntVec3 direction in GenAdj.CardinalDirections)
+            {
+                if (IsSuppliedCanalAt(cell + direction)) return true;
+            }
+            return false;
+        }
+
         private bool OccupiesCanalWidth(IntVec3 c, bool includePendingDig)
         {
             if (!c.InBounds(map)) return false;
