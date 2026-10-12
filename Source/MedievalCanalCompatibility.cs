@@ -103,9 +103,9 @@ namespace AncientMedievalJapan.Waterworks
                 new object[] { comp.parent.Map, cells });
         }
 
-        // Use original DBH implementation when its own tower has enough water.
-        // Otherwise the supplied open canal irrigates independently without
-        // fabricating water towers or draining unrelated DBH consumers.
+        // Preserve ordinary DBH execution when no natural canal is connected.
+        // With natural supply, irrigate independently without fabricating
+        // water towers or draining unrelated DBH consumers.
         public static bool SprayPrefix(object __instance, ref bool __result)
         {
             if (!SourceSupplies(__instance)) return true;
