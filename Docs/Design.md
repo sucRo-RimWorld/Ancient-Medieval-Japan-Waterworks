@@ -68,9 +68,16 @@ Rice Cultivation, Hot Springs, DBH compatibility and any future defensive-earthw
 - When DBH is absent, disabled or in a Lite configuration that removes its water-system components, skip only the adapter. Ordinary canals, save loading and canal rendering remain functional. Maintain compatibility with DBH water-management enabled but Thirst/Bladder/Hygiene needs disabled where those combinations are supported.
 - Conditional DBH references must be isolated: no hard static reference to missing DBH assemblies or uncompensated loading of DBH-only Defs when the dependency is absent. Verify actual DBH 1.6 classes/defNames and mod identifiers from the installed target version before production implementation.
 
+**Gravity-fed medieval presentation (author refinement):**
+- The ordinary player-facing path must require **no DBH hand pump, powered pump, pressurized tank or water tower** between a naturally supplied Waterworks canal and a DBH consumer. A short, visibly connected inlet/pipe from a canal may be used, subject to the actual DBH API.
+- A canal-fed provider should behave as a gravity-supplied clean-water source, not as a renamed industrial pump. If the target DBH version fundamentally requires tanks or pumping, investigate a narrowly scoped optional provider/compatibility shim; do not claim a straightforward XML connection would suffice.
+- Prioritize historically plausible open channels, covered channels, simple outlets, and wells for AMJ-era architecture. Water-filled flush toilets are optional gameplay interoperability with DBH, **not a claim that modern-style flush toilets were standard in medieval Japan**.
+- Model connection and source availability, not per-cell gradients, hydraulic pressure, or realistic elevation. Avoid presenting impossible uphill flow as historical realism; the existing abstract topology remains the game rule.
+- Separate the **historical structure** from the **DBH compatibility abstraction** in localization and release copy. Do not require all Waterworks players to install DBH.
+
 **Required acceptance tests (not yet run):**
 1. Vanilla/Waterworks without DBH: connected/dry/dig/fill/bridge gameplay and save reload unchanged; no missing types or XML patch errors.
-2. DBH enabled: river -> wet canal -> adapter -> DBH supply PipeNet -> flush toilet receives and consumes water and operates with its required sewage infrastructure. Assert the actual DBH supply-network state, not simply successful Def load.
+2. DBH enabled: river -> wet canal -> adapter -> DBH supply PipeNet -> flush toilet receives and consumes water and operates with its required sewage infrastructure, **without pumps, powered equipment, pressurized tanks or water towers**. Assert the actual DBH supply-network state, not simply successful Def load.
 3. Disconnect the canal from its natural source: the adapter ceases supply and the toilet eventually lacks input according to DBH's real stored-water rules; reconnect restores supply. No instantaneous disappearance of water already stored by DBH.
 4. A canal beneath a Vanilla bridge or approved reinforced cover continues to supply the adapter; the covered section does not accidentally break topology.
 5. No cross-network pollution: sewage return path remains DBH-owned and does not refill the freshwater inlet; check clean-water and sewage network identities explicitly.
