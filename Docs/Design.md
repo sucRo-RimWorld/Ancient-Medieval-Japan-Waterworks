@@ -54,6 +54,10 @@ Waterworks does **not** own:
 
 Rice Cultivation, Hot Springs, DBH compatibility and any future defensive-earthworks mod are consumers / integrations, not extensions of Waterworks' core responsibility.
 
+### 2.0 Supported test targets (2026-10-13)
+
+Maintain **RimWorld 1.6 stable** as the known baseline and include **RimWorld 1.7 unstable (Waylith)** as an additional, separately verified target. Unstable support is a test goal, not a compatibility claim. Preserve the 1.6 package, loaded-game matrix, saved games and prior evidence; do not infer 1.7 success from 1.6 builds or announce 1.7 compatibility before validation. DBH for Medieval irrigation compatibility is only testable on 1.7 when compatible DBH and DBH for Medieval dependencies actually load. Follow `Docs/GoldenPaths/E2EValidation.md` for the separate four-profile test matrix and recorded evidence.
+
 ### 2.1 DBH for Medieval canal interoperability (author-revised priority, 2026-10-13)
 
 **Current priority:** join Waterworks' *terrain-based, source-supplied canals* to DBH for Medieval's existing *building-based irrigation canals*, preserving the water use that the latter already provides. This supersedes the earlier proposal to prioritize a generic DBH PipeNet supply for flush toilets.
