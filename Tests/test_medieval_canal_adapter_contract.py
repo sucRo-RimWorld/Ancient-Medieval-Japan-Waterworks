@@ -36,6 +36,15 @@ def test_only_cardinal_contact():
     assert "Diagonal" not in body
 
 
+def test_connected_medieval_canal_chain_is_only_a_geometry_query():
+    body = method_body("MedievalIrrigationCanalTouchesWaterworksSource")
+    assert "HasMedievalCanalAt(start)" in body
+    assert "TouchesSuppliedCanal(at)" in body
+    assert "GenAdj.CardinalDirections" in body
+    assert "HasMedievalCanalAt(adjacent)" in body
+    assert "PipeNet" not in body and "PushWater" not in body
+
+
 def test_no_false_claim_of_irrigation_implementation():
     assert "actual adapter and runtime acceptance remain unimplemented/unverified" in DESIGN
 
@@ -43,5 +52,6 @@ def test_no_false_claim_of_irrigation_implementation():
 if __name__ == "__main__":
     test_natural_supply_not_inferred_from_foreign_pipes()
     test_only_cardinal_contact()
+    test_connected_medieval_canal_chain_is_only_a_geometry_query()
     test_no_false_claim_of_irrigation_implementation()
     print("PASS: source-only Medieval canal compatibility query guards (NOT gameplay integration)")
