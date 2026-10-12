@@ -144,6 +144,47 @@ namespace AncientMedievalJapan.Waterworks
             return false;
         }
 
+        /// <summary>
+        /// Optional DBH for Medieval geometry query. Finds an actually spawned
+        /// ES_IrrigationCanal connected cardinally to a supplied Waterworks canal.
+        /// This deliberately does not touch DBH water storage or override any
+        /// consumption methods; DBH remains the authority for those behaviors.
+        /// </summary>
+        public bool MedievalIrrigationCanalTouchesWaterworksSource(IntVec3 start)
+        {
+            if (!start.InBounds(map) || !HasMedievalCanalAt(start)) return false;
+            var seen = new HashSet<IntVec3> { start };
+            var pending = new Queue<IntVec3>();
+            pending.Enqueue(start);
+            while (pending.Count > 0)
+            {
+                IntVec3 at = pending.Dequeue();
+                if (TouchesSuppliedCanal(at)) return true;
+                foreach (IntVec3 direction in GenAdj.CardinalDirections)
+                {
+                    IntVec3 adjacent = at + direction;
+                    if (adjacent.InBounds(map) && !seen.Contains(adjacent) &&
+                        HasMedievalCanalAt(adjacent))
+                    {
+                        seen.Add(adjacent);
+                        pending.Enqueue(adjacent);
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasMedievalCanalAt(IntVec3 cell)
+        {
+            if (!cell.InBounds(map)) return false;
+            foreach (Thing thing in cell.GetThingList(map))
+            {
+                if (thing.def != null && thing.def.defName == "ES_IrrigationCanal")
+                    return true;
+            }
+            return false;
+        }
+
         private bool OccupiesCanalWidth(IntVec3 c, bool includePendingDig)
         {
             if (!c.InBounds(map)) return false;
