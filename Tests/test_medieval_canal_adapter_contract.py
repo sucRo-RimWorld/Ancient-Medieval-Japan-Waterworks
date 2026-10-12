@@ -45,13 +45,23 @@ def test_connected_medieval_canal_chain_is_only_a_geometry_query():
     assert "PipeNet" not in body and "PushWater" not in body
 
 
-def test_no_false_claim_of_irrigation_implementation():
-    assert "actual adapter and runtime acceptance remain unimplemented/unverified" in DESIGN
+def test_optional_adapter_contract():
+    adapter = (ROOT / "Source" / "MedievalCanalCompatibility.cs").read_text(encoding="utf-8")
+    assert "DBHforMedieval.CompSluiceGate" in adapter
+    assert "DBHforMedieval.IrrigationUtility" in adapter
+    assert "nameof(WaitingPostfix)" in adapter
+    assert "nameof(SprayPrefix)" in adapter
+    assert "nameof(FlowPostfix)" in adapter
+    assert "AddMoistureMethod.Invoke" in adapter
+    assert "DriedCellsMethod.Invoke" in adapter
+    assert "WaterTowers.Add" not in adapter
+    assert "WaterStorage +=" not in adapter
+    assert "loaded-game behavior remains unverified" in DESIGN
 
 
 if __name__ == "__main__":
     test_natural_supply_not_inferred_from_foreign_pipes()
     test_only_cardinal_contact()
     test_connected_medieval_canal_chain_is_only_a_geometry_query()
-    test_no_false_claim_of_irrigation_implementation()
+    test_optional_adapter_contract()
     print("PASS: source-only Medieval canal compatibility query guards (NOT gameplay integration)")
