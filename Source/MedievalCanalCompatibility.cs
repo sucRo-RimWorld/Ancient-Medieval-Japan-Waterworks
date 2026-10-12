@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace AncientMedievalJapan.Waterworks
@@ -33,12 +35,13 @@ namespace AncientMedievalJapan.Waterworks
                 new[] { typeof(Map), typeof(IntVec3), typeof(float), typeof(float) });
         private static readonly FieldInfo PipeField =
             SluiceType == null ? null : AccessTools.Field(SluiceType.BaseType, "PipeComp");
-        private static readonly FieldInfo PropsField =
-            SluiceType == null ? null : AccessTools.Field(SluiceType.BaseType, "props");
         private static readonly FieldInfo FireDamageField =
             AccessTools.TypeByName("DubsBadHygiene.CompProperties_Sprinkler") == null
                 ? null : AccessTools.Field(
                     AccessTools.TypeByName("DubsBadHygiene.CompProperties_Sprinkler"), "fireDamage");
+        private static readonly FieldInfo RippleDefField =
+            AccessTools.TypeByName("DBHforMedieval.DBHfM_DefOf") == null ? null :
+                AccessTools.Field(AccessTools.TypeByName("DBHforMedieval.DBHfM_DefOf"), "ES_Mote_Ripple");
         private static readonly MethodInfo CoolingMethod =
             SluiceType == null ? null : AccessTools.Method(SluiceType.BaseType, "Cooling");
 
@@ -121,6 +124,20 @@ namespace AncientMedievalJapan.Waterworks
             {
                 args[1] = cell;
                 AddMoistureMethod.Invoke(null, args);
+            }
+            // Preserve the original Medieval sluice ripple for its manual gate.
+            if (RippleDefField != null)
+            {
+                var rippleDef = RippleDefField.GetValue(null) as FleckDef;
+                if (rippleDef != null)
+                {
+                    var position = comp.parent.Position.ToVector3Shifted() +
+                        comp.parent.Rotation.FacingCell.ToVector3() * 0.5f;
+                    FleckCreationData ripple = FleckMaker.GetDataStatic(
+                        position, comp.parent.Map, rippleDef, 1f);
+                    ripple.rotation = comp.parent.Rotation.AsAngle;
+                    comp.parent.Map.flecks.CreateFleck(ripple);
+                }
             }
             __result = true;
             return false;
