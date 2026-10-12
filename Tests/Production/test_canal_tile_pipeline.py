@@ -7,7 +7,7 @@ import subprocess
 import sys
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "Scripts" / "canal_tile_pipeline.py"
 
 spec = importlib.util.spec_from_file_location("canal_tile_pipeline", SCRIPT)
