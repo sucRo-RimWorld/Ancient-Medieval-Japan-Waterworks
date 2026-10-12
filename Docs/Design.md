@@ -54,6 +54,32 @@ Waterworks does **not** own:
 
 Rice Cultivation, Hot Springs, DBH compatibility and any future defensive-earthworks mod are consumers / integrations, not extensions of Waterworks' core responsibility.
 
+### 2.1 Author-directed DBH PipeNet water-supply integration (2026-10-12)
+
+**Approved target behavior:** with Dubs Bad Hygiene installed and its normal water network enabled, a freshwater-supplied Waterworks canal can act as a **water supply** for DBH's existing PipeNet so a DBH flush toilet connected to the supply network can receive usable water. The end-to-end player arrangement is `natural freshwater -> connected Waterworks canal (including covered segments) -> optional DBH supply adapter -> DBH clean-water PipeNet -> DBH flush toilet`. This is an authorized extension beyond the initial v1 playtest scope; it does not make DBH a Waterworks dependency.
+
+**Ownership and constraints:**
+- Waterworks remains the authority on natural-water eligibility, canal connectivity and wet/dry status. A source-disconnected/dry canal MUST stop supplying DBH water; restored connection resumes supply without changing the canal's save schema unnecessarily.
+- DBH remains the authority on PipeNet, clean-water quantity/availability, sanitary-device demand and all toilet output/sewage. Do not duplicate wells, storage, toilets, sewage disposal, thirst or hygiene inside Waterworks.
+- The adapter must enter the **actual DBH potable/usable supply network**, not merely draw a visual link or register a sewage/drain pipe. DBH for Medieval's `ES_IrrigationCanal` declares `CompProperties_Pipe mode=Sewage`, which is not evidence of clean-water toilet supply; neither that mode nor `PrimitiveWell`'s pipe patch should be copied as an assumed supply solution.
+- Prefer a dedicated optional one-cell canal-to-DBH interface only if required by the verified DBH 1.6 API. Do **not** make every terrain cell a DBH `CompPipe` or replace the internal Waterworks graph with `PipeNet`. The player's canal still conducts water without DBH pipes.
+- No hidden unlimited-water exploit: map wet/dry eligibility to the DBH-supported inlet/provider semantics; reuse DBH's existing consumption, restrictions and status feedback. Exact source throughput and any water quality behavior are adapter audit values, not values invented from the canal renderer.
+- Flush toilets require both working fresh-water input and their normal DBH wastewater arrangement. The integration must not silently connect clean supply to sewage or discharge wastewater into the supplying canal.
+- When DBH is absent, disabled or in a Lite configuration that removes its water-system components, skip only the adapter. Ordinary canals, save loading and canal rendering remain functional. Maintain compatibility with DBH water-management enabled but Thirst/Bladder/Hygiene needs disabled where those combinations are supported.
+- Conditional DBH references must be isolated: no hard static reference to missing DBH assemblies or uncompensated loading of DBH-only Defs when the dependency is absent. Verify actual DBH 1.6 classes/defNames and mod identifiers from the installed target version before production implementation.
+
+**Required acceptance tests (not yet run):**
+1. Vanilla/Waterworks without DBH: connected/dry/dig/fill/bridge gameplay and save reload unchanged; no missing types or XML patch errors.
+2. DBH enabled: river -> wet canal -> adapter -> DBH supply PipeNet -> flush toilet receives and consumes water and operates with its required sewage infrastructure. Assert the actual DBH supply-network state, not simply successful Def load.
+3. Disconnect the canal from its natural source: the adapter ceases supply and the toilet eventually lacks input according to DBH's real stored-water rules; reconnect restores supply. No instantaneous disappearance of water already stored by DBH.
+4. A canal beneath a Vanilla bridge or approved reinforced cover continues to supply the adapter; the covered section does not accidentally break topology.
+5. No cross-network pollution: sewage return path remains DBH-owned and does not refill the freshwater inlet; check clean-water and sewage network identities explicitly.
+6. DBH Lite/disabled water network, missing DBH, and DBH needs-off configurations: adapter gracefully inactive while Waterworks retains core behavior.
+7. Save/load, source disappearance/reappearance, and per-map cleanup: no stale providers, duplicated water creation or leaked cross-map PipeNet references.
+
+**Implementation gate:** review the actual DBH 1.6 PipeNet supplier / inlet and clean-water versus sewage APIs, DBH for Medieval source/patches, Vanilla/MO/VE and non-VE alternatives before shipping the adapter. Tests, quantities and names must follow observed APIs. This section is a target specification, not a claim that integration is already implemented or tested.
+
+
 ## 3. Minimal v1 core
 
 ### 3.1 Required features
