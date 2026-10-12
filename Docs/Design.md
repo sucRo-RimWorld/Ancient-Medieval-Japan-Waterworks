@@ -75,7 +75,7 @@ Rice Cultivation, Hot Springs, DBH compatibility and any future defensive-earthw
 6. Mixed intersections, multiple endpoints to one PipeNet, and covered Waterworks segments: no duplicate or stale water-source registration.
 7. Save/reload and map removal: no dangling provider, duplicate source or cross-map leak.
 
-**Implementation status:** target behavior specified; actual adapter and runtime acceptance remain unimplemented/unverified until the upstream method-body audit establishes a supported integration method. The previous flush-toilet PipeNet provider proposal is deferred, not an authorized implementation priority.
+**Implementation status:** adapter implemented in source; loaded-game behavior remains unverified. Reverse-engineered DBH for Medieval `CompSluiceGate` checks `pipeNet.WaterTowers` in both `IsWaitingForDoer()` and `TrySpray()` and directly reduces tower storage. The optional Harmony adapter augments the water-demand condition and invokes DBH for Medieval's `IrrigationUtility.AddMoisture(Map, cell, 5f, fireDamage)` when a Waterworks-supplied adjacent chain is available; it preserves existing DBH networks without fabricating or charging water towers. It also makes the Medieval canal flow overlay follow Waterworks supply. Original effects (including water ripple) are retained in the compatibility route. C# compilation and loaded-game behavior remain unverified; do not merge or advertise gameplay compatibility before testing. The previous flush-toilet PipeNet provider proposal remains deferred.
 
 ## 3. Minimal v1 core
 
