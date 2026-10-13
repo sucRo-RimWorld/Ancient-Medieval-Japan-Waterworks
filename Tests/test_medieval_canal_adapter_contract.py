@@ -54,6 +54,10 @@ def test_optional_adapter_contract():
     assert "nameof(FlowPostfix)" in adapter
     assert "AddMoistureMethod.Invoke" in adapter
     assert "DriedCellsMethod.Invoke" in adapter
+    assert "ReturnsBoolWithoutArguments(wait)" in adapter
+    assert "ReturnsBoolWithoutArguments(spray)" in adapter
+    assert "ReturnsBoolWithoutArguments(flow)" in adapter
+    assert "MatchesIrrigationMethods()" in adapter
     assert "WaterTowers.Add" not in adapter
     assert "WaterStorage +=" not in adapter
     assert "loaded-game behavior remains unverified" in DESIGN
