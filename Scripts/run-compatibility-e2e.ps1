@@ -130,7 +130,8 @@ $summaryPath = Join-Path $report 'summary.json'
 Check (Test-Path -LiteralPath $summaryPath) "Fresh Pickle summary missing: $summaryPath"
 $summary = Get-Content -LiteralPath $summaryPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $required = if ($Suite -eq 'Integration') {
-    @('Pawn opens native sluice and game ticks irrigate soil',
+    @('Separate maps never share supply and native map removal clears the provider',
+          'Pawn opens native sluice and game ticks irrigate soil',
           'Natural source feeds native sluice once and disconnects safely',
       'Diagonal contact and disconnected Medieval chains never irrigate',
       'Native storage is charged first and survives natural source loss',

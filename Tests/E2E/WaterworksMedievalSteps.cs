@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using RimWorks.Pickle;
 using RimWorld;
+using RimWorld.Planet;
 using Verse;
 using Verse.AI;
 
@@ -256,6 +257,102 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 VerifySpray(ctx, comp, false);
                 map.terrainGrid.SetTerrain(sourceCell, DefDatabase<TerrainDef>.GetNamed("WaterMovingShallow"));
                 VerifySpray(ctx, comp, true);
+            });
+        }
+        private static bool ClearPatch(Map map, IntVec3 center)
+        {
+            for (int x = -5; x <= 5; x++)
+                for (int z = -5; z <= 5; z++)
+                {
+                    var at = center + new IntVec3(x, 0, z);
+                    if (!at.InBounds(map) || at.Fogged(map) || at.GetFirstBuilding(map) != null ||
+                        map.terrainGrid.UnderTerrainAt(at) != null || map.terrainGrid.FoundationAt(at) != null)
+                        return false;
+                }
+            return true;
+        }
+        [Then("Medieval supply is map local and survives removal of another supplied map")]
+        public Task MapLifecycle(PickleContext ctx)
+        {
+            return GameThread.Run(delegate
+            {
+                Map retained = Find.CurrentMap;
+                Map removed = null;
+                MapParent parent = null;
+                WaterworksSteps.Fixture first = null;
+                TimeSpeed speed = Find.TickManager.CurTimeSpeed;
+                Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
+                try
+                {
+                    ctx.Require(retained != null && Find.Maps.Contains(retained), "Primary real map missing");
+                    PlanetTile tile = PlanetTile.Invalid;
+                    for (int i = 0; i < Find.WorldGrid.TilesCount; i++)
+                    {
+                        var candidate = new PlanetTile(i);
+                        if (Find.WorldGrid[candidate].PrimaryBiome == retained.Biome &&
+                            !Find.WorldObjects.AllWorldObjects.Any(w => w.Tile == candidate))
+                        { tile = candidate; break; }
+                    }
+                    ctx.Require(tile.Valid, "No separate unused land tile for the real second map");
+                    parent = (MapParent)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
+                    parent.Tile = tile;
+                    parent.SetFaction(Faction.OfPlayer);
+                    Find.WorldObjects.Add(parent);
+                    removed = MapGenerator.GenerateMap(new IntVec3(50, 1, 50), parent,
+                        DefDatabase<MapGeneratorDef>.GetNamed("Base_Player"));
+                    ctx.Require(removed != retained && Find.Maps.Contains(removed), "Second map was not actually registered");
+                    removed.fogGrid.ClearAllFog();
+                    IntVec3 common = IntVec3.Invalid;
+                    for (int x = 8; x < 42 && !common.IsValid; x++)
+                        for (int z = 8; z < 42 && !common.IsValid; z++)
+                        {
+                            var at = new IntVec3(x, 0, z);
+                            if (ClearPatch(retained, at) && ClearPatch(removed, at)) common = at;
+                        }
+                    ctx.Require(common.IsValid, "No shared unobstructed 11x11 patch");
+                    first = new WaterworksSteps.Fixture(ctx, retained, common);
+                    var second = new WaterworksSteps.Fixture(ctx, removed, common);
+                    var firstSluice = Prepare(ctx, first);
+                    var secondSluice = Prepare(ctx, second);
+                    ctx.Assert(firstSluice.parent.Position == secondSluice.parent.Position,
+                        "Map-local test must use identical cell coordinates");
+                    ctx.Assert(first.Canal != second.Canal && !ReferenceEquals(Grid(retained), Grid(removed)),
+                        "Maps unexpectedly share Waterworks/DBH state");
+                    first.Set(-1, 0, "Soil");
+                    VerifySpray(ctx, firstSluice, false);
+                    VerifySpray(ctx, secondSluice, true);
+                    first.Set(-1, 0, "WaterMovingShallow");
+                    second.Set(-1, 0, "Soil");
+                    VerifySpray(ctx, firstSluice, true);
+                    VerifySpray(ctx, secondSluice, false);
+                    // Remove a supplied map while the same coordinates on the other map are dry.
+                    first.Set(-1, 0, "Soil");
+                    second.Set(-1, 0, "WaterMovingShallow");
+                    VerifySpray(ctx, secondSluice, true);
+                    ctx.Require((bool)Field(typeof(CanalMapComponent), "subscribed").GetValue(second.Canal),
+                        "Generated map did not subscribe to native terrain events");
+                    Current.Game.CurrentMap = retained;
+                    Current.Game.DeinitAndRemoveMap(removed, false);
+                    ctx.Assert(!Find.Maps.Contains(removed) && Find.Maps.Contains(retained), "Native map removal failed");
+                    ctx.Assert(!(bool)Field(typeof(CanalMapComponent), "subscribed").GetValue(second.Canal),
+                        "Removed map retained Waterworks terrain-event subscription");
+                    ctx.Assert(!secondSluice.parent.Spawned, "Removed map retained a spawned source consumer");
+                    ctx.Assert(!(bool)Method(typeof(MedievalCanalCompatibility), "SourceSupplies")
+                        .Invoke(null, new object[] { secondSluice }), "Removed sluice retained natural supply");
+                    VerifySpray(ctx, firstSluice, false);
+                    first.Set(-1, 0, "WaterMovingShallow");
+                    VerifySpray(ctx, firstSluice, true);
+                    first.Set(-1, 0, "Soil");
+                    VerifySpray(ctx, firstSluice, false);
+                }
+                finally
+                {
+                    Current.Game.CurrentMap = retained;
+                    if (removed != null && Find.Maps.Contains(removed)) Current.Game.DeinitAndRemoveMap(removed, false);
+                    if (parent != null && Find.WorldObjects.AllWorldObjects.Contains(parent)) Find.WorldObjects.Remove(parent);
+                    if (first != null) first.Dispose();
+                    Find.TickManager.CurTimeSpeed = speed;
+                }
             });
         }
     }

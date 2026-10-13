@@ -1,8 +1,7 @@
 # AMJ Waterworks Coordination
 
 Read `AGENTS.md`, this file from main, then the owning design/test procedure.
-This is a main-targeted integration update in PR #19; it becomes the live
-coordination authority on merge. Superseded prototype/art/test chains are
+PR #19 merged as `5d2c75bd93f00ff202cbfb0f86fd6697191e2ed1`. Superseded prototype/art/test chains are
 retained in Git history (pre-compaction main `6bf6ac6084759059f31e88de4073014d8a190281`),
 not maintained as competing branch logs.
 
@@ -10,8 +9,8 @@ not maintained as competing branch logs.
 
 ### DBH-CANAL-20261013 — optional Medieval sluice compatibility
 
-**Owner:** Waterworks PR #19
-**Status:** IMPLEMENTATION AUDITED / WINDOWS 1.6 AND 1.7 BOUNDED RUNTIME PASS; PR INTEGRATION PENDING
+**Owner:** Waterworks DBH compatibility
+**Status:** DONE FOR IMPLEMENTATION / NAMED ACCEPTANCE CONDITIONS ON WINDOWS 1.6 AND 1.7; PUBLIC RELEASE REMAINS SEPARATE
 
 Compared the uploaded DBHforMedieval DLL to the installed DLL (identical SHA256),
 read the decompiled DBH/Medieval APIs, and checked their real Harmony targets,
@@ -20,18 +19,21 @@ native job execution, soil-moisture grid and storage consumption. Fixed the
 The shared net472 production DLL is preserved; no .NET 10 production port.
 
 Both versions: Solo/DBHOnly/Medieval core Pickle **8/8** each, Medieval irrigation
-**5/5** with Thirst/Bladder/Hygiene OFF and water management ON, Medieval Lite
+**6/6** with Thirst/Bladder/Hygiene OFF and water management ON, Medieval Lite
 core **8/8** with partner Defs absent, Solo/Medieval RimTest **4/4** each.
-All accepted logs have runtime ERROR=0. Exact source/provider identity, named
+The sixth integration case closes acceptance condition 7: real equal-coordinate
+networks on two generated maps do not share supply; the actual game map-removal
+path clears the removed consumer and Waterworks event subscription while the
+retained map still connects/disconnects and irrigates. All accepted logs have
+runtime ERROR=0. Production code/DLL remains unchanged. Exact source/provider identity, named
 premises, log hashes and scope limits: `Docs/GoldenPaths/E2EValidation.md` and
 `Docs/Validation/DBHCanalCompatibility-20261013.md` (+ JSON). The actual game log
 reports 1.6.4871 rev591 (Version.txt rev590) / 1.7.4976 rev1043.
 
-**Next:** review PR #19 against current main and triggered checks; do not claim
-merge/publication here. Installed partner Mods still advertise 1.6, so the
-1.7 test is binary interoperability evidence, not upstream declared support.
-Multi-map removal, arbitrary modpacks and unrelated DBH consumers are not
-covered by the scoped irrigation fixture. Generic toilet/PipeNet supply stays
+**Next:** no mandatory implementation/test work remains in this bounded DBH
+compatibility scope. Installed partner Mods still advertise 1.6, so the 1.7 test
+is binary interoperability evidence, not upstream declared support. Arbitrary
+modpacks and unrelated DBH consumers remain outside the scoped fixture. Generic toilet/PipeNet supply stays
 deferred; the source of truth is `Docs/Design.md` section 2.1.
 
 ### WATERWORKS-PLAYTEST-READY-028 — ordinary playtest / publication boundary
