@@ -45,6 +45,24 @@ namespace AncientMedievalJapan.Waterworks
         private static readonly MethodInfo CoolingMethod =
             SluiceType == null ? null : AccessTools.Method(SluiceType.BaseType, "Cooling");
 
+        // DBH for Medieval 1.6 APIs are not guaranteed on the 1.7 unstable
+        // branch: patch only the exact decompiled signatures we have audited.
+        private static bool ReturnsBoolWithoutArguments(MethodInfo method)
+        {
+            return method != null && method.ReturnType == typeof(bool) &&
+                method.GetParameters().Length == 0;
+        }
+
+        private static bool MatchesIrrigationMethods()
+        {
+            if (DriedCellsMethod == null ||
+                DriedCellsMethod.ReturnType != typeof(bool)) return false;
+            var driedArgs = DriedCellsMethod.GetParameters();
+            return driedArgs.Length == 2 &&
+                driedArgs[0].ParameterType == typeof(Map) &&
+                driedArgs[1].ParameterType == typeof(List<IntVec3>);
+        }
+
         static MedievalCanalCompatibility()
         {
             if (SluiceType == null || CanalType == null || UtilityType == null)
@@ -52,8 +70,10 @@ namespace AncientMedievalJapan.Waterworks
             MethodInfo wait = AccessTools.Method(SluiceType, "IsWaitingForDoer");
             MethodInfo spray = AccessTools.Method(SluiceType, "TrySpray");
             MethodInfo flow = AccessTools.PropertyGetter(CanalType, "WaterFlow");
-            if (wait == null || spray == null || flow == null ||
-                ActiveCellsMethod == null || DriedCellsMethod == null ||
+            if (!ReturnsBoolWithoutArguments(wait) ||
+                !ReturnsBoolWithoutArguments(spray) ||
+                !ReturnsBoolWithoutArguments(flow) ||
+                ActiveCellsMethod == null || !MatchesIrrigationMethods() ||
                 AddMoistureMethod == null || PipeField == null ||
                 CoolingMethod == null || FireDamageField == null)
             {
