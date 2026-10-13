@@ -92,7 +92,9 @@ namespace AncientMedievalJapan.Waterworks
                 typeof(MedievalCanalCompatibility), nameof(WaitingPostfix)));
             harmony.Patch(spray, prefix: new HarmonyMethod(
                 typeof(MedievalCanalCompatibility), nameof(SprayPrefix)));
-            harmony.Patch(flow, postfix: new HarmonyMethod(
+            harmony.Patch(flow, prefix: new HarmonyMethod(
+                typeof(MedievalCanalCompatibility), nameof(FlowPrefix)),
+                postfix: new HarmonyMethod(
                 typeof(MedievalCanalCompatibility), nameof(FlowPostfix)));
         }
 
@@ -210,6 +212,26 @@ namespace AncientMedievalJapan.Waterworks
             }
             __result = true;
             return false;
+        }
+
+        // The upstream WaterFlow getter directly dereferences pipe.pipeNet.
+        // An isolated Medieval canal may temporarily have no DBH network.
+        // Skip only that unsafe native path; the postfix still checks the
+        // naturally supplied Waterworks canal chain.
+        public static bool FlowPrefix(object __instance, ref bool __result)
+        {
+            var building = __instance as ThingWithComps;
+            if (building == null || !building.Spawned) return true;
+            var pipe = building.AllComps.FirstOrDefault(comp =>
+                comp != null && comp.GetType().FullName == "DubsBadHygiene.CompPipe");
+            if (pipe == null) { __result = false; return false; }
+            var networkProperty = AccessTools.Property(pipe.GetType(), "pipeNet");
+            if (networkProperty == null || networkProperty.GetValue(pipe, null) == null)
+            {
+                __result = false;
+                return false;
+            }
+            return true;
         }
 
         public static void FlowPostfix(object __instance, ref bool __result)
