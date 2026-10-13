@@ -1,0 +1,141 @@
+{
+  "game_version": "1.7.4976 rev1043",
+  "production_base": "0bd47856a902680b2dd634ef66231c5f702810b4",
+  "tested_code_commit": "a3a66186df77f93ebe8eb6f53152c18bd4bc10e2",
+  "production_changed_from_base": false,
+  "test_source_sha256": {
+    "Scripts/RimWorldRuntime.ps1": "b8266365efcf05cde283632a429b9c7be8ac0804dc853b9b959c35508eb0ed4a",
+    "Scripts/Run-17Tests.ps1": "36ff2611d95df2d366ec1a03cba74276eea86415442881757645d9f7170743c3",
+    "Scripts/build-canal-tile.ps1": "c8d2058948b05523517a6a346df74cac6e4e79375f03d9201223df2d7a5dde2e",
+    "Scripts/run-add-to-save-e2e.ps1": "f0e7116002141821e3f6f14771dd32aee21850d602f4faa83ae34323ee22ff32",
+    "Scripts/run-compatibility-e2e.ps1": "de5641bb01fb7ff94246687984c8b1d2f6c8d2d76addb8488b6f74cd5eaca30c",
+    "Scripts/run-e2e.ps1": "0e930762491c530e7efc4e2d3bb6d35cecfdbbcb782a81520bd8b40f4e46e0ad",
+    "Scripts/run-rimtest.ps1": "e2197af697e473b0c04f4a749a0fce7d5da0801b6e4920acabbeab469ad59787",
+    "Scripts/run-visual-e2e.ps1": "257bda40defef44d8d70aa5350dff65a64a82cf01581d35ae1895ef56b59c4de",
+    "Scripts/run-visual-isolated.ps1": "f9fc42915aa18d4a3a35c5454e2ed0dc866133b12ad1f7ef02d99c33f61a4b69",
+    "Scripts/validate-source.ps1": "c827dcda5f052c6ac5f102130784e3cf0f441537b111878248fdeada16385c45",
+    "Tests/E2E/AddToSaveMod/Pickle/Features/waterworks-add-to-save.feature": "259c79d9a0bf863667cb2e2070153cbbadc833ea280f2fd70cad8fdb1ed5b743",
+    "Tests/E2E/BootstrapMod/Pickle/Features/waterworks-before-install.feature": "6f9cdcb49852b295c10ea2ecb5923aac38c3bb4f27b8cee8855509026438410d",
+    "Tests/E2E/BootstrapSteps.csproj": "622ea0c618a2db16e021a0cd6371d7c4144f951df41011b72e010c293569a3e9",
+    "Tests/E2E/PrivateDesktopNative.cs": "26ae5c602eccb11ae67176349ca4bbb0f73195fa5155a74b2081b4767ac246a3",
+    "Tests/E2E/Quickstart.csproj": "6c7392100b6d4e907079ae2050bd70dd120322358d4e60c1208b0be30c56cd79",
+    "Tests/E2E/Steps.csproj": "fad7e3136bb2dd0dbd0528eb502a01805a3555a6ec537fd057db2f613e215b24",
+    "Tests/E2E/TestMod/Pickle/Features/waterworks-core.feature": "3f7e9dfaa83e2a9ff80da4c349576b028a390045e6cd431325954e502e8baf1a",
+    "Tests/E2E/TestMod/Pickle/Features/waterworks-medieval.feature": "bdb558d7c6cb4c081c9bf8999e72563094a0bf1db62c00f9f8a87195d271718c",
+    "Tests/E2E/TestMod/Pickle/Features/waterworks-visual.feature": "95ee9151019abb53e25f11274ef7c91e5d823dc24fd8368ab2f64b9042b8df50",
+    "Tests/E2E/WaterworksAddToSaveSteps.cs": "b3cb842b017c952bb14669989558417222b1a603d336d8ef30d8785abcc987d3",
+    "Tests/E2E/WaterworksBootstrapSteps.cs": "70c62d0638611a25f1034e5581337432a103dca052b735b86333f44bbd370175",
+    "Tests/E2E/WaterworksMedievalSteps.cs": "4068d17c8ab2a44ed1a908cf8ca06b4723ab420d0266d6e2417b02fbaf31b9c6",
+    "Tests/E2E/WaterworksPawnJobs.cs": "8bf41c176869c63603031ab5ddab5b7fa73b143103cee0f87395c8d0ae549ebf",
+    "Tests/E2E/WaterworksPersistenceSteps.cs": "f8747bef8fcf67ecc3183140e6b98a386ff3ca731a6f21bfca223bd61cdfca65",
+    "Tests/E2E/WaterworksQuickstart.cs": "ee3512fe40e0dc490d5924b8ad9a5f9c643272bc80bfe6ad8a76ebfa9a925d77",
+    "Tests/E2E/WaterworksRenderProbe.cs": "325de3bc71f7a21135cf0828c124d8141c261f7495055e0eda10ee789b15f86b",
+    "Tests/E2E/WaterworksSteps.cs": "36bbd060f2ef8ae8ff508fd42b678b82d59ad547a9df0147a8b27397b082d2d0",
+    "Tests/E2E/WaterworksVisualSteps.cs": "10c12eadbee1d27018b875d14f3f92ad5bf3dfb9eafb3787e708ee6299594c0f",
+    "Tests/RimTest/WaterworksRimTests.cs": "b93e067d653e7d91513ca431d6d60014a2f6aa48a40a1682678ffee08cd3ac72",
+    "Tests/Runtime/Test-RimWorld17Harness.ps1": "66f2406970764413fb9ba510de5aa01b51af1f2dbb85851a94449b8c3f6438f5"
+  },
+  "game_sha256": {
+    "Assembly-CSharp.dll": "a75352be43ff6fe20a45f014dd0969e90842ee6468c60655d02b9f5138eb69e7",
+    "UnityStubs.dll": "b0b997c300670d5a42ea70f468ff9fedaba03cbd65eabf5d522675b3f16cdb22",
+    "RimWorld.dll": "7183c5b884bf22dfe9efa10e596ffac862eeb3c71678b544c357ed69f50030a3",
+    "RimWorld.exe": "eb7db15592d9aaf9c952f1e82d96320c713b2952bed08acfb4e880149c78b46a"
+  },
+  "available_real_provider_dll_sha256": {
+    "steamapps/workshop/content/294100/2009463077/1.4/Assemblies/0Harmony.dll": "d04ec5b2590dd1bbb57f0f11dc417b1a5bebbb36b1f97006d35f2d87c3a2a69f",
+    "steamapps/workshop/content/294100/2009463077/1.5/Assemblies/0Harmony.dll": "e96fc01100b6bbdc094b900efe47850cf97aa9df7c6a78cbe723b1decf5a506a",
+    "steamapps/workshop/content/294100/2009463077/1.6/Assemblies/0Harmony.dll": "8ac54fdf0fab257148d68bc744d67609b74554ee72a4f3452e32030eaad009c6",
+    "steamapps/workshop/content/294100/2009463077/1.7/Assemblies/0Harmony.dll": "94dd929a06f720869f6a718a64bc6713a37dbe153c2f4c16c031b2587d7ee694",
+    "steamapps/workshop/content/294100/2023507013/1.0/Assemblies/0Harmony.dll": "e271d22a7c32bfca105d0e471c04eee14eec6142d37a30cd73cb7d32c7d1dd0f",
+    "steamapps/workshop/content/294100/3210544395/1.3/Assemblies/ProcessorFramework.dll": "c271052c8d61a1825aa4d88fa1e3a60c52f4e77fc42eff807164d22ade231621",
+    "steamapps/workshop/content/294100/3210544395/1.4/Assemblies/ProcessorFramework.dll": "18ac0eb4b65150f2d1803bfcfa3eb38c911439c4d7b1cb92e522be1e407d01a0",
+    "steamapps/workshop/content/294100/3210544395/1.5/Assemblies/ProcessorFramework.dll": "5458fe65bf0c78d54c7dba2ead3348a61a2624a586874fa64ed753278eb5accb",
+    "steamapps/workshop/content/294100/3210544395/1.6/Assemblies/0Harmony.dll": "df043f05c6e43602fa8e8f38f52a3a2cf962aab7a65a9d85573ea25f01a63e80",
+    "steamapps/workshop/content/294100/3210544395/1.6/Assemblies/ProcessorFramework.dll": "3e24319ecfca8f3e1c7c040df956cd61eb70b304476f0e4b74ce8b99e1ff1377",
+    "steamapps/workshop/content/294100/3219596926/1.4/Assemblies/MedievalOverhaul.dll": "254debaa238e56f617685397d25509cb05c4b438880147783efc5b5019dda719",
+    "steamapps/workshop/content/294100/3219596926/1.5/Assemblies/MedievalOverhaul.dll": "3c0d71c54c9599bbaf10e45446c2172709818e0646bd7b079b7c6033bf147513",
+    "steamapps/workshop/content/294100/3219596926/1.6/Assemblies/MedievalOverhaul.dll": "d92b9693f0cb4536504837fa0ce4df1ac8f1b57b547958c006f852c0287b85e1",
+    "steamapps/workshop/content/294100/3733484696/1.5/Assemblies/RimWorks.RimLogging.dll": "223284da0de164c7ec522ed10270c21f4c647ddfbf7fc2d00457a480b96c4b9c",
+    "steamapps/workshop/content/294100/3733484696/1.6/Assemblies/RimWorks.RimLogging.dll": "95a0b4d3a55187fa7d8cb7506ff2da0cc878b33d0ac235c3f39fcaf8eb0826cf",
+    "steamapps/workshop/content/294100/3733484696/1.7/Assemblies/RimWorks.RimLogging.dll": "176e837176ef206f766b6090346e6b8ff2031c7c3adaa2315108912dc39a382a",
+    "steamapps/workshop/content/294100/3791648678/1.5/Assemblies/RimWorks.Pickle.dll": "b3358fb0b67a681e8b72a598796c32464d56e35f498565c8de505c7fcb7a14e1",
+    "steamapps/workshop/content/294100/3791648678/1.6/Assemblies/RimWorks.Pickle.dll": "43d2d4aac76d444f8efa904d46649dce9ac8d387cd090541fd1466964a133eef",
+    "steamapps/workshop/content/294100/3793646067/1.5/Assemblies/Quickstarts.dll": "6225e36a30c38100ad0cf7340cd3e3901328c8217cbcd1d0a2004236129691fe",
+    "steamapps/workshop/content/294100/3793646067/1.6/Assemblies/Quickstarts.dll": "703caa0d2c279c486b688a8cbf7deaa67137239f612c7f0a9fff1a92037acaf5",
+    "steamapps/workshop/content/294100/3793646067/1.7/Assemblies/Quickstarts.dll": "eae575d43c525814a35a7557238bea5300457da4e602a399d46d0467581b6d64",
+    "steamapps/common/RimWorld/Mods/CropColdToleranceOverhaul/Assemblies/CropColdToleranceOverhaul.dll": "14ff28b0dcffade343a51b55df354b8e52d0bbd88c3edf6587a77a847002b77b"
+  },
+  "runs": [
+    {
+      "profile": "Solo/Core",
+      "local_report": "TestResults/RimWorld17-Solo-Core-20261013-194335-506/Reports",
+      "pid": 26544,
+      "log_complete": true,
+      "native_errors": 0,
+      "summary_sha256": "d1814d77ce86f3367716a75ee460e54aee52ff63c949278dbe1826c8192d2f33",
+      "log_sha256": "feff9fe693a86090488401dc20ff84b3f532299326fe9e4fcc114c2e53933a93",
+      "summary": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "exitReason": "passed",
+        "scenarios": [
+          {
+            "name": "Waterworks production Defs load correctly",
+            "outcome": "Passed",
+            "durationMs": 731,
+            "attempts": 1
+          },
+          {
+            "name": "Four-direction canal branches connect and disconnect",
+            "outcome": "Passed",
+            "durationMs": 2366,
+            "attempts": 1
+          },
+          {
+            "name": "Canal width stays one cell",
+            "outcome": "Passed",
+            "durationMs": 1271,
+            "attempts": 1
+          },
+          {
+            "name": "Standing freshwater requires nine adjacent cells",
+            "outcome": "Passed",
+            "durationMs": 1127,
+            "attempts": 1
+          },
+          {
+            "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+            "outcome": "Passed",
+            "durationMs": 1174,
+            "attempts": 1
+          },
+          {
+            "name": "Vanilla bridge preserves canal flow and terrain restoration",
+            "outcome": "Passed",
+            "durationMs": 1255,
+            "attempts": 1
+          },
+          {
+            "name": "Construction pawn completes real dig and fill jobs",
+            "outcome": "Passed",
+            "durationMs": 1288,
+            "attempts": 1
+          },
+          {
+            "name": "Save and reload restores canal supply and original ground",
+            "outcome": "Passed",
+            "durationMs": 2098,
+            "attempts": 1
+          }
+        ]
+      }
+    }
+  ],
+  "isolated_production_dll": {
+    "sha256": "f6c54a001ae005c63f1a52334f864fe609fa99c9cc2f80fd813954f4d4bda95e",
+    "target": "1.7 test-only build of unchanged upstream source; not a shared net472 binary claim"
+  }
+}

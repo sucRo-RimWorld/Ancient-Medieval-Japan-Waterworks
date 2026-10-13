@@ -3,6 +3,14 @@
 if ($env:OS -eq 'Windows_NT' -and $PSVersionTable.PSEdition -eq 'Desktop') {
     $env:PSModulePath="$env:SystemRoot\System32\WindowsPowerShell\v1.0\Modules"
 }
+function Read-RimWorldTestXml([string]$Path) {
+    # XmlDocument honors the file's declaration/BOM; Windows PowerShell's
+    # default Get-Content encoding can corrupt BOM-free UTF-8 metadata.
+    $document = New-Object System.Xml.XmlDocument
+    $document.Load([IO.Path]::GetFullPath($Path))
+    return $document
+}
+
 function Get-RimWorldRuntime([string]$GameRoot) {
     $root = [IO.Path]::GetFullPath($GameRoot)
     $version = (Get-Content -LiteralPath (Join-Path $root 'Version.txt') -Raw).Trim()
@@ -17,7 +25,7 @@ function Find-RimWorldModAssembly([string]$Root, [string]$Name, [string]$Version
     $loader = @('LoadFolders.xml','loadFolders.xml') | ForEach-Object { Join-Path $Root $_ } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
     $folders = @('/', $Version)
     if ($loader) {
-        [xml]$xml = Get-Content -LiteralPath $loader -Raw
+        [xml]$xml = Read-RimWorldTestXml $loader
         $node = $xml.SelectSingleNode('/loadFolders/v'+$Version)
         if (-not $node -and $Version -eq '1.7') { $node=$xml.SelectSingleNode('/loadFolders/v1.6') }
         if (-not $node) { throw "No supported load folders in $loader" }
@@ -50,6 +58,7 @@ function Invoke-RimWorldTestCompile([string]$GameRoot, [string]$Output, [string[
         $compiler=$compilers | Sort-Object Version -Descending | Select-Object -First 1
         if(-not $compiler){throw 'Installed dotnet SDK with Roslyn csc.dll is required for 1.7 test builds'}
         $args+='/nostdlib+'
+        $args+='/define:AMJ_TEST_WAYLITH'
         $References+=@(Get-ChildItem -LiteralPath $runtime.Root -Filter '*.dll' -File | Where-Object {$_.Name -ne 'RimWorld.dll'} | ForEach-Object {
             try { [void][Reflection.AssemblyName]::GetAssemblyName($_.FullName); $_.FullName } catch [BadImageFormatException] { }
         })
@@ -79,7 +88,7 @@ function Invoke-RimWorldIsolated([string]$GameRoot,[string]$Arguments,[string]$L
     $mutex=$null; $locked=$false; $desktop=[IntPtr]::Zero
     if($runtime.Modern) {
         $mutex=New-Object Threading.Mutex($false,'Local\RimWorld17AutomatedLog')
-        $locked=$mutex.WaitOne(0)
+        $locked=$mutex.WaitOne(60000)
         if(-not $locked){$mutex.Dispose();throw 'Another 1.7 test owns the native log; use serial test profiles'}
         if(Get-Process RimWorld -ErrorAction SilentlyContinue){$mutex.ReleaseMutex();$mutex.Dispose();throw 'Close the existing RimWorld normally before 1.7 tests'}
     }

@@ -12,6 +12,13 @@ function MustFail([scriptblock]$action, [string]$message) {
     Assert $failed $message
 }
 try {
+    New-Item -ItemType Directory -Force -Path $temp | Out-Null
+    $metadata = Join-Path $temp 'About.xml'
+    $unicode = -join @([char]0x53E4, [char]0x4EE3, [char]0x65E5, [char]0x672C)
+    [IO.File]::WriteAllText($metadata,
+        ('<?xml version="1.0" encoding="utf-8"?><ModMetaData><name>' + $unicode + '</name></ModMetaData>'),
+        (New-Object Text.UTF8Encoding($false)))
+    Assert ((Read-RimWorldTestXml $metadata).ModMetaData.name -eq $unicode) 'BOM-free UTF-8 metadata was corrupted'
     $game = Join-Path $temp 'RimWorld'
     New-Item -ItemType Directory -Force -Path $game | Out-Null
     Set-Content -LiteralPath (Join-Path $game 'Version.txt') -Value '1.7.4976 rev1043' -Encoding Ascii
@@ -54,7 +61,7 @@ try {
     }
     # UTF-8 metadata and legacy Unity references caused real local failures.
     $runnerSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../Scripts/Run-17Tests.ps1') -Raw -Encoding UTF8
-    Assert ($runnerSource.Contains('Get-Content -LiteralPath $source -Raw -Encoding UTF8')) 'UTF-8 About read regressed'
+    Assert ($runnerSource.Contains('Read-RimWorldTestXml $source')) 'UTF-8 About read regressed'
     foreach ($sourceName in @('WaterworksSteps.cs','WaterworksPawnJobs.cs','WaterworksPersistenceSteps.cs','WaterworksMedievalSteps.cs')) {
         Assert ($runnerSource.Contains("'"+$sourceName+"'")) ('Missing native test source: '+$sourceName)
     }
