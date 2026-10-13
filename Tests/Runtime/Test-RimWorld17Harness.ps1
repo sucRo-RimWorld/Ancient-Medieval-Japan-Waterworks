@@ -1,5 +1,9 @@
 $ErrorActionPreference = 'Stop'
+$modulePathBefore = $env:PSModulePath
 . (Join-Path $PSScriptRoot '../../Scripts/RimWorldRuntime.ps1')
+if ($PSVersionTable.PSEdition -eq 'Core' -and $env:PSModulePath -ne $modulePathBefore) {
+    throw 'Runtime helper changed PowerShell Core module paths; clean-session commands cannot autoload.'
+}
 $temp = Join-Path ([IO.Path]::GetTempPath()) ('AMJW17-' + [guid]::NewGuid().ToString('N'))
 function Assert([bool]$ok, [string]$message) { if (-not $ok) { throw $message } }
 function MustFail([scriptblock]$action, [string]$message) {
