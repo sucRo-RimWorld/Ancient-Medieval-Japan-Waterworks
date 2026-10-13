@@ -15,7 +15,7 @@ if (-not $game.Modern) { throw 'Use Scripts/run-e2e.ps1 for RimWorld 1.6.' }
 $repo = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $mods = Join-Path $game.Root 'Mods'
 $source = Join-Path $repo 'About/About.xml'
-[xml]$sourceAbout = Get-Content -LiteralPath $source -Raw -Encoding UTF8
+$sourceAbout = Read-RimWorldTestXml $source
 if ([string]$sourceAbout.ModMetaData.packageId -ne 'sucro.ancientmedievaljapan.waterworks') {
     throw 'Unexpected Waterworks source identity'
 }
@@ -65,7 +65,7 @@ try {
     $about.Save((Join-Path $fixture 'About/About.xml'))
     Copy-Item -LiteralPath (Join-Path $repo ('Tests/E2E/TestMod/Pickle/Features/' + $feature)) -Destination (Join-Path $fixture 'Pickle/Features')
     function Get-TestSources([string]$project) {
-        [xml]$xml = Get-Content -LiteralPath $project -Raw -Encoding UTF8
+        $xml = Read-RimWorldTestXml $project
         $directory = Split-Path -Parent $project
         @($xml.SelectNodes('//Compile') | ForEach-Object {
             $path = Join-Path $directory ([string]$_.Include)
