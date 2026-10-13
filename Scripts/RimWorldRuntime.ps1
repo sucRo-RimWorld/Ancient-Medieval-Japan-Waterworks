@@ -1,5 +1,6 @@
 # Shared runtime tooling. Keep the CCTO copy identical; no runtime Mod dependency.
-if ($env:OS -eq 'Windows_NT') {
+# PowerShell 7 must retain its native module paths for clean-session autoloading.
+if ($env:OS -eq 'Windows_NT' -and $PSVersionTable.PSEdition -eq 'Desktop') {
     $env:PSModulePath="$env:SystemRoot\System32\WindowsPowerShell\v1.0\Modules"
 }
 function Get-RimWorldRuntime([string]$GameRoot) {
