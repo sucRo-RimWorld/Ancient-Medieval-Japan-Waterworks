@@ -1,0 +1,954 @@
+{
+  "date": "2026-10-13 JST",
+  "productionTarget": "net472",
+  "productionSha256": "a27a37f1552075b2fa01bd4658ba77905c780d91155960550452becfec8e99a0",
+  "productionSourceBase": "d3418249956afb49a828674f12c7fb077072a5be",
+  "mainHarnessBase": "6bf6ac6084759059f31e88de4073014d8a190281",
+  "uploadedMedievalSha256": "5132b2577cc1c6033997285ccf64a7e2e7e7ffea17eda0348882ce6e213bdac9",
+  "providers": [
+    {
+      "path": "836308268/1.6/Assemblies/BadHygiene.dll",
+      "sha256": "511a4ec97d04c232f09e3f1e7efde20c44b66b52563e03fb4359e3823aaab597"
+    },
+    {
+      "path": "2926675339/1.6/Assemblies/DBHforMedieval.dll",
+      "sha256": "5132b2577cc1c6033997285ccf64a7e2e7e7ffea17eda0348882ce6e213bdac9"
+    },
+    {
+      "path": "3791648678/1.6/Assemblies/RimWorks.Pickle.dll",
+      "sha256": "43d2d4aac76d444f8efa904d46649dce9ac8d387cd090541fd1466964a133eef"
+    },
+    {
+      "path": "3793646067/1.6/Assemblies/Quickstarts.dll",
+      "sha256": "703caa0d2c279c486b688a8cbf7deaa67137239f612c7f0a9fff1a92037acaf5"
+    },
+    {
+      "path": "3793646067/1.7/Assemblies/Quickstarts.dll",
+      "sha256": "eae575d43c525814a35a7557238bea5300457da4e602a399d46d0467581b6d64"
+    },
+    {
+      "path": "3762405308/1.6/Assemblies/RimTestRedux.dll",
+      "sha256": "a26d58821819b5053b95d6fa2d8195f076cb862d8c72ab5d36deec64bc375e91"
+    }
+  ],
+  "acceptedRuns": [
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "DBHOnly",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-DBHOnly-Core-20261013-161355-886",
+      "summarySha256": "626a92e3d9f39479b8918aff8c291883f22d3ba7f60039a0278c3bca02db470d",
+      "logSha256": "75668a9bb1c7bc0758c5bbbfaa910f8db1edc7c6b24abb1867ca50aa174a26f1",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 30,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2193,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1207,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1301,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1337,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1272,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1428,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2774,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Medieval",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-Medieval-Core-20261013-161203-685",
+      "summarySha256": "95e898ef647ead56d91f55e219a60a7cb010af576d9f0be71b59f8630d29b8d9",
+      "logSha256": "4ec3e08660e29b7e3a19aa57732769e0468b7e5a522b3788f986c7bff8f8d58b",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 30,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2236,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1184,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1245,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1210,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1234,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1363,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2961,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Medieval",
+      "suite": "Core",
+      "liteMode": true,
+      "needsDisabled": true,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-Medieval-Core-20261013-161424-388",
+      "summarySha256": "16b6b716991bfabcc407dc378ed7b835be7080654b67c8c2bc172a6577bfd261",
+      "logSha256": "afd77559635001e74ec60403a07a7f726057c628b9a93c9dfae5572bb415e94c",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 36,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2024,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1200,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1239,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1328,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1327,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1502,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2889,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Medieval",
+      "suite": "Integration",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 5,
+      "passed": 5,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-Medieval-Integration-20261013-161604-158",
+      "summarySha256": "e5852f6d29c9be6ce85377abea3811725ddfa14b66c5fb4e424a7bcd87c4bf1d",
+      "logSha256": "f50aba73640518fe5cba28de01ca1b82c2cafdebd5e35aa3b218add9e04bf678",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Pawn opens native sluice and game ticks irrigate soil",
+          "outcome": "Passed",
+          "durationMs": 2410,
+          "attempts": 1
+        },
+        {
+          "name": "Natural source feeds native sluice once and disconnects safely",
+          "outcome": "Passed",
+          "durationMs": 1231,
+          "attempts": 1
+        },
+        {
+          "name": "Diagonal contact and disconnected Medieval chains never irrigate",
+          "outcome": "Passed",
+          "durationMs": 1254,
+          "attempts": 1
+        },
+        {
+          "name": "Native storage is charged first and survives natural source loss",
+          "outcome": "Passed",
+          "durationMs": 1255,
+          "attempts": 1
+        },
+        {
+          "name": "Real save reload preserves optional irrigation topology",
+          "outcome": "Passed",
+          "durationMs": 2964,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Medieval",
+      "suite": "RimTest",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 4,
+      "passed": 4,
+      "errorCount": 0,
+      "result": "TestResults/RimTest-Medieval-20261013-161231-481",
+      "summarySha256": "6674f4ae7fd6da10b1621b6a439f71428cf319d26be3773d7fd09b9562164c9f",
+      "logSha256": "b4ba0dc271670d2e57345245108d99bc082aa60d3861c675db74889cd5c00f6b",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "ilyvion.laboratory",
+        "ilyvion.rimtestredux",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "sucro.amjw.rimtests"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "suite": "CanalContracts",
+          "test": "CanalDefsPreserveBridgeAndNaturalSourceBoundary",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterPatchesOnlyAvailablePartnerMethods",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterRejectsUnknownMethodSignatures",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "StandingWaterClassifierExcludesOceanWetlandsAndCanals",
+          "status": "PASS",
+          "error": ""
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Solo",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-Solo-Core-20261013-161328-641",
+      "summarySha256": "056f6d7170a5241374b7a5ac1fc4a1328955498a5e4c87330da3891986b5f4b8",
+      "logSha256": "41756f1e10664aa3050d44d0d2c95eb785e4f481856e2d74ec80e3ae1a423fbf",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 55,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2106,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1152,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1209,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1198,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1211,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1348,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2698,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Solo",
+      "suite": "RimTest",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 4,
+      "passed": 4,
+      "errorCount": 0,
+      "result": "TestResults/RimTest-Solo-20261013-155741-015",
+      "summarySha256": "6674f4ae7fd6da10b1621b6a439f71428cf319d26be3773d7fd09b9562164c9f",
+      "logSha256": "f7c936fc932d114262f7409e6e865aaa7cfdc0074a0843d3269f80b419382411",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "ilyvion.laboratory",
+        "ilyvion.rimtestredux",
+        "sucro.ancientmedievaljapan.waterworks",
+        "sucro.amjw.rimtests"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "suite": "CanalContracts",
+          "test": "CanalDefsPreserveBridgeAndNaturalSourceBoundary",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterPatchesOnlyAvailablePartnerMethods",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterRejectsUnknownMethodSignatures",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "StandingWaterClassifierExcludesOceanWetlandsAndCanals",
+          "status": "PASS",
+          "error": ""
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "DBHOnly",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-DBHOnly-Core-20261013-160938-986",
+      "summarySha256": "559ff09edd79221785bf9127e7789c974c9c585cf288925cd918e6cd443927c3",
+      "logSha256": "065fbbbebd72f4b6193bc88786cc31363cb63d1f5db72ad5f8876ed218fff241",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 6792,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 753,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2317,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1250,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1154,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1221,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1395,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1298,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2208,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Medieval",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-Medieval-Core-20261013-160708-914",
+      "summarySha256": "9b3e94c0705ba7c45ad419378bab054378a3552136d58f54ec55151875168a8c",
+      "logSha256": "8f322ab557a283a5c1043c093fff0290e74606f411ee99f048095578e8c95490",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 33840,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 790,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2114,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1241,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1130,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1193,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1353,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1318,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2127,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Medieval",
+      "suite": "Core",
+      "liteMode": true,
+      "needsDisabled": true,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-Medieval-Core-20261013-160825-018",
+      "summarySha256": "77e148f00cb6cb7e0d3fcc43831c403221cd45bc708797677ad5b8074f4f428a",
+      "logSha256": "e59d4231194a6eddda347b96e36b0269676ccedb18faf7f55e620d654919655b",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 19232,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 673,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2207,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1284,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1188,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1183,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1451,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1330,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2126,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Medieval",
+      "suite": "Integration",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 5,
+      "passed": 5,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-Medieval-Integration-20261013-160550-429",
+      "summarySha256": "de73d765305938d9c44a3bb884000c5514029f4b28348af1a825c89714654078",
+      "logSha256": "6f306510f676e9d9a6059352c61ff33af48a12020ebe0e8b6c569ce36b9d0b0b",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 24980,
+      "scenarios": [
+        {
+          "name": "Pawn opens native sluice and game ticks irrigate soil",
+          "outcome": "Passed",
+          "durationMs": 3321,
+          "attempts": 1
+        },
+        {
+          "name": "Natural source feeds native sluice once and disconnects safely",
+          "outcome": "Passed",
+          "durationMs": 1250,
+          "attempts": 1
+        },
+        {
+          "name": "Diagonal contact and disconnected Medieval chains never irrigate",
+          "outcome": "Passed",
+          "durationMs": 1169,
+          "attempts": 1
+        },
+        {
+          "name": "Native storage is charged first and survives natural source loss",
+          "outcome": "Passed",
+          "durationMs": 1258,
+          "attempts": 1
+        },
+        {
+          "name": "Real save reload preserves optional irrigation topology",
+          "outcome": "Passed",
+          "durationMs": 2526,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Medieval",
+      "suite": "RimTest",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 4,
+      "passed": 4,
+      "errorCount": 0,
+      "result": "TestResults/RimTest-Medieval-20261013-160406-952",
+      "summarySha256": "6674f4ae7fd6da10b1621b6a439f71428cf319d26be3773d7fd09b9562164c9f",
+      "logSha256": "549f39cd5df633a21c7016532fbc0d5107ff4037ed6ae25320ca9e331a8121df",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "ilyvion.laboratory",
+        "ilyvion.rimtestredux",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "sucro.amjw.rimtests"
+      ],
+      "nativePid": 30512,
+      "scenarios": [
+        {
+          "suite": "CanalContracts",
+          "test": "CanalDefsPreserveBridgeAndNaturalSourceBoundary",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterPatchesOnlyAvailablePartnerMethods",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterRejectsUnknownMethodSignatures",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "StandingWaterClassifierExcludesOceanWetlandsAndCanals",
+          "status": "PASS",
+          "error": ""
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Solo",
+      "suite": "Core",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 8,
+      "passed": 8,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-20261013-160136-253",
+      "summarySha256": "80f83c73fea83c4b24dbdf8854d9e923da71f46983cf90c7b6ca805f1afbce8a",
+      "logSha256": "c22cca102f4890d5fd5a0a74e82ef8e2151da0336e2e00fa3bf04f76cbdea49d",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 40572,
+      "scenarios": [
+        {
+          "name": "Waterworks production Defs load correctly",
+          "outcome": "Passed",
+          "durationMs": 741,
+          "attempts": 1
+        },
+        {
+          "name": "Four-direction canal branches connect and disconnect",
+          "outcome": "Passed",
+          "durationMs": 2048,
+          "attempts": 1
+        },
+        {
+          "name": "Canal width stays one cell",
+          "outcome": "Passed",
+          "durationMs": 1214,
+          "attempts": 1
+        },
+        {
+          "name": "Standing freshwater requires nine adjacent cells",
+          "outcome": "Passed",
+          "durationMs": 1136,
+          "attempts": 1
+        },
+        {
+          "name": "Mud and Marsh allow excavation without becoming freshwater sources",
+          "outcome": "Passed",
+          "durationMs": 1180,
+          "attempts": 1
+        },
+        {
+          "name": "Vanilla bridge preserves canal flow and terrain restoration",
+          "outcome": "Passed",
+          "durationMs": 1267,
+          "attempts": 1
+        },
+        {
+          "name": "Construction pawn completes real dig and fill jobs",
+          "outcome": "Passed",
+          "durationMs": 1347,
+          "attempts": 1
+        },
+        {
+          "name": "Save and reload restores canal supply and original ground",
+          "outcome": "Passed",
+          "durationMs": 2161,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Solo",
+      "suite": "RimTest",
+      "liteMode": false,
+      "needsDisabled": false,
+      "total": 4,
+      "passed": 4,
+      "errorCount": 0,
+      "result": "TestResults/RimTest-Solo-20261013-160922-212",
+      "summarySha256": "6674f4ae7fd6da10b1621b6a439f71428cf319d26be3773d7fd09b9562164c9f",
+      "logSha256": "77c48e271d89d24222760c5521a666bd067b1ac90ad1e4c0fcacba83d522c8a6",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "ilyvion.laboratory",
+        "ilyvion.rimtestredux",
+        "sucro.ancientmedievaljapan.waterworks",
+        "sucro.amjw.rimtests"
+      ],
+      "nativePid": 29856,
+      "scenarios": [
+        {
+          "suite": "CanalContracts",
+          "test": "CanalDefsPreserveBridgeAndNaturalSourceBoundary",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterPatchesOnlyAvailablePartnerMethods",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "OptionalAdapterRejectsUnknownMethodSignatures",
+          "status": "PASS",
+          "error": ""
+        },
+        {
+          "suite": "CanalContracts",
+          "test": "StandingWaterClassifierExcludesOceanWetlandsAndCanals",
+          "status": "PASS",
+          "error": ""
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    }
+  ]
+}
