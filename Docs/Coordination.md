@@ -69,3 +69,7 @@ Use ordinary Vanilla Bridge for current crossings. One canal-specific reinforced
 cover may be reconsidered only when a demonstrated heavy-structure layout
 needs it; no generic bridge/foundation pack or separate culvert grid is approved.
 Formal ownership and design: `AGENTS.md`, `Docs/Design.md`.
+
+## WATERWORKS-NATIVE17-HARNESS-20261013
+
+**State:** TEST-ONLY CORRECTION VERIFIED — latest production base `0bd47856a902680b2dd634ef66231c5f702810b4`, Solo/Core 1.7.4976 rev1043 8/8, complete PID log, native ERROR 0. XML-declaration reader, BOM-free Unicode regression and serial native mutex waiting are the bounded changes. This isolated run uses a 1.7 test build of unchanged upstream source, not the shared net472 binary claim. Existing DBH acceptance remains in its own record. Canonical results/premises: `Docs/GoldenPaths/E2EValidation.md`, `Docs/Testing/Native17-20261013.json`. Art, real existing saves and release remain separate.
