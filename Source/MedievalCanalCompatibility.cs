@@ -76,7 +76,10 @@ namespace AncientMedievalJapan.Waterworks
                 ActiveCellsMethod == null || !MatchesIrrigationMethods() ||
                 AddMoistureMethod == null ||
                 AddMoistureMethod.ReturnType != typeof(void) ||
-                PipeField == null || CoolingMethod == null ||
+                PipeField == null ||
+                AccessTools.Field(SluiceType, "width") == null ||
+                AccessTools.Field(SluiceType, "length") == null ||
+                CoolingMethod == null ||
                 CoolingMethod.ReturnType != typeof(void) ||
                 CoolingMethod.GetParameters().Length != 0 ||
                 FireDamageField == null)
