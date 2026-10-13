@@ -70,7 +70,7 @@ def test_optional_adapter_contract():
     assert "available >= usage" in adapter
     assert "WaterTowers.Add" not in adapter
     assert "WaterStorage +=" not in adapter
-    assert "loaded-game behavior remains unverified" in DESIGN
+    assert "the bounded real-game 1.6 and 1.7 matrix passed" in DESIGN
 
 
 if __name__ == "__main__":

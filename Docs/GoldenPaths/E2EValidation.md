@@ -29,7 +29,23 @@ RimWorld 1.7 was announced on 2026-10-12 and is available on Steam's **unstable*
 
 **Mandatory evidence per version:** exact RimWorld build/version and branch, DBH and DBH for Medieval versions / active load flags, compiled assembly target, named scenarios with expected assertions and observed results, isolated Player.log error count, save/load findings, and screenshot or renderer check where visuals change. Do not label 1.7 compatible or add a 1.7 supported-version manifest entry before the loaded-game matrix actually passes. Unavailable upstream dependencies are **BLOCKED**, not PASS.
 
-**Current result:** none of these 1.7 runs have been executed; the new Medieval adapter has no verified 1.6 runtime PASS either. The old 1.6 core results are retained only with their original version and scope.
+**Current result (2026-10-13):** independently run on Windows: both 1.6 and 1.7 passed core Pickle 8/8 in Solo, DBHOnly and Medieval profiles; Medieval with needs disabled passed irrigation 5/5; Medieval Lite passed core 8/8 with the absent partner Defs asserted. RimTest passed 4/4 in Solo and Medieval on both versions. All accepted runs had runtime ERROR=0. Full named premises and log/summary hashes: [DBH compatibility evidence](../Validation/DBHCanalCompatibility-20261013.md) and its adjacent JSON. The 1.6 engine log says `1.6.4871 rev591` while installed Version.txt says `1.6.4871 rev590`; 1.7 says `1.7.4976 rev1043`. Production DLL remained the same net472 binary through both versions. Installed DBH/Medieval still declare 1.6, so this is tested binary interoperability on 1.7, not upstream announced support or a public-version promotion.
+
+Repeatable commands (from this repository):
+
+```powershell
+# 1.6, rendered on a private desktop; normal configuration is preserved
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-compatibility-e2e.ps1 -Profile Solo -Suite Core
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-compatibility-e2e.ps1 -Profile DBHOnly -Suite Core
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-compatibility-e2e.ps1 -Profile Medieval -Suite Core -NeedsDisabled
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-compatibility-e2e.ps1 -Profile Medieval -Suite Integration -NeedsDisabled
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-compatibility-e2e.ps1 -Profile Medieval -Suite Core -LiteMode
+# RimTest accepts the exact game version selected from Version.txt
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-rimtest.ps1 -Profile Solo
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/run-rimtest.ps1 -Profile Medieval
+```
+
+For 1.7 use `Scripts/Run-17Tests.ps1` with the same Profile/Suite/NeedsDisabled/LiteMode arguments and `-GameRoot` instead of `-RimWorldDir`. It compiles only test assemblies and retains the shared 1.6 production DLL. The existing 1.6 core entry and historical acceptance remain intact. All runs must exit successfully, provide the exact named summary, no failed/skipped cases and a complete log; 1.7 also verifies native PID. Do not switch engine versions while a run is starting.
 
 ## Mud/Marsh pond-margin excavation validation — 2026-10-09
 

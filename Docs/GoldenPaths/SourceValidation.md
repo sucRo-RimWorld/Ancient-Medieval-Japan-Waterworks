@@ -17,6 +17,10 @@ This document records the repeatable **static/build** validation procedure for t
 
 ## Current validation state
 
+PR #19 Windows closeout (2026-10-13): production C# against actual 1.6 files passed with **0 warnings / 0 errors**. The source preflight now also executes `Tests/test_medieval_canal_adapter_contract.py`. Actual 1.6/1.7 Pickle and RimTest evidence is in [E2EValidation.md](E2EValidation.md) and [DBHCanalCompatibility-20261013.md](../Validation/DBHCanalCompatibility-20261013.md). The reproduced C# failure was in the 1.7 test assembly's legacy Unity references; `GameThread` and the owning 1.7 test-source selection were corrected without rebuilding production for .NET 10. Do not apply the old environment limitations below to this Windows run.
+
+Historical checkpoint:
+
 On the current one-cell-width source, the author reported `Scripts/validate-source.ps1` PASS after the explicit XML-inventory repair, followed by `Scripts/run-e2e.ps1` **7/7 PASS with zero isolated runtime `[ERROR]` lines**. The runtime runner covers source validity, graph splits/rejoins, the one-cell-width rule, dig/fill and saved original terrain, bridge/Foundation preservation, and save/load.
 
 Rendering tests remain separate: keep the normal rendering path in a hidden/off-screen environment; do not use `-nographics` for shader tests.

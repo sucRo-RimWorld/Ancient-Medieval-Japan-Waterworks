@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using AncientMedievalJapan.Waterworks;
 using RimWorks.Pickle;
@@ -13,7 +14,14 @@ namespace AncientMedievalJapan.Waterworks.E2E
         public static Task Run(Action check)
         {
             var result = new TaskCompletionSource<bool>();
-            RimWorks.Pickle.Runtime.PickleDriver.Post(delegate
+            // Pickle 1.6's driver inherits Unity MonoBehaviour. Resolve its exact
+            // dispatcher without exposing that legacy Unity assembly identity
+            // to the 1.7 compiler; runtime dispatch and thread assertion stay intact.
+            Type driver = typeof(PickleContext).Assembly.GetType("RimWorks.Pickle.Runtime.PickleDriver", true);
+            MethodInfo post = driver.GetMethod("Post", BindingFlags.Public | BindingFlags.Static,
+                null, new[] { typeof(Action) }, null);
+            if (post == null) throw new MissingMethodException(driver.FullName, "Post(Action)");
+            post.Invoke(null, new object[] { (Action)delegate
             {
                 try
                 {
@@ -23,7 +31,7 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     result.SetResult(true);
                 }
                 catch (Exception ex) { result.SetException(ex); }
-            });
+            } });
             return result.Task;
         }
     }
@@ -49,6 +57,10 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 c.Require(DefDatabase<JobDef>.GetNamed("AMJW_FillCanalJob") != null, "Fill JobDef");
                 c.Require(TerrainDefOf.Bridge != null && TerrainDefOf.Bridge.isFoundation,
                     "Bridge foundation not resolved");
+                if (System.Environment.GetEnvironmentVariable("AMJW_EXPECT_LITE") == "1")
+                    c.Assert(DefDatabase<ThingDef>.GetNamedSilentFail("ES_IrrigationCanal") == null &&
+                        DefDatabase<ThingDef>.GetNamedSilentFail("ES_SluiceGate") == null,
+                        "DBH Lite must remove the partner water-management Defs while Waterworks remains loaded");
             });
         }
 

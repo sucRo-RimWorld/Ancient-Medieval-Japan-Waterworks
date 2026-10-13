@@ -48,6 +48,14 @@ try {
         [IO.File]::WriteAllText($log, $text)
         MustFail { Assert-RimWorldNativeLog $log 123 } 'Wrong or erroneous native log was accepted'
     }
+    # UTF-8 metadata and legacy Unity references caused real local failures.
+    $runnerSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../Scripts/Run-17Tests.ps1') -Raw -Encoding UTF8
+    Assert ($runnerSource.Contains('Get-Content -LiteralPath $source -Raw -Encoding UTF8')) 'UTF-8 About read regressed'
+    foreach ($sourceName in @('WaterworksSteps.cs','WaterworksPawnJobs.cs','WaterworksPersistenceSteps.cs','WaterworksMedievalSteps.cs')) {
+        Assert ($runnerSource.Contains("'"+$sourceName+"'")) ('Missing native test source: '+$sourceName)
+    }
+    $steps = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../E2E/WaterworksSteps.cs') -Raw -Encoding UTF8
+    Assert ($steps.Contains('"RimWorks.Pickle.Runtime.PickleDriver"') -and $steps.Contains('new[] { typeof(Action) }') -and $steps.Contains('UnityData.IsInMainThread')) 'Legacy dispatcher bridge lost signature/thread safeguards'
     Write-Output '[OK] Waterworks 1.6/1.7 runtime selection, provider selection, PID and ERROR contracts passed (no game).'
 }
 finally {
