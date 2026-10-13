@@ -1,0 +1,35 @@
+name: Waterworks RimWorld 1.7 test harness
+on:
+  pull_request:
+    paths:
+      - 'Scripts/RimWorldRuntime.ps1'
+      - 'Scripts/Run-17Tests.ps1'
+      - 'Tests/Runtime/Test-RimWorld17Harness.ps1'
+      - '.github/workflows/rimworld17-test-tooling.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Scripts/RimWorldRuntime.ps1'
+      - 'Scripts/Run-17Tests.ps1'
+      - 'Tests/Runtime/Test-RimWorld17Harness.ps1'
+      - '.github/workflows/rimworld17-test-tooling.yml'
+concurrency:
+  group: waterworks17-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  native-test-harness-contract:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse 1.7 test PowerShell scripts
+        shell: pwsh
+        run: |
+          $files = @('Scripts/RimWorldRuntime.ps1', 'Scripts/Run-17Tests.ps1', 'Tests/Runtime/Test-RimWorld17Harness.ps1')
+          foreach ($file in $files) {
+            $tokens = $null; $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $file), [ref]$tokens, [ref]$errors)
+            if ($errors) { throw "${file}: $($errors -join '; ')" }
+          }
+      - name: Validate versioned providers and native-log rejection (no game)
+        shell: pwsh
+        run: ./Tests/Runtime/Test-RimWorld17Harness.ps1
