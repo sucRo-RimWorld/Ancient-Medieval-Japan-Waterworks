@@ -51,7 +51,9 @@ def test_optional_adapter_contract():
     assert "DBHforMedieval.IrrigationUtility" in adapter
     assert "nameof(WaitingPostfix)" in adapter
     assert "nameof(SprayPrefix)" in adapter
+    assert "nameof(FlowPrefix)" in adapter
     assert "nameof(FlowPostfix)" in adapter
+    assert 'networkProperty.GetValue(pipe, null) == null' in adapter
     assert "AddMoistureMethod.Invoke" in adapter
     assert "DriedCellsMethod.Invoke" in adapter
     assert "ReturnsBoolWithoutArguments(wait)" in adapter
