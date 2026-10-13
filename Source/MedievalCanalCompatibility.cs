@@ -105,6 +105,45 @@ namespace AncientMedievalJapan.Waterworks
                 waterworks.MedievalIrrigationCanalTouchesWaterworksSource(pipe.parent.Position);
         }
 
+        // Native tower-supplied irrigation takes precedence over the optional
+        // natural canal. Never bypass the ordinary DBH water charge when storage
+        // can already satisfy this sluice's own full-area usage requirement.
+        private static bool CanUseNativeStorage(object sluice)
+        {
+            var pipe = PipeField.GetValue(sluice);
+            if (pipe == null) return false;
+            var netField = AccessTools.Field(pipe.GetType(), "pipeNet");
+            var net = netField == null ? null : netField.GetValue(pipe);
+            if (net == null) return false;
+            var towersField = AccessTools.Field(net.GetType(), "WaterTowers");
+            var towers = towersField == null ? null :
+                towersField.GetValue(net) as System.Collections.IEnumerable;
+            if (towers == null) return false;
+            var comp = sluice as ThingComp;
+            if (comp == null || comp.parent == null) return false;
+            float usage = 0f;
+            var props = comp.props;
+            var usageField = props == null ? null :
+                AccessTools.Field(props.GetType(), "usagePerCell");
+            if (usageField == null) return false;
+            float perCell = Convert.ToSingle(usageField.GetValue(props));
+            var lengthField = AccessTools.Field(SluiceType, "length");
+            var widthField = AccessTools.Field(SluiceType, "width");
+            if (lengthField == null || widthField == null) return false;
+            usage = Convert.ToSingle(lengthField.GetValue(sluice)) *
+                Convert.ToSingle(widthField.GetValue(sluice)) * perCell;
+            if (usage <= 0f) return false;
+            float available = 0f;
+            foreach (object tower in towers)
+            {
+                if (tower == null) continue;
+                var storage = AccessTools.Property(tower.GetType(), "WaterStorage");
+                if (storage != null)
+                    available += Convert.ToSingle(storage.GetValue(tower, null));
+            }
+            return available >= usage;
+        }
+
         private static List<IntVec3> Cells(object sluice)
         {
             var cells = ActiveCellsMethod.Invoke(sluice, null) as IEnumerable<IntVec3>;
@@ -128,7 +167,7 @@ namespace AncientMedievalJapan.Waterworks
         // water towers or draining unrelated DBH consumers.
         public static bool SprayPrefix(object __instance, ref bool __result)
         {
-            if (!SourceSupplies(__instance)) return true;
+            if (!SourceSupplies(__instance) || CanUseNativeStorage(__instance)) return true;
             var comp = (ThingComp)__instance;
             var cells = Cells(__instance);
             if (cells.Count == 0) { __result = false; return false; }
