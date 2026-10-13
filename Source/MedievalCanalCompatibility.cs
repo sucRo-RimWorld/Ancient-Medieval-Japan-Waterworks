@@ -112,8 +112,8 @@ namespace AncientMedievalJapan.Waterworks
         {
             var pipe = PipeField.GetValue(sluice);
             if (pipe == null) return false;
-            var netField = AccessTools.Field(pipe.GetType(), "pipeNet");
-            var net = netField == null ? null : netField.GetValue(pipe);
+            var netProperty = AccessTools.Property(pipe.GetType(), "pipeNet");
+            var net = netProperty == null ? null : netProperty.GetValue(pipe, null);
             if (net == null) return false;
             var towersField = AccessTools.Field(net.GetType(), "WaterTowers");
             var towersProperty = AccessTools.Property(net.GetType(), "WaterTowers");
