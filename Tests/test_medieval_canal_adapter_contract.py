@@ -58,6 +58,9 @@ def test_optional_adapter_contract():
     assert "ReturnsBoolWithoutArguments(spray)" in adapter
     assert "ReturnsBoolWithoutArguments(flow)" in adapter
     assert "MatchesIrrigationMethods()" in adapter
+    assert "CanUseNativeStorage(__instance)" in adapter
+    assert 'AccessTools.Field(tower.GetType(), "WaterStorage")' in adapter
+    assert "available >= usage" in adapter
     assert "WaterTowers.Add" not in adapter
     assert "WaterStorage +=" not in adapter
     assert "loaded-game behavior remains unverified" in DESIGN
