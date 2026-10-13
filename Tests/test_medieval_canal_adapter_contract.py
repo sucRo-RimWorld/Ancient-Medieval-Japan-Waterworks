@@ -58,6 +58,9 @@ def test_optional_adapter_contract():
     assert "ReturnsBoolWithoutArguments(spray)" in adapter
     assert "ReturnsBoolWithoutArguments(flow)" in adapter
     assert "MatchesIrrigationMethods()" in adapter
+    assert "AddMoistureMethod.ReturnType != typeof(void)" in adapter
+    assert "CoolingMethod.ReturnType != typeof(void)" in adapter
+    assert "CoolingMethod.GetParameters().Length != 0" in adapter
     assert "CanUseNativeStorage(__instance)" in adapter
     assert 'AccessTools.Field(tower.GetType(), "WaterStorage")' in adapter
     assert "available >= usage" in adapter
