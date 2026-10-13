@@ -11,3 +11,10 @@ The runner uses actual `Version.txt`, `RimWorld.exe`, current game DLLs and inst
 The local startup uncovered two real tooling defects: Windows PowerShell read the bilingual UTF-8 About.xml as ANSI, and the old Pickle driver exposed a UnityEngine.CoreModule MonoBehaviour reference to Roslyn. The runner now reads UTF-8 explicitly; the shared GameThread calls the exact `Post(Action)` dispatcher by reflection and still asserts `UnityData.IsInMainThread`. The 1.7 core/integration test build selects only its four owning step files, avoiding unrelated legacy Mesh-returning visual probes. This preserves every core assertion; it is not a replacement visual test or a production C#/.NET modernization.
 
 `-Profile Solo|DBHOnly|Medieval`, `-Suite Core|Integration`, `-NeedsDisabled` and `-LiteMode` select isolated acceptance profiles. Integration requires Medieval and water management enabled; Lite runs core and asserts the partner canal/sluice Defs are absent. Installed partner DLLs still advertise 1.6 only: do not alter their metadata or claim upstream 1.7 support from these runs. Provider paths follow LoadFolders, including the existing Pickle/RimTest 1.6 fallback. CCTO and Environment's runtime helper was inspected and remains unchanged; Waterworks adds its own scoped dispatcher fix without making either Mod a dependency.
+
+The Medieval integration feature now requires six named scenarios; acceptance
+condition 7 is exercised by real two-map generation, equal-coordinate supply
+isolation and native map removal, with the other map continuing to respond to
+source changes. The same six-case suite passed 1.6 and 1.7; use the existing
+Profile Medieval / Suite Integration / NeedsDisabled command. Historical
+five-case evidence remains separate in the validation JSON.

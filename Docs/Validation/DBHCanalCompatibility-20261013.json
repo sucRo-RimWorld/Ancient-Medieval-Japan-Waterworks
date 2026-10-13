@@ -265,12 +265,12 @@
       "suite": "Integration",
       "liteMode": false,
       "needsDisabled": true,
-      "total": 5,
-      "passed": 5,
+      "total": 6,
+      "passed": 6,
       "errorCount": 0,
-      "result": "TestResults/Compatibility-Medieval-Integration-20261013-161604-158",
-      "summarySha256": "e5852f6d29c9be6ce85377abea3811725ddfa14b66c5fb4e424a7bcd87c4bf1d",
-      "logSha256": "f50aba73640518fe5cba28de01ca1b82c2cafdebd5e35aa3b218add9e04bf678",
+      "result": "TestResults/Compatibility-Medieval-Integration-20261013-165810-201",
+      "summarySha256": "01dd5eef00bbbeee01b2013be402246ef778caa741ce94cac4b182f47369603c",
+      "logSha256": "6a5f5550becac5958d9ca3b360bbf21f0f12fd885af549f889973a84cc0f8eb9",
       "activePackageIds": [
         "brrainz.harmony",
         "ludeon.rimworld",
@@ -285,33 +285,39 @@
       "nativePid": null,
       "scenarios": [
         {
+          "name": "Separate maps never share supply and native map removal clears the provider",
+          "outcome": "Passed",
+          "durationMs": 2806,
+          "attempts": 1
+        },
+        {
           "name": "Pawn opens native sluice and game ticks irrigate soil",
           "outcome": "Passed",
-          "durationMs": 2410,
+          "durationMs": 1564,
           "attempts": 1
         },
         {
           "name": "Natural source feeds native sluice once and disconnects safely",
           "outcome": "Passed",
-          "durationMs": 1231,
+          "durationMs": 1410,
           "attempts": 1
         },
         {
           "name": "Diagonal contact and disconnected Medieval chains never irrigate",
           "outcome": "Passed",
-          "durationMs": 1254,
+          "durationMs": 1350,
           "attempts": 1
         },
         {
           "name": "Native storage is charged first and survives natural source loss",
           "outcome": "Passed",
-          "durationMs": 1255,
+          "durationMs": 1386,
           "attempts": 1
         },
         {
           "name": "Real save reload preserves optional irrigation topology",
           "outcome": "Passed",
-          "durationMs": 2964,
+          "durationMs": 3083,
           "attempts": 1
         }
       ],
@@ -724,12 +730,12 @@
       "suite": "Integration",
       "liteMode": false,
       "needsDisabled": true,
-      "total": 5,
-      "passed": 5,
+      "total": 6,
+      "passed": 6,
       "errorCount": 0,
-      "result": "TestResults/RimWorld17-Medieval-Integration-20261013-160550-429",
-      "summarySha256": "de73d765305938d9c44a3bb884000c5514029f4b28348af1a825c89714654078",
-      "logSha256": "6f306510f676e9d9a6059352c61ff33af48a12020ebe0e8b6c569ce36b9d0b0b",
+      "result": "TestResults/RimWorld17-Medieval-Integration-20261013-165341-271",
+      "summarySha256": "1ba850c013248d40fb5192c82b8b70b0a26c9989f5c7c619af08dd96803122aa",
+      "logSha256": "570f5b9245e0b71a788066b608a119c1e329b703d21d098698a707c0ba11353b",
       "activePackageIds": [
         "brrainz.harmony",
         "ludeon.rimworld",
@@ -741,36 +747,42 @@
         "rimworks.quickstarts",
         "sucro.ancientmedievaljapan.waterworks.e2e17"
       ],
-      "nativePid": 24980,
+      "nativePid": 40132,
       "scenarios": [
+        {
+          "name": "Separate maps never share supply and native map removal clears the provider",
+          "outcome": "Passed",
+          "durationMs": 4094,
+          "attempts": 1
+        },
         {
           "name": "Pawn opens native sluice and game ticks irrigate soil",
           "outcome": "Passed",
-          "durationMs": 3321,
+          "durationMs": 1480,
           "attempts": 1
         },
         {
           "name": "Natural source feeds native sluice once and disconnects safely",
           "outcome": "Passed",
-          "durationMs": 1250,
+          "durationMs": 1143,
           "attempts": 1
         },
         {
           "name": "Diagonal contact and disconnected Medieval chains never irrigate",
           "outcome": "Passed",
-          "durationMs": 1169,
+          "durationMs": 1355,
           "attempts": 1
         },
         {
           "name": "Native storage is charged first and survives natural source loss",
           "outcome": "Passed",
-          "durationMs": 1258,
+          "durationMs": 1233,
           "attempts": 1
         },
         {
           "name": "Real save reload preserves optional irrigation topology",
           "outcome": "Passed",
-          "durationMs": 2526,
+          "durationMs": 2189,
           "attempts": 1
         }
       ],
@@ -950,5 +962,125 @@
       ],
       "normalConfigPreservedByRunner": true
     }
-  ]
+  ],
+  "precedingIntegrationRuns": [
+    {
+      "version": "1.6.4871 rev591",
+      "profile": "Medieval",
+      "suite": "Integration",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 5,
+      "passed": 5,
+      "errorCount": 0,
+      "result": "TestResults/Compatibility-Medieval-Integration-20261013-161604-158",
+      "summarySha256": "e5852f6d29c9be6ce85377abea3811725ddfa14b66c5fb4e424a7bcd87c4bf1d",
+      "logSha256": "f50aba73640518fe5cba28de01ca1b82c2cafdebd5e35aa3b218add9e04bf678",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e"
+      ],
+      "nativePid": null,
+      "scenarios": [
+        {
+          "name": "Pawn opens native sluice and game ticks irrigate soil",
+          "outcome": "Passed",
+          "durationMs": 2410,
+          "attempts": 1
+        },
+        {
+          "name": "Natural source feeds native sluice once and disconnects safely",
+          "outcome": "Passed",
+          "durationMs": 1231,
+          "attempts": 1
+        },
+        {
+          "name": "Diagonal contact and disconnected Medieval chains never irrigate",
+          "outcome": "Passed",
+          "durationMs": 1254,
+          "attempts": 1
+        },
+        {
+          "name": "Native storage is charged first and survives natural source loss",
+          "outcome": "Passed",
+          "durationMs": 1255,
+          "attempts": 1
+        },
+        {
+          "name": "Real save reload preserves optional irrigation topology",
+          "outcome": "Passed",
+          "durationMs": 2964,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    },
+    {
+      "version": "1.7.4976 rev1043",
+      "profile": "Medieval",
+      "suite": "Integration",
+      "liteMode": false,
+      "needsDisabled": true,
+      "total": 5,
+      "passed": 5,
+      "errorCount": 0,
+      "result": "TestResults/RimWorld17-Medieval-Integration-20261013-160550-429",
+      "summarySha256": "de73d765305938d9c44a3bb884000c5514029f4b28348af1a825c89714654078",
+      "logSha256": "6f306510f676e9d9a6059352c61ff33af48a12020ebe0e8b6c569ce36b9d0b0b",
+      "activePackageIds": [
+        "brrainz.harmony",
+        "ludeon.rimworld",
+        "dubwise.dubsbadhygiene",
+        "eldersign.dbhformedieval",
+        "sucro.ancientmedievaljapan.waterworks",
+        "rimworks.rimlogging",
+        "rimworks.pickle",
+        "rimworks.quickstarts",
+        "sucro.ancientmedievaljapan.waterworks.e2e17"
+      ],
+      "nativePid": 24980,
+      "scenarios": [
+        {
+          "name": "Pawn opens native sluice and game ticks irrigate soil",
+          "outcome": "Passed",
+          "durationMs": 3321,
+          "attempts": 1
+        },
+        {
+          "name": "Natural source feeds native sluice once and disconnects safely",
+          "outcome": "Passed",
+          "durationMs": 1250,
+          "attempts": 1
+        },
+        {
+          "name": "Diagonal contact and disconnected Medieval chains never irrigate",
+          "outcome": "Passed",
+          "durationMs": 1169,
+          "attempts": 1
+        },
+        {
+          "name": "Native storage is charged first and survives natural source loss",
+          "outcome": "Passed",
+          "durationMs": 1258,
+          "attempts": 1
+        },
+        {
+          "name": "Real save reload preserves optional irrigation topology",
+          "outcome": "Passed",
+          "durationMs": 2526,
+          "attempts": 1
+        }
+      ],
+      "normalConfigPreservedByRunner": true
+    }
+  ],
+  "lifecycleFollowupSourceBase": "5d2c75bd93f00ff202cbfb0f86fd6697191e2ed1",
+  "lifecycleStepsSha256": "4068d17c8ab2a44ed1a908cf8ca06b4723ab420d0266d6e2417b02fbaf31b9c6"
 }

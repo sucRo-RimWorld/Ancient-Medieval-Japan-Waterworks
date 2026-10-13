@@ -60,6 +60,14 @@ try {
     }
     $steps = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../E2E/WaterworksSteps.cs') -Raw -Encoding UTF8
     Assert ($steps.Contains('"RimWorks.Pickle.Runtime.PickleDriver"') -and $steps.Contains('new[] { typeof(Action) }') -and $steps.Contains('UnityData.IsInMainThread')) 'Legacy dispatcher bridge lost signature/thread safeguards'
+    $medievalFeature = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../E2E/TestMod/Pickle/Features/waterworks-medieval.feature') -Raw -Encoding UTF8
+    $expectedIntegration = @($medievalFeature -split "`n" | Where-Object { $_ -match '^\s*Scenario:' }).Count
+    Assert ($expectedIntegration -eq 6) 'Medieval acceptance must retain all six scenarios including map removal'
+    $lifecycleName = 'Separate maps never share supply and native map removal clears the provider'
+    foreach ($relative in @('../../Scripts/Run-17Tests.ps1','../../Scripts/run-compatibility-e2e.ps1')) {
+        $content = Get-Content -LiteralPath (Join-Path $PSScriptRoot $relative) -Raw -Encoding UTF8
+        Assert ($content.Contains($lifecycleName)) 'Native map lifecycle scenario must be mandatory in both version runners'
+    }
     Write-Output '[OK] Waterworks 1.6/1.7 runtime selection, provider selection, PID and ERROR contracts passed (no game).'
 }
 finally {

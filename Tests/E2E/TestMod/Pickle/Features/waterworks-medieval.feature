@@ -1,5 +1,9 @@
 Feature: Optional real DBH for Medieval irrigation
 
+  @quickstart:WaterworksQuickstart @timeout:160
+  Scenario: Separate maps never share supply and native map removal clears the provider
+    Then Medieval supply is map local and survives removal of another supplied map
+
   @quickstart:WaterworksQuickstart @timeout:100
   Scenario: Pawn opens native sluice and game ticks irrigate soil
     Then a pawn opens the native Medieval sluice and its ticks irrigate soil

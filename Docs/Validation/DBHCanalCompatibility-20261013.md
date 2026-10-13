@@ -69,7 +69,7 @@ retained unchanged. No rendering bypass or weakened ERROR gate was introduced.
 | Solo core Pickle | 8/8 | 8/8 |
 | DBHOnly core Pickle | 8/8 | 8/8 |
 | Medieval core Pickle, water management ON / needs OFF | 8/8 | 8/8 |
-| Medieval irrigation including native pawn job, needs OFF | 5/5 | 5/5 |
+| Medieval irrigation including native pawn job and two-map removal, needs OFF | 6/6 | 6/6 |
 | Medieval Lite core; partner water Defs absent | 8/8 | 8/8 |
 | Solo RimTest | 4/4 | 4/4 |
 | Medieval RimTest | 4/4 | 4/4 |
@@ -79,6 +79,19 @@ RimTest unknown=0 and loaded production assembly path was verified. 1.7 also
 checks the native log PID. Both versions used real rendering on an unswitched
 private desktop. Raw log hashes, named outcomes and active Mod lists are in JSON;
 no old PASS was relabeled as a result for the adapter.
+
+The map-lifecycle follow-up to merged PR #19 (main
+`5d2c75bd93f00ff202cbfb0f86fd6697191e2ed1`) closes acceptance condition 7.
+The six-case integration suite passed independently on both versions;
+JSON retains the prior five-case runs as historical evidence. Production
+source and the shared DLL are unchanged. The new test generates an actual
+second player map at another unused world tile, places identical-coordinate
+Waterworks/Medieval networks on both maps, exercises supply independently,
+and calls the game's real DeinitAndRemoveMap. This is not a direct invocation
+of MapComponent.MapRemoved or a mock map. The removed consumer is no longer
+spawned or supplied, Waterworks unsubscribes from terrain events, and the
+retained map can still connect/disconnect and irrigate. Normal settings and
+production DLL hashes remained unchanged; complete log ERROR counts are zero.
 
 ## Test items and assumed specification
 
@@ -95,6 +108,7 @@ no old PASS was relabeled as a result for the adapter.
 
 | Medieval Pickle item | Premise / observed assertions |
 | --- | --- |
+| Two-map isolation and native removal | Both actual maps use identical cell coordinates but different Waterworks components and DBH grids. Removing either source affects only its own sluice (native TrySpray delta 5/0). A supplied second map is actually removed while the retained map is dry; removed map absent from Find.Maps, event-subscription flag false, consumer unspawned and SourceSupplies false. Remaining map still gives delta 0 → 5 → 0 on reconnection/disconnection. |
 | Native pawn operation | Actual Growing WorkGiver offers ES_OpenSluiceGate; pawn runs upstream JobDriver; actual CompTick increases all active-cell moisture by at least 5 within 1280 ticks, without tower/pump/well. |
 | Natural source and cut | Cardinal Waterworks → native building-canal bend → sluice; native TrySpray adds exactly 5 per active cell. Multiple contacts and a covered Waterworks intake still add once. Disconnect returns false / zero delta and removes native demand; reconnect restores it. Needs-disabled profile explicitly verifies actual Thirst/Bladder/Hygiene false and Lite false. |
 | Topology rejection | Removing the intermediate native canal breaks irrigation; only-diagonal contact remains false / zero delta. |
@@ -110,9 +124,11 @@ RimTest is not presented as a synthetic map simulation.
 ## Limits and disposition
 
 This closes the requested bounded code/build/1.6 and native 1.7 test scope.
-It does not newly certify adding the Mod to every existing save, multi-map
-removal, full Medieval Overhaul / arbitrary modpacks, ordinary DBH toilet/tower
+It does not newly certify adding the Mod to every existing save,
+full Medieval Overhaul / arbitrary modpacks, ordinary DBH toilet/tower
 construction, screenshot appearance or long-term play. The existing separate
 1+1 installation gate and author art acceptance retain their prior scopes.
 Production public supportedVersions remains 1.6; version is still 0.1.0-dev.
-PR #19 integration, Workshop release and 2GAME posting are separate states.
+PR #19 merged as `5d2c75bd93f00ff202cbfb0f86fd6697191e2ed1`;
+this follow-up completes its previously omitted map lifecycle acceptance.
+Workshop release and 2GAME posting remain separate states.

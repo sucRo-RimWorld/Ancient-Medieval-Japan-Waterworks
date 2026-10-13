@@ -226,18 +226,22 @@ namespace AncientMedievalJapan.Waterworks.E2E
                 new Dictionary<IntVec3, TerrainDef>();
             public readonly Map Map;
             public readonly CanalMapComponent Canal;
-            public Fixture(PickleContext context)
+            public Fixture(PickleContext context, Map targetMap = null, IntVec3? fixedOrigin = null)
             {
                 ctx = context;
-                Map = Find.CurrentMap;
+                Map = targetMap ?? Find.CurrentMap;
                 ctx.Require(Map != null && Map.Size.x >= 40 && Map.Size.z >= 40,
                     "Expected 50x50 Quickstart map");
                 Canal = Map.GetComponent<CanalMapComponent>();
                 ctx.Require(Canal != null, "Waterworks component missing");
                 bool found = false;
                 IntVec3 chosen = IntVec3.Invalid;
-                for (int x = 8; x < Map.Size.x - 8 && !found; x++)
-                    for (int z = 8; z < Map.Size.z - 8 && !found; z++)
+                int firstX = fixedOrigin.HasValue ? fixedOrigin.Value.x : 8;
+                int lastX = fixedOrigin.HasValue ? firstX + 1 : Map.Size.x - 8;
+                int firstZ = fixedOrigin.HasValue ? fixedOrigin.Value.z : 8;
+                int lastZ = fixedOrigin.HasValue ? firstZ + 1 : Map.Size.z - 8;
+                for (int x = firstX; x < lastX && !found; x++)
+                    for (int z = firstZ; z < lastZ && !found; z++)
                     {
                         IntVec3 p = new IntVec3(x, 0, z);
                         bool valid = true;

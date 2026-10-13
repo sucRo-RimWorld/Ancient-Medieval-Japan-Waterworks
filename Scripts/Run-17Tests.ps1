@@ -133,7 +133,8 @@ try {
         'Save and reload restores canal supply and original ground'
     )
     if ($Suite -eq 'Integration') {
-        $required = @('Pawn opens native sluice and game ticks irrigate soil',
+        $required = @('Separate maps never share supply and native map removal clears the provider',
+          'Pawn opens native sluice and game ticks irrigate soil',
           'Natural source feeds native sluice once and disconnects safely',
           'Diagonal contact and disconnected Medieval chains never irrigate',
           'Native storage is charged first and survives natural source loss',
