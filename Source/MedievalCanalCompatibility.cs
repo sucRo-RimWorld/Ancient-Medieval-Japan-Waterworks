@@ -116,8 +116,10 @@ namespace AncientMedievalJapan.Waterworks
             var net = netField == null ? null : netField.GetValue(pipe);
             if (net == null) return false;
             var towersField = AccessTools.Field(net.GetType(), "WaterTowers");
-            var towers = towersField == null ? null :
-                towersField.GetValue(net) as System.Collections.IEnumerable;
+            var towersProperty = AccessTools.Property(net.GetType(), "WaterTowers");
+            var towers = (towersField != null ? towersField.GetValue(net) :
+                towersProperty == null ? null : towersProperty.GetValue(net, null))
+                as System.Collections.IEnumerable;
             if (towers == null) return false;
             var comp = sluice as ThingComp;
             if (comp == null || comp.parent == null) return false;
@@ -137,9 +139,9 @@ namespace AncientMedievalJapan.Waterworks
             foreach (object tower in towers)
             {
                 if (tower == null) continue;
-                var storage = AccessTools.Property(tower.GetType(), "WaterStorage");
+                var storage = AccessTools.Field(tower.GetType(), "WaterStorage");
                 if (storage != null)
-                    available += Convert.ToSingle(storage.GetValue(tower, null));
+                    available += Convert.ToSingle(storage.GetValue(tower));
             }
             return available >= usage;
         }
