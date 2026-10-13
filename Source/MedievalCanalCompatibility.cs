@@ -74,8 +74,12 @@ namespace AncientMedievalJapan.Waterworks
                 !ReturnsBoolWithoutArguments(spray) ||
                 !ReturnsBoolWithoutArguments(flow) ||
                 ActiveCellsMethod == null || !MatchesIrrigationMethods() ||
-                AddMoistureMethod == null || PipeField == null ||
-                CoolingMethod == null || FireDamageField == null)
+                AddMoistureMethod == null ||
+                AddMoistureMethod.ReturnType != typeof(void) ||
+                PipeField == null || CoolingMethod == null ||
+                CoolingMethod.ReturnType != typeof(void) ||
+                CoolingMethod.GetParameters().Length != 0 ||
+                FireDamageField == null)
             {
                 Log.Warning("[AMJ Waterworks] DBH for Medieval irrigation API mismatch; adapter disabled.");
                 return;
@@ -113,7 +117,8 @@ namespace AncientMedievalJapan.Waterworks
             var pipe = PipeField.GetValue(sluice);
             if (pipe == null) return false;
             var netProperty = AccessTools.Property(pipe.GetType(), "pipeNet");
-            var net = netProperty == null ? null : netProperty.GetValue(pipe, null);
+            if (netProperty == null) return false;
+            var net = netProperty.GetValue(pipe, null);
             if (net == null) return false;
             var towersField = AccessTools.Field(net.GetType(), "WaterTowers");
             var towersProperty = AccessTools.Property(net.GetType(), "WaterTowers");
