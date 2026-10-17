@@ -113,9 +113,26 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     var comp = Prepare(ctx, f);
                     ctx.Assert((bool)Method(comp.GetType(), "IsWaitingForDoer").Invoke(comp, null), "Dry supplied sluice offers native work");
                     VerifySpray(ctx, comp, true);
-                    // Multiple contacts and a bridge must not multiply irrigation.
-                    ctx.Require(f.Canal.Dig(f.Cell(0, 1)), "Second natural endpoint");
+                    // A covered contact still carries water, but cannot feed
+                    // the Medieval network until an exposed contact exists.
                     f.Map.terrainGrid.SetFoundation(f.Cell(0, 0), TerrainDefOf.Bridge);
+                    ctx.Assert(f.Canal.IsSuppliedCanalAt(f.Cell(0, 0)),
+                        "Bridge must preserve water beneath the cover");
+                    VerifySpray(ctx, comp, false);
+                    ctx.Assert(!(bool)Method(comp.GetType(), "IsWaitingForDoer").Invoke(comp, null),
+                        "Covered-only canal must not offer irrigation work");
+                    f.Map.terrainGrid.RemoveFoundation(f.Cell(0, 0), false);
+                    VerifySpray(ctx, comp, true);
+
+                    // An alternative exposed cardinal contact may supply the
+                    // same network once, even while its first contact is covered.
+                    ctx.Require(f.Canal.Dig(f.Cell(0, 1)) &&
+                        f.Canal.Dig(f.Cell(1, 1)), "Second exposed contact");
+                    f.Map.terrainGrid.SetFoundation(f.Cell(0, 0), TerrainDefOf.Bridge);
+                    VerifySpray(ctx, comp, true);
+                    f.Map.terrainGrid.SetFoundation(f.Cell(1, 1), TerrainDefOf.Bridge);
+                    VerifySpray(ctx, comp, false);
+                    f.Map.terrainGrid.RemoveFoundation(f.Cell(1, 1), false);
                     VerifySpray(ctx, comp, true);
                     f.Set(-1, 0, "Soil");
                     VerifySpray(ctx, comp, false);

@@ -118,9 +118,9 @@ namespace AncientMedievalJapan.Waterworks
         }
 
         /// <summary>
-        /// Read-only compatibility query for independently supplied, naturally
-        /// connected Waterworks terrain canals. Do not infer supply from a wet
-        /// graphic or the presence of an adjacent foreign building.
+        /// Read-only water-state query. A wet canal remains supplied under a
+        /// Vanilla bridge or other foundation; supply does not grant permission
+        /// to draw water from that covered cell.
         /// </summary>
         public bool IsSuppliedCanalAt(IntVec3 cell)
         {
@@ -130,16 +130,28 @@ namespace AncientMedievalJapan.Waterworks
         }
 
         /// <summary>
-        /// Cardinal-only contact point for optional water consumers such as
-        /// DBH for Medieval's building-based irrigation canal. No PipeNet state
-        /// is modified by this query.
+        /// Direct water intake requires an exposed wet canal cell. The Vanilla
+        /// bridge/lid is a foundation, so covering a canal blocks withdrawal but
+        /// does not interrupt the canal's underlying wet state or connectivity.
+        /// </summary>
+        public bool CanDrawWaterFromCanalAt(IntVec3 cell)
+        {
+            return IsSuppliedCanalAt(cell) &&
+                map.terrainGrid.FoundationAt(cell) == null;
+        }
+
+        /// <summary>
+        /// Cardinal-only exposed intake for optional water consumers such as
+        /// DBH for Medieval's building-based irrigation canal. Covered canal
+        /// cells still carry water but cannot supply a neighboring consumer.
+        /// No PipeNet state is modified by this query.
         /// </summary>
         public bool TouchesSuppliedCanal(IntVec3 cell)
         {
             if (!cell.InBounds(map)) return false;
             foreach (IntVec3 direction in GenAdj.CardinalDirections)
             {
-                if (IsSuppliedCanalAt(cell + direction)) return true;
+                if (CanDrawWaterFromCanalAt(cell + direction)) return true;
             }
             return false;
         }
