@@ -10,7 +10,7 @@ not maintained as competing branch logs.
 ### WATERWORKS-COVERED-INTAKE-20261017 — covered canals cannot feed consumers
 
 **Owner:** Waterworks / DBH for Medieval integration
-**Status:** NATIVE 1.6 CORE 8/8 PASS; POST-TEST PRODUCT DLL BUILT; 1.7 AND DBH COVERED-INTAKE TESTS OPEN
+**Status:** LOADED-GAME COVERED-INTAKE ACCEPTANCE COMPLETE — 1.6/1.7 SOLO + ACTUAL DBH FOR MEDIEVAL; RELEASE/VISUAL GATES SEPARATE
 
 Waterworks canals still carry water beneath Vanilla Bridge foundations, but a
 foundation-covered cell is not a valid withdrawal point for an adjacent consumer.
@@ -20,9 +20,11 @@ without changing canal topology or natural source recognition. Canonical rule:
 `Docs/Design.md` §2.1 and §7.1; C#:
 `Source/CanalMapComponent.cs`. Existing core and Medieval Pickle scenarios
 include exposed/covered/multiple-contact assertions. No automatic RimWorld
-test launch. The committed `Assemblies/` production DLL is **unchanged** until
-a real 1.6 production compile is available; 1.6/1.7 loaded-game verification
-and packaging remain separate.
+test launch. The **post-acceptance production DLL is committed** to `main`
+(PR #34, `2e46d4188e2b0c3bed83ca558d65ea2b5b2dca60`), SHA-256
+`1653a9827bb92ee4bfe9ada314fe550e90afb098f9da786f909c479246e27846`.
+Loaded-game results are summarized in the latest closeout below; visual,
+save-addition and public-release gates remain independent.
 
 Follow-up 2026-10-17: PR #30 added `Scripts/native-covered-intake16.py`
 and the manually requested `covered-intake-native16.yml` on `main`
@@ -55,6 +57,42 @@ superseded as dispatch blockers; the Project-hosted branch-create route succeede
 This covers the **1.6 solo core** only: live DBH for Medieval coverage,
 1.7, physical appearance and Workshop release are separate and unverified.
 
+
+**Latest covered-intake closeout, 2026-10-17 — actual 1.6/1.7 acceptance
+completed; this supersedes previous PENDING statements in this item:**
+
+- RimWorld **1.6.4871 rev598**, original solo Waterworks bridge/core graph
+  [Project #39027975054](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39027975054):
+  Pickle **8/8 PASS**, runtime ERROR=0, exit=0; DLL compiled after PASS.
+- RimWorld **1.7.4977 rev1248**, **same** production DLL in isolated real
+  Waylith game [Project #39030075023](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39030075023):
+  bridge-covered intake/flow/uncover core Pickle **1/1 PASS**, ERROR=0, exit=0.
+- Authentic upstream Dubs Bad Hygiene + Steam **DBH for Medieval**
+  [Project #39030578855](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39030578855):
+  **five of six** original native 1.6 integration cases PASS; sixth covered
+  contact case (and initial 1.7 covered contact attempt) failed a
+  **test-settings premise**, because the isolated standalone DBH settings
+  file had not actually disabled the needs. Do not record this run as 6/6.
+- Test-only explicit runtime DBH settings correction, **same unchanged
+  production DLL and original provider bytes**:
+  [Project #39031077996](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39031077996),
+  actual 1.6 focused covered-contact **1/1 PASS**, ERROR=0, exit=0, and
+  actual 1.7 focused covered-contact **1/1 PASS**, ERROR=0, exit=0.
+  The original strict in-game settings assertion remained active.
+
+The accepted Medieval scenario asserts actual sluice irrigation and waiting
+behavior: covering a sole water-filled contact blocks intake while keeping
+through-flow; removal resumes it; another exposed cardinal contact sustains
+irrigation when the first is covered; covering all contacts stops it; source
+loss and reconnection propagate as expected. These are **game-loaded**
+claims, not source/static inferences. The tested DBH for Medieval provider
+advertises support through **1.6 only**; 1.7 result demonstrates tested binary
+interoperability, not official partner 1.7 support. Original runtime test
+requirements, upstream identities, named outcomes and limits:
+`Docs/Validation/CoveredIntakeNative1617-20261017.md`.
+No further test is required for this bounded change without an observed new
+defect; appearance, real existing-save addition and Workshop publication
+remain separate.
 
 ### DBH-CANAL-20261013 — optional Medieval sluice compatibility
 

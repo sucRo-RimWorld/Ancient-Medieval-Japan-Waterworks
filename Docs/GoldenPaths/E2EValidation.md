@@ -66,3 +66,22 @@ Untested by this Solo rerun: DBH integrations/settings, manual appearance, actua
 The [single focused Project-hosted native run #39027975054](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39027975054) on actual Linux 1.6.4871 rev598 passed the existing eight core Waterworks Pickle scenarios **8/8**, native `[ERROR]`=0, exit=0. The bridge core scenario verifies that a covered water-filled canal still conducts water but cannot be an intake point; uncovering restores it. The separate **post-test** net472 DLL build succeeded, SHA-256 `1653a9827bb92ee4bfe9ada314fe550e90afb098f9da786f909c479246e27846`.
 
 The source SHA, named expectations, result and exclusions are recorded in [CoveredIntakeNative16-20261017.md](../Validation/CoveredIntakeNative16-20261017.md). **DBH for Medieval's actual irrigation job/alternative-contact behavior and 1.7 are not tested by this run**; prior results for unchanged behavior are not fresh coverage of the new restriction. No Workshop upload or new release/visual acceptance is implied.
+
+## Covered-canal withdrawal — completed 1.6/1.7 loaded-game acceptance (2026-10-17)
+
+Original Waterworks `main` product `2e46d4188e2b0c3bed83ca558d65ea2b5b2dca60`,
+SHA-256 `1653a9827bb92ee4bfe9ada314fe550e90afb098f9da786f909c479246e27846`,
+loaded in real native 1.6 and 1.7. The acceptance is bounded to unchanged
+specified intake behavior, not a new full-modpack/release matrix.
+
+- **1.6 Solo**: [#39027975054](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39027975054), actual 1.6.4871 rev598, core 8/8, ERROR=0.
+- **1.7 Solo**: [#39030075023](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39030075023), actual 1.7.4977 rev1248, bridge/cover 1/1, ERROR=0.
+- **1.6 DBH + DBH for Medieval**: [#39030578855](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39030578855) original suite 5/6 (other five PASS, covered-contact fails unmet test-only DBH needs-setting precondition), then [#39031077996](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39031077996) focused covered-contact 1/1 PASS, ERROR=0 after setting actual DBH runtime need flags off; no product changes.
+- **1.7 DBH + DBH for Medieval**: initial #39030578855 fails same unmet settings premise, then #39031077996 focused covered-contact 1/1 PASS, ERROR=0 with actual needs OFF. The original Medieval partner metadata does not claim 1.7 support; this is binary interoperability evidence.
+
+Formal named assertions and upstream provider provenance:
+[CoveredIntakeNative1617-20261017.md](../Validation/CoveredIntakeNative1617-20261017.md).
+Historical results for other profiles must not be reclassified as these new
+changes. Actual source/DLL remain unchanged; separate appearance, legacy
+existing-save installation, unrestricted modpacks and Steam publication
+were not retested or authorized by this acceptance.
