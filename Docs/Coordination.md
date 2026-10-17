@@ -7,6 +7,23 @@ not maintained as competing branch logs.
 
 ## Current work
 
+### WATERWORKS-COVERED-INTAKE-20261017 — covered canals cannot feed consumers
+
+**Owner:** Waterworks / DBH for Medieval integration
+**Status:** SOURCE CHANGE COMPLETE; PRODUCTION DLL REBUILD AND LOADED-GAME ACCEPTANCE PENDING
+
+Waterworks canals still carry water beneath Vanilla Bridge foundations, but a
+foundation-covered cell is not a valid withdrawal point for an adjacent consumer.
+The existing cardinal optional DBH for Medieval connection must use an exposed
+wet canal contact; covering or uncovering a contact changes intake eligibility
+without changing canal topology or natural source recognition. Canonical rule:
+`Docs/Design.md` §2.1 and §7.1; C#:
+`Source/CanalMapComponent.cs`. Existing core and Medieval Pickle scenarios
+include exposed/covered/multiple-contact assertions. No automatic RimWorld
+test launch. The committed `Assemblies/` production DLL is **unchanged** until
+a real 1.6 production compile is available; 1.6/1.7 loaded-game verification
+and packaging remain separate.
+
 ### DBH-CANAL-20261013 — optional Medieval sluice compatibility
 
 **Owner:** Waterworks DBH compatibility

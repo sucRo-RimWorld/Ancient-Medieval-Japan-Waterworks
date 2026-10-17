@@ -115,6 +115,12 @@ assert "TerrainAffordanceDefOf.Diggable" not in component_source
 assert '"WaterMovingShallow"' in component_source
 assert '"WaterShallow"' in component_source
 assert '"Mud"' in component_source and '"Marsh"' in component_source
+# Wet canals remain connected beneath foundations, but the public intake
+# query and foreign-consumer adjacency must reject covered endpoints.
+assert "public bool CanDrawWaterFromCanalAt(IntVec3 cell)" in component_source
+assert "return IsSuppliedCanalAt(cell) &&" in component_source
+assert "map.terrainGrid.FoundationAt(cell) == null;" in component_source
+assert "if (CanDrawWaterFromCanalAt(cell + direction)) return true;" in component_source
 
 
 localization_keys = (

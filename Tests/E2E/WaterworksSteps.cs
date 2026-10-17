@@ -204,13 +204,23 @@ namespace AncientMedievalJapan.Waterworks.E2E
                     c.Require(f.Canal.Dig(a), "Cannot dig Gravel");
                     f.Set(-1, 0, "WaterMovingChestDeep"); f.Tick();
                     f.Wet(a, "moving freshwater");
+                    c.Assert(f.Canal.CanDrawWaterFromCanalAt(a),
+                        "Open wet canal must allow water intake");
                     f.Map.terrainGrid.SetFoundation(a, TerrainDefOf.Bridge);
                     c.Assert(f.Map.terrainGrid.FoundationAt(a) == TerrainDefOf.Bridge, "Bridge missing");
                     c.Assert(f.Canal.IsCanal(a), "Bridge erased canal");
+                    c.Assert(f.Canal.IsSuppliedCanalAt(a),
+                        "Bridge should not interrupt water beneath it");
+                    c.Assert(!f.Canal.CanDrawWaterFromCanalAt(a),
+                        "Covered canal permitted direct intake");
+                    c.Assert(!f.Canal.TouchesSuppliedCanal(f.Cell(1, 0)),
+                        "Neighbor drew from bridge-covered canal");
                     c.Assert(!f.Canal.CanFill(a).Accepted, "Fill allowed under bridge");
                     f.Set(-1, 0, "Soil"); f.Tick(); f.Dry(a, "source cut under bridge");
                     f.Set(-1, 0, "WaterMovingShallow"); f.Tick(); f.Wet(a, "source restored");
                     f.Map.terrainGrid.RemoveFoundation(a, false);
+                    c.Assert(f.Canal.CanDrawWaterFromCanalAt(a),
+                        "Removing cover must restore intake without redigging");
                     c.Require(f.Canal.Fill(a), "Cannot fill after bridge removal");
                     c.Assert(f.Map.terrainGrid.TopTerrainAt(a).defName == "Gravel",
                         "Original Gravel not restored");
