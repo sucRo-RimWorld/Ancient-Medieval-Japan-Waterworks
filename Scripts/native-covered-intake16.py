@@ -33,9 +33,17 @@ def modid(path):
     return (ET.parse(path / "About/About.xml").getroot().findtext("packageId") or "").lower()
 
 def one_dll(folder, filename):
-    found = list(folder.rglob(filename))
-    check(len(found) == 1, "Need exactly one " + filename)
-    return found[0]
+    """Resolve the active RimWorld 1.6 assembly rather than another version."""
+    found = sorted(p for p in folder.rglob(filename) if p.is_file() and not p.is_symlink())
+    native16 = [p for p in found if "1.6" in p.relative_to(folder).parts]
+    if len(native16) == 1:
+        return native16[0]
+    # The provider may publish a non-versioned single-assembly distribution.
+    if len(found) == 1:
+        return found[0]
+    check(False, "RimWorld 1.6 assembly ambiguous: " +
+          ", ".join(p.relative_to(folder).as_posix() for p in found))
+    raise AssertionError("unreachable")
 
 def compile_project(project, output, env, substitutions=None, managed=None):
     tmp = project.with_name("AMJWNative_" + project.name)
