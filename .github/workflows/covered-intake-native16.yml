@@ -1,0 +1,65 @@
+name: Waterworks covered-intake native 1.6 and gated product DLL
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+concurrency:
+  group: amjw-covered-intake16
+  cancel-in-progress: false
+jobs:
+  native-acceptance:
+    if: >-
+      github.event.issue.number == 29 &&
+      github.event.comment.user.login == 'sucRo0629' &&
+      github.event.comment.body == '/amjw covered-intake16-test-build'
+    runs-on: [self-hosted, linux, x64, amj-rimworld]
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify approved change and obtain exclusive native lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -d /srv/amj-rimworld/runs && ! -L /srv/amj-rimworld/runs ]]
+          [[ ! -L /srv/amj-rimworld/runs/.amj-native-integration.lock ]]
+          exec 9>/srv/amj-rimworld/runs/.amj-native-integration.lock
+          flock -w 900 9 || { echo "BLOCKED: another game test holds lock"; exit 2; }
+          python3 Tests/static_audit.py
+          python3 Scripts/native-covered-intake16.py
+      - name: Push post-test DLL to a reviewable topic branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/amjw-covered-intake16/acceptance.json"
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          result = json.loads((pathlib.Path(os.environ["RUNNER_TEMP"]) / "amjw-covered-intake16/acceptance.json").read_text())
+          dll = pathlib.Path("Assemblies/AncientMedievalJapanWaterworks.dll")
+          assert result["post_test_build"] and result["passed"] == 8 and result["native_error_count"] == 0
+          assert hashlib.sha256(dll.read_bytes()).hexdigest() == result["release_sha256"]
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="build/amjw-covered-intake16-${GITHUB_RUN_ID}"
+          git switch -c "$branch"
+          git add -- Assemblies/AncientMedievalJapanWaterworks.dll
+          if git diff --cached --quiet; then
+            echo "BLOCKED: no changed product DLL"
+            exit 2
+          fi
+          test "$(git diff --cached --name-only | wc -l)" -eq 1
+          test "$(git diff --cached --name-only)" = "Assemblies/AncientMedievalJapanWaterworks.dll"
+          git commit -m "Build Waterworks covered intake after native 1.6 acceptance"
+          git push origin "HEAD:refs/heads/$branch"
+          echo "Product DLL branch: $branch"
+      - name: Preserve native evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amjw-covered-intake16-${{ github.run_id }}
+          path: ${{ runner.temp }}/amjw-covered-intake16/
+          if-no-files-found: warn
+          retention-days: 7
