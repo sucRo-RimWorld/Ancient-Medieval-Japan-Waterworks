@@ -10,7 +10,7 @@ not maintained as competing branch logs.
 ### WATERWORKS-COVERED-INTAKE-20261017 — covered canals cannot feed consumers
 
 **Owner:** Waterworks / DBH for Medieval integration
-**Status:** SOURCE CHANGE COMPLETE; PRODUCTION DLL REBUILD AND LOADED-GAME ACCEPTANCE PENDING
+**Status:** SOURCE COMPLETE; EXPLICIT NATIVE RUN ENTRY READY; TEST DISPATCH BLOCKED; PRODUCT DLL UNCHANGED
 
 Waterworks canals still carry water beneath Vanilla Bridge foundations, but a
 foundation-covered cell is not a valid withdrawal point for an adjacent consumer.
@@ -23,6 +23,22 @@ include exposed/covered/multiple-contact assertions. No automatic RimWorld
 test launch. The committed `Assemblies/` production DLL is **unchanged** until
 a real 1.6 production compile is available; 1.6/1.7 loaded-game verification
 and packaging remain separate.
+
+Follow-up 2026-10-17: PR #30 added `Scripts/native-covered-intake16.py`
+and the manually requested `covered-intake-native16.yml` on `main`
+(commit `4181596eb2a8cfb28eed4a3ba83e4baafe82a385`).
+The route checks the pinned covered-intake source, builds temporary 1.6
+production and Pickle/Quickstarts assemblies, runs the eight existing
+1.6 core cases once on the isolated Linux host (rendered through Xvfb),
+and restores the host's marked staged Mod. Only on actual 8/8,
+zero-[ERROR] acceptance does a subsequent production compile push a
+single-DLL topic branch for PR integration. It does not run on push/PR.
+Attempted exact PR #29 issue-comment trigger was rejected by the
+connected tool's safety check; no issue comment or native workflow run
+was created. This is an operational dispatch blocker, **not** a test
+failure or runtime PASS. DBH for Medieval integration and native 1.7
+remain unverified for this change. Do not merge/update a DLL or claim
+loaded-game acceptance until genuine matching artifacts exist.
 
 ### DBH-CANAL-20261013 — optional Medieval sluice compatibility
 
