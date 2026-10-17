@@ -60,3 +60,9 @@ Premises: production Defs load; four cardinal branches connect/disconnect; canal
 Reusable correction: XML loader declarations/BOM are honored by `Read-RimWorldTestXml`, including BOM-free Japanese metadata under Windows PowerShell 5.1. A round-trip Unicode regression protects this. The private native-log mutex waits up to 60 seconds rather than immediately rejecting another authorized test; launches remain serial and fail safely if the lock stays occupied. Windows PowerShell 5.1 and PowerShell 7 harness regressions passed. No production C#/XML, 1.6 entry point, art, player configuration or metadata changed in this patch.
 
 Untested by this Solo rerun: DBH integrations/settings, manual appearance, actual legacy colony add/remove, balance and Workshop payload. Use the separate accepted DBH matrix for its named profiles, not this Solo result.
+
+## Covered-canal withdrawal — native 1.6 acceptance (2026-10-17)
+
+The [single focused Project-hosted native run #39027975054](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39027975054) on actual Linux 1.6.4871 rev598 passed the existing eight core Waterworks Pickle scenarios **8/8**, native `[ERROR]`=0, exit=0. The bridge core scenario verifies that a covered water-filled canal still conducts water but cannot be an intake point; uncovering restores it. The separate **post-test** net472 DLL build succeeded, SHA-256 `1653a9827bb92ee4bfe9ada314fe550e90afb098f9da786f909c479246e27846`.
+
+The source SHA, named expectations, result and exclusions are recorded in [CoveredIntakeNative16-20261017.md](../Validation/CoveredIntakeNative16-20261017.md). **DBH for Medieval's actual irrigation job/alternative-contact behavior and 1.7 are not tested by this run**; prior results for unchanged behavior are not fresh coverage of the new restriction. No Workshop upload or new release/visual acceptance is implied.

@@ -10,7 +10,7 @@ not maintained as competing branch logs.
 ### WATERWORKS-COVERED-INTAKE-20261017 — covered canals cannot feed consumers
 
 **Owner:** Waterworks / DBH for Medieval integration
-**Status:** SOURCE COMPLETE; EXPLICIT NATIVE RUN ENTRY READY; TEST DISPATCH BLOCKED; PRODUCT DLL UNCHANGED
+**Status:** NATIVE 1.6 CORE 8/8 PASS; POST-TEST PRODUCT DLL BUILT; 1.7 AND DBH COVERED-INTAKE TESTS OPEN
 
 Waterworks canals still carry water beneath Vanilla Bridge foundations, but a
 foundation-covered cell is not a valid withdrawal point for an adjacent consumer.
@@ -39,6 +39,22 @@ was created. This is an operational dispatch blocker, **not** a test
 failure or runtime PASS. DBH for Medieval integration and native 1.7
 remain unverified for this change. Do not merge/update a DLL or claim
 loaded-game acceptance until genuine matching artifacts exist.
+
+**Superseding result (2026-10-17):** Project-hosted one-shot run
+[#39027975054](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/actions/runs/39027975054)
+loaded actual Linux RimWorld 1.6.4871 rev598 and executed Waterworks' existing
+core Pickle scenarios **8/8 PASS** (no skips/failures), game exit 0 and native
+`[ERROR]` count 0. The bridge scenario directly exercises water flowing under
+a cover while withdrawal is blocked, and removal restoring intake.
+**After the PASS**, the net472 production DLL was rebuilt and SHA-256
+`1653a9827bb92ee4bfe9ada314fe550e90afb098f9da786f909c479246e27846`
+was verified before binary transfer. Definitive acceptance premises, exclusions
+and source/binary provenance: `Docs/Validation/CoveredIntakeNative16-20261017.md`.
+The earlier rejected issue-comment and unassigned Waterworks-repo job are
+superseded as dispatch blockers; the Project-hosted branch-create route succeeded.
+This covers the **1.6 solo core** only: live DBH for Medieval coverage,
+1.7, physical appearance and Workshop release are separate and unverified.
+
 
 ### DBH-CANAL-20261013 — optional Medieval sluice compatibility
 
