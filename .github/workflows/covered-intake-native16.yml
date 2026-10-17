@@ -2,6 +2,7 @@ name: Waterworks covered-intake native 1.6 and gated product DLL
 on:
   issue_comment:
     types: [created]
+  create:
 permissions:
   contents: write
 concurrency:
@@ -10,9 +11,14 @@ concurrency:
 jobs:
   native-acceptance:
     if: >-
-      github.event.issue.number == 29 &&
-      github.event.comment.user.login == 'sucRo0629' &&
-      github.event.comment.body == '/amjw covered-intake16-test-build'
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.number == 29 &&
+       github.event.comment.user.login == 'sucRo0629' &&
+       github.event.comment.body == '/amjw covered-intake16-test-build') ||
+      (github.event_name == 'create' &&
+       github.event.ref_type == 'branch' &&
+       github.event.ref == 'run/amjw-covered-intake16-20261017' &&
+       github.actor == 'sucRo0629')
     runs-on: [self-hosted, linux, x64, amj-rimworld]
     timeout-minutes: 28
     steps:
