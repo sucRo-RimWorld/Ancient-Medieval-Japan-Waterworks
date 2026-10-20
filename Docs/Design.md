@@ -702,9 +702,11 @@ The first DBH integration should be designed only after current DBH 1.6 API sema
 
 ### 11.2 Rice Cultivation
 
-Rice Cultivation remains independently playable without Waterworks.
+**2026-10-21 作者方針変更:** Rice CultivationはWaterworksを**必須依存**とする。これにより旧「Rice CultivationはWaterworksなしでも独立稼働」の記述を撤回する。Waterworks自体は引き続きRice Cultivationなしでも単独稼働でき、既存のDig/Fill/自然水連結の機能と公開境界を変えない。
 
-If integrated later, Rice Cultivation owns all paddy-specific conditions and distances. Waterworks only reports supplied canal presence.
+Rice Cultivationは水田造成、区画管理、畦、取水・排水操作、湛水・生育効果を所有する。Waterworksは開放水路の供給・露出した水路接点の取水可否を提供するだけであり、水田専用の水量・作物効果・建造物を重複実装しない。水田取水は既存`CanDrawWaterFromCanalAt(IntVec3)`等の接触セル制約に従う。GrainsはRice Cultivationの必須依存ではなく、Grains未導入時もRice Cultivation + Waterworks + Vanilla `Plant_Rice` / `RawRice` 経路を設計する。
+
+作者承認済みの「範囲指定による造成・外周の自動畦・水田区画独立管理」および未確定の取水点・排水方式は、専用Riceリポジトリ作成前の[Project水田設計草案](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/blob/main/Docs/Research/RicePaddyDesign-2026-10-21.md)で管理する。Waterworks既存の水路グラフ・2値供給計算・橋下取水不可の実装は、この決定だけでは変更しない。
 
 ### 11.3 Hot Springs
 
