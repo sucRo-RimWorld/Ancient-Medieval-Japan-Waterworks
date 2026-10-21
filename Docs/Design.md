@@ -139,6 +139,22 @@ The following are deferred until a concrete use case requires them:
 
 Do not implement these merely because they were present in earlier drafts.
 
+### 3.5 Future constructed ponds / ため池 — deferred common infrastructure candidate (2026-10-21 author decision)
+
+**Status: future extension CANDIDATE owned by Waterworks for evaluation, not part of v1 or an approved design/implementation.** The author approved the *dependency and order boundary*: first make Firewater's DBH-independent natural-water/vessel firefighting viable and Rice Cultivation's existing-canal paddy-water interface viable **without any artificial reservoir**. Only then assess whether stored water changes actual drought response, firefighting logistics or paddy gameplay enough to justify a pond.
+
+**Owner boundary:** If adopted, Waterworks owns only a constructed **open, earthwork-type reservoir / water basin** and its interaction with natural water and open canals. This does not transfer rice plots, paddy water control, village firefighting, drinking, wells, DBH tanks/pipes/pumps, flood-control simulation or generic water-quality systems to Waterworks. The Firewater consumer owns its finite water vessels and firefighting Jobs; Rice Cultivation owns its plot state, intake and irrigation effects. **DBH remains optional** for all Waterworks infrastructure.
+
+**Compatibility with currently accepted Waterworks invariants:**
+- An artificial pond is **not** a multi-cell variant of the existing one-cell canal TerrainDef: preserve the prohibition on completing a filled 2×2 canal area, current dig/fill commands, 4-neighbor canal graph, exposed-intake rule and original-ground restoration for existing canal cells. A future pond would need its own explicitly designated earthwork area/state, not a loophole in the canal width restriction.
+- Do **not** reclassify artificial open water as `WaterShallow` / `WaterDeep` natural sources that automatically satisfy the existing 9-cell **infinite** source rule. Natural rivers/ponds keep their accepted binary-supply semantics. No water is created by digging nine artificial pond cells; a proposed reservoir's intake, storage and depletion must be considered explicitly before implementation.
+- Do **not** change the current Waterworks graph from binary supply to per-cell flow/pressure/elevation or deplete an existing natural pond merely to support this candidate. If a pond requires a bounded storage state, it must remain separate from the core canal-network source of truth and connect through a narrowly defined consumer/source interface.
+- Do not invent rain fill, gate quantities, evaporation/leakage, dry-out times, terrain appearance, costs, work requirements, capacity, reservoir connection direction, discharge/overflow or permanent-pond behavior yet; these remain open design questions, not accepted balance rules.
+
+**Implementation entry condition:** complete the Project's VE **and non-VE** prior-art and historical/UX review for **constructed finite open reservoirs**, and first identify a concrete consumer need unmet by natural water + current canals + Firewater vessels. Compare limited-capacity ponds against decorative/create-water Terrain Mods, DBH storage and existing irrigators **as whole products**. Define a separate pond designation and save contract (including cancel/partial work, refill/empty, remove, existing saves), minimal API to Rice/Firewater, no artificial unlimited-source loophole and event-driven/TPS-bounded updates before production. No new native run, prototype implementation, Mod dependency, release gate or priority change is authorized by this record.
+
+**Cross-owner canonical pointers:** [Project Firewater candidate](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/blob/main/Docs/Research/FirefightingWaterStorageCandidate.md) and [Rice Cultivation candidate](https://github.com/sucRo-RimWorld/Ancient-Medieval-Japan-Project/blob/main/Docs/Research/RicePaddyDesign-2026-10-21.md). These consumers proceed without the pond.
+
 ## 4. Natural-water sources
 
 ### 4.1 v1 source class
