@@ -16,7 +16,7 @@ New features cannot enter implementation before the Project [existing-Mod audit 
 - Connected canal candidate production: `Docs/GoldenPaths/CanalTilePipeline.md`; topology/validation must pass before any candidate is shown or promoted.
 - Testing: follow `Tests/AGENTS.md` for RimTest/Pickle selection and evidence boundaries.
 - Accepted high-resolution masters belong under `Art/Sources/`; `Textures/` contains derivatives. Apply Project's source-preservation pipeline before art work.
-- Release metadata: `Tests/validate_add_changenote.py`; use the actual owning release path, not a nonexistent common payload command.
+- Release metadata: `Tests/Release/validate_add_changenote.py`; use the actual owning release path, not a nonexistent common payload command.
 
 ## Waterworks ownership boundary
 
